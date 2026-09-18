@@ -1,0 +1,128 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CI: 'true'
+  npm_config_fund: 'false'
+  npm_config_audit: 'false'
+
+jobs:
+  acceptance:
+    name: Acceptance matrix (A-L)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Install Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Chromium system dependencies
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - run: npm run build
+      - name: Acceptance matrix
+        run: npm run test:acceptance -- --out acceptance-matrix.md
+      - name: Upload acceptance matrix and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance
+          path: |
+            acceptance-matrix.md
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  fresh-clone-smoke:
+    name: Fresh-clone setup smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Chromium system dependencies (setup never installs system packages itself)
+        run: npx --yes playwright@$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version") install-deps chromium
+      - name: Clone HEAD to a temp dir, run setup twice, assert READY and idempotency
+        run: node scripts/fresh-clone-smoke.mjs
+
+  storybook:
+    name: Storybook build (non-required)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip when no Storybook configuration is committed
+        id: has
+        run: |
+          if [ -d .storybook ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "No .storybook/ directory; skipping."; fi
+      - uses: actions/setup-node@v4
+        if: steps.has.outputs.present == 'true'
+        with:
+          node-version: 24
+          cache: npm
+      - if: steps.has.outputs.present == 'true'
+        run: npm ci
+      - if: steps.has.outputs.present == 'true'
+        run: npm run build-storybook
+
+  live-smoke:
+    name: Live backend smoke (optional)
+    # Never for pull requests or forks: secrets must not be exposed to untrusted code.
+    if: github.event_name != 'pull_request' && github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Check for secrets
+        id: secrets
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ] || [ -n "$OPENAI_API_KEY" ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "No backend secrets configured; skipping."; fi
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.present == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.present == 'true'
+        with:
+          node-version: 24
+          cache: npm
+      - if: steps.secrets.outputs.present == 'true'
+        run: npm ci
+      - name: Install agent CLIs on the runner
+        if: steps.secrets.outputs.present == 'true'
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then npm install --global @anthropic-ai/claude-code; fi
+          if [ -n "$OPENAI_API_KEY" ]; then npm install --global @openai/codex; fi
+      - name: Live harness tests (tiny, turn-capped tasks)
+        if: steps.secrets.outputs.present == 'true'
+        env:
+          COURSEFORGE_LIVE: '1'
+        run: npx vitest run tests/unit/harness/live.test.ts

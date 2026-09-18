@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      playwright:
+        patterns: ['playwright', '@playwright/*', '@axe-core/*', 'axe-core']
+      graphics:
+        patterns: ['mermaid', 'vega', 'vega-lite', 'd3', '@types/d3', '@svgdotjs/*', 'lucide-static']
+      storybook:
+        patterns: ['storybook', '@storybook/*']
+      tooling:
+        patterns: ['typescript', 'tsx', 'vitest', '@vitest/*', '@biomejs/*', '@types/*']
+      runtime:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
