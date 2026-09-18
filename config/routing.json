@@ -43,8 +43,8 @@
         "archetype": "PROCESS",
         "interaction": null
       },
-      "primary": "mermaid",
-      "fallbacks": ["svgjs"]
+      "primary": "cf_svg",
+      "fallbacks": ["mermaid"]
     },
     {
       "rule": "VIS-TIMELINE-001",
@@ -52,8 +52,8 @@
         "archetype": "TIMELINE",
         "interaction": null
       },
-      "primary": "mermaid",
-      "fallbacks": ["svgjs"]
+      "primary": "cf_svg",
+      "fallbacks": ["mermaid"]
     },
     {
       "rule": "VIS-DECISION_TREE-001",

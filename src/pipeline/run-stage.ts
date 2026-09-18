@@ -433,7 +433,9 @@ async function repair(
 }
 
 function stageDirFor(stage: Stage): string {
-  return stage === 'COURSE_QA' ? 'review/findings' : `${STAGE_DIRS[stage]}/review/${stage.toLowerCase()}`;
+  if (stage === 'COURSE_QA') return 'review/findings';
+  if (stage === 'RELEASE') return 'review/release';
+  return `${STAGE_DIRS[stage]}/review/${stage.toLowerCase()}`;
 }
 
 /* ------------------------------------------------------------------ the loop */

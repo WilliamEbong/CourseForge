@@ -152,7 +152,8 @@ export interface PipelineApi {
  * Resolved at runtime so the CLI can be built and tested before/independently of the pipeline internals.
  * `src/pipeline/impl.ts` exports `pipelineApi: PipelineApi`.
  */
-export async function loadPipelineApi(): Promise<PipelineApi> {
-  const mod = (await import('./impl.js')) as { pipelineApi: PipelineApi };
+export async function loadPipelineApi(progress?: (line: string) => void): Promise<PipelineApi> {
+  const mod = (await import('./impl.js')) as { pipelineApi: PipelineApi; setProgressWriter(fn: ((line: string) => void) | null): void };
+  mod.setProgressWriter(progress ?? null);
   return mod.pipelineApi;
 }

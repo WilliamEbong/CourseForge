@@ -11,7 +11,9 @@ import { type Finding, FindingSchema, type FindingSet, type RepairPlan } from '.
 import type { RunContext } from './context.js';
 
 export function stageFindingsPath(stage: Stage): string {
-  return stage === 'COURSE_QA' ? 'review/findings/findings.json' : `${STAGE_DIRS[stage]}/review/${stage.toLowerCase()}/findings.json`;
+  if (stage === 'COURSE_QA') return 'review/findings/findings.json';
+  if (stage === 'RELEASE') return 'review/release/findings.json';
+  return `${STAGE_DIRS[stage]}/review/${stage.toLowerCase()}/findings.json`;
 }
 
 export function cycleDir(stage: Stage, cycle: number): string {

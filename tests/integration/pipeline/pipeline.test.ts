@@ -57,7 +57,7 @@ describe('pipeline with fake harness', () => {
 
   it('@E6 storyboard review raises a finding, repair applies it, the reviewer reruns', async () => {
     const { courseId } = await api.newCourse({ title: TITLE, runTo: 'RESEARCH_DOSSIER' });
-    const outcome = await api.run({ courseId, to: 'VISUAL_DIRECTION' });
+    const outcome = await api.run({ courseId, to: 'VISUAL_DIRECTION', gate: 'auto' });
     expect(outcome.status).toBe('completed');
     const dir = courseDir(courseId);
     const state = loadState(dir);
@@ -155,10 +155,19 @@ describe('pipeline with fake harness', () => {
   }, 300_000);
 
   it('@C6 repair cycles are capped and escalate to a human', async () => {
+    const demoDir = process.env.COURSEFORGE_FIXTURES as string;
+    const repair = JSON.parse(readFileSync(join(demoDir, 'repair/default.json'), 'utf8'));
+    const perCycle = (c: number) => ({
+      output: {
+        ...repair.output,
+        replacements: repair.output.replacements.map((r: { actionIds: string[] }) => ({ ...r, actionIds: [`A${c}-01`] })),
+      },
+    });
     const fixtures = fixturesWith({
-      'review/assessment.json': JSON.parse(
-        readFileSync(join(process.env.COURSEFORGE_FIXTURES as string, 'review/assessment.c0.json'), 'utf8'),
-      ),
+      'repair/repairer.c1.json': perCycle(1),
+      'repair/repairer.c2.json': perCycle(2),
+      'repair/repairer.c3.json': perCycle(3),
+      'review/assessment.json': JSON.parse(readFileSync(join(demoDir, 'review/assessment.c0.json'), 'utf8')),
     });
     process.env.COURSEFORGE_FIXTURES = fixtures;
     const { courseId } = await api.newCourse({ title: TITLE, runTo: 'STORYBOARD' });

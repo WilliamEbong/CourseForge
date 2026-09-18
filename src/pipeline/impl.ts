@@ -22,6 +22,7 @@ import { slugify } from '../core/ids.js';
 import { COURSE_FILES, courseDir, coursesDir, localStateDir, repoRoot } from '../core/paths.js';
 import { CourseManifestSchema, type Finding } from '../core/schemas/index.js';
 import { ingestFile } from '../ingestion/intake.js';
+import { loadRegistries } from '../routing/registries.js';
 import type { PipelineApi, RunOutcome, StatusReport } from './api.js';
 import { loadStageFindings, saveStageFindings } from './findings-store.js';
 import { defaultFromStage, openContext, runRange } from './runner.js';
@@ -182,18 +183,24 @@ export const pipelineApi: PipelineApi = {
     }
     const state = loadState(dir);
     const stage = report.acceptedStage;
+    // Register under the pipeline's logical keys (config/stages.json `artifacts`) so versions line up.
+    const keyByPath = new Map<string, string>();
+    for (const def of Object.values(loadRegistries().stages.stages))
+      for (const [key, path] of Object.entries(def.artifacts)) keyByPath.set(path, key);
     for (const p of produced) {
+      if (p.path.endsWith('.md') && p.path !== 'input/concept-request.md') continue; // Markdown twins are derived views
+      const logicalKey = keyByPath.get(p.path) ?? (p.path === 'input/concept-request.md' ? 'concept-request' : p.logicalKey);
       registerArtifact(dir, {
         stage: p.stage,
         path: p.path,
-        logicalKey: p.logicalKey,
+        logicalKey,
         producer: { kind: opts.replace ? 'human' : 'imported' },
         event: opts.replace ? 'human-edited' : 'imported',
         humanModified: true,
         now: now(),
       });
-      const rec = latest(loadRegistry(dir), p.logicalKey);
-      if (rec) state.canonicalArtifacts[p.logicalKey] = rec.artifactId;
+      const rec = latest(loadRegistry(dir), logicalKey);
+      if (rec) state.canonicalArtifacts[logicalKey] = rec.artifactId;
     }
     const st = state.stages[stage];
     if (st.status !== 'NOT_STARTED' && st.status !== 'INGESTED') {

@@ -419,7 +419,16 @@ export async function main(
       positionals,
       json,
       io,
-      api: () => (overrides.api ? Promise.resolve(overrides.api) : loadPipelineApi()),
+      api: () =>
+        overrides.api
+          ? Promise.resolve(overrides.api)
+          : loadPipelineApi(
+              json
+                ? undefined
+                : (line) =>
+                    io.stderr.write(`  · ${line}
+`),
+            ),
       doctor: overrides.doctor ?? runDoctor,
     });
   } catch (err) {

@@ -8,8 +8,8 @@ const route = (archetype: string, interaction: string | null = 'none', rendererO
   routeVisual({ id: 'V-1', archetype, interaction, rendererOverride }, registries.routing, registries.tools);
 
 const EXPECTED: Record<string, [string, string]> = {
-  PROCESS: ['mermaid', 'svgjs'],
-  TIMELINE: ['mermaid', 'svgjs'],
+  PROCESS: ['cf_svg', 'mermaid'],
+  TIMELINE: ['cf_svg', 'mermaid'],
   DECISION_TREE: ['mermaid', 'svgjs'],
   CAUSE_EFFECT: ['mermaid', 'svgjs'],
   SYSTEM_ARCHITECTURE: ['mermaid', 'svgjs'],
@@ -58,7 +58,7 @@ describe('visual routing @D2 @H4', () => {
   it('honours a registered renderer override and keeps the archetype chain as fallbacks (deduped)', () => {
     expect(route('PROCESS', 'none', 'svgjs')).toEqual({
       renderer: 'svgjs',
-      fallbacks: ['mermaid', 'text_equivalent'],
+      fallbacks: ['cf_svg', 'mermaid', 'text_equivalent'],
       rule: OVERRIDE_RULE,
     });
     expect(route('LABELED_OBJECT', 'none', 'cf_svg')).toEqual({

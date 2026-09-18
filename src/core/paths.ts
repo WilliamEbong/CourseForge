@@ -119,7 +119,10 @@ export const STAGE_DIRS: Record<Stage, string> = {
 
 export function findingsDir(stage: Stage, cycle: number): string {
   const base = STAGE_DIRS[stage];
-  return stage === 'COURSE_QA' ? `review/findings/c${cycle}` : `${base}/review/${stage.toLowerCase()}/c${cycle}`;
+  if (stage === 'COURSE_QA') return `review/findings/c${cycle}`;
+  // release/ holds only shippable outputs; release-gate review records live with the other QA records.
+  if (stage === 'RELEASE') return `review/release/c${cycle}`;
+  return `${base}/review/${stage.toLowerCase()}/c${cycle}`;
 }
 
 /** Expands `{course}` in a registry path template to a course-relative (`.`) or absolute prefix. */
