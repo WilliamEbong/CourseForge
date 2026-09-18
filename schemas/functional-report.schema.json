@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/functional-report.schema.json",
+  "title": "functional-report",
+  "description": "review/functional-tests.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "courseId": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "contract",
+        "crawl"
+      ]
+    },
+    "target": {
+      "type": "string"
+    },
+    "targetHash": {
+      "type": "string"
+    },
+    "profile": {
+      "type": "string",
+      "enum": [
+        "dev",
+        "release",
+        "smoke"
+      ]
+    },
+    "viewports": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "durationMs": {
+      "type": "number"
+    },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "index": {
+            "type": "number"
+          },
+          "viewport": {
+            "type": "number"
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "overflow": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "index",
+          "viewport",
+          "ok",
+          "errors",
+          "overflow",
+          "missingIds"
+        ]
+      }
+    },
+    "interactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "correctPath": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "skipped"
+            ]
+          },
+          "incorrectPath": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "skipped"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mode",
+          "correctPath",
+          "incorrectPath",
+          "detail"
+        ]
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "properties": {
+        "checked": {
+          "type": "boolean"
+        },
+        "expectedPercent": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "actualPercent": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "ok": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "checked",
+        "expectedPercent",
+        "actualPercent",
+        "ok"
+      ]
+    },
+    "navigation": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ok",
+        "detail"
+      ]
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "glossary": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "references": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "glossary",
+        "references",
+        "ok",
+        "detail"
+      ]
+    },
+    "progress": {
+      "type": "object",
+      "properties": {
+        "persisted": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "resetOk": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "persisted",
+        "resetOk"
+      ]
+    },
+    "keyboard": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "focusVisible": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ok",
+        "focusVisible",
+        "detail"
+      ]
+    },
+    "offline": {
+      "type": "object",
+      "properties": {
+        "blockedRequests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "blockedRequests"
+      ]
+    },
+    "consoleErrors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "crawl": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "states": {
+              "type": "number"
+            },
+            "maxDepth": {
+              "type": "number"
+            },
+            "controls": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "truncated": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "states",
+            "maxDepth",
+            "controls",
+            "truncated"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "pass": {
+          "type": "boolean"
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "pass",
+        "failures"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "courseId",
+    "mode",
+    "target",
+    "targetHash",
+    "profile",
+    "viewports",
+    "durationMs",
+    "screens",
+    "interactions",
+    "scoring",
+    "navigation",
+    "resources",
+    "progress",
+    "keyboard",
+    "offline",
+    "consoleErrors",
+    "summary"
+  ]
+}

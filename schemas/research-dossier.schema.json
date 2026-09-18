@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/research-dossier.schema.json",
+  "title": "research-dossier",
+  "description": "research/research-dossier.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1"
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sectionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "title": {
+            "type": "string"
+          },
+          "markdown": {
+            "type": "string"
+          },
+          "claimIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          }
+        },
+        "required": [
+          "sectionId",
+          "title",
+          "markdown",
+          "claimIds",
+          "sourceIds"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "title",
+    "version",
+    "sections"
+  ]
+}

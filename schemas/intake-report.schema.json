@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/intake-report.schema.json",
+  "title": "intake-report",
+  "description": "input/intake-report.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "courseId": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "originals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "number"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "md",
+              "txt",
+              "html",
+              "json",
+              "docx",
+              "pdf"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "path",
+          "hash",
+          "bytes",
+          "format"
+        ]
+      }
+    },
+    "declaredStage": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CONCEPT",
+            "RESEARCH_BRIEF",
+            "RESEARCH_DOSSIER",
+            "INSTRUCTIONAL_DESIGN",
+            "STORYBOARD",
+            "EDITORIAL",
+            "VISUAL_DIRECTION",
+            "COURSE_MODEL",
+            "COURSE_BUILD",
+            "COURSE_QA",
+            "RELEASE"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "inferred": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "CONCEPT",
+                "RESEARCH_BRIEF",
+                "RESEARCH_DOSSIER",
+                "INSTRUCTIONAL_DESIGN",
+                "STORYBOARD",
+                "EDITORIAL",
+                "VISUAL_DIRECTION",
+                "COURSE_MODEL",
+                "COURSE_BUILD",
+                "COURSE_QA",
+                "RELEASE"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "heuristic",
+            "agent",
+            "declared"
+          ]
+        },
+        "scores": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "stage",
+        "confidence",
+        "method",
+        "scores",
+        "evidence"
+      ]
+    },
+    "acceptedStage": {
+      "type": "string",
+      "enum": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "preserve",
+        "review-only",
+        "improve",
+        "rebuild"
+      ]
+    },
+    "contractGaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "requirement": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "met",
+              "partial",
+              "missing"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "requirement",
+          "status",
+          "detail"
+        ]
+      }
+    },
+    "idsFound": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "counts": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "producedArtifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lossy": {
+      "type": "boolean"
+    },
+    "nextLegalTargets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "CONCEPT",
+          "RESEARCH_BRIEF",
+          "RESEARCH_DOSSIER",
+          "INSTRUCTIONAL_DESIGN",
+          "STORYBOARD",
+          "EDITORIAL",
+          "VISUAL_DIRECTION",
+          "COURSE_MODEL",
+          "COURSE_BUILD",
+          "COURSE_QA",
+          "RELEASE"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "courseId",
+    "createdAt",
+    "originals",
+    "declaredStage",
+    "inferred",
+    "acceptedStage",
+    "mode",
+    "contractGaps",
+    "idsFound",
+    "counts",
+    "producedArtifacts",
+    "warnings",
+    "lossy",
+    "nextLegalTargets"
+  ]
+}

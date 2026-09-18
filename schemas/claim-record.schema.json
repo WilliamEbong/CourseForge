@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/claim-record.schema.json",
+  "title": "claim-record",
+  "description": "research/claims.jsonl line. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "text": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "law-regulation",
+        "scientific-technical",
+        "statistic",
+        "version-currentness",
+        "guidance-recommendation",
+        "definition",
+        "scenario-synthesis"
+      ]
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sourceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "locator": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "sourceId",
+          "locator"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sectionId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "jurisdiction": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "qualifications": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "text",
+    "category",
+    "citations",
+    "sectionId",
+    "jurisdiction",
+    "confidence",
+    "qualifications"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/adjudication.schema.json",
+  "title": "adjudication",
+  "description": "AI adjudicator decisions (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "findingId": {
+            "type": "string"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "reject",
+              "defer-to-human"
+            ]
+          },
+          "finalSeverity": {
+            "type": "string",
+            "enum": [
+              "blocker",
+              "critical",
+              "major",
+              "minor",
+              "style"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "repairInstruction": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "findingId",
+          "verdict",
+          "finalSeverity",
+          "rationale",
+          "repairInstruction"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "findingIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "findingIds",
+          "description",
+          "resolution"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "decisions",
+    "conflicts"
+  ],
+  "additionalProperties": false
+}

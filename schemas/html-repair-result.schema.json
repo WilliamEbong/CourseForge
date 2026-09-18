@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/html-repair-result.schema.json",
+  "title": "html-repair-result",
+  "description": "Find/replace edits on an HTML copy (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "actionId": {
+            "type": "string"
+          },
+          "find": {
+            "type": "string"
+          },
+          "replace": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actionId",
+          "find",
+          "replace"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "edits",
+    "notes"
+  ],
+  "additionalProperties": false
+}

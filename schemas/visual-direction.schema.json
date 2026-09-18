@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/visual-direction.schema.json",
+  "title": "visual-direction",
+  "description": "VISUAL_DIRECTION bounded choices (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "direction": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": [
+            "scientific-clinical",
+            "technical-industrial",
+            "corporate-professional",
+            "editorial-humanities",
+            "modern-technology",
+            "environmental-natural"
+          ]
+        },
+        "accentHue": {
+          "type": "integer"
+        },
+        "density": {
+          "type": "string",
+          "enum": [
+            "comfortable",
+            "compact"
+          ]
+        },
+        "corner": {
+          "type": "string",
+          "enum": [
+            "sharp",
+            "soft",
+            "round"
+          ]
+        },
+        "typeScale": {
+          "type": "string",
+          "enum": [
+            "compact",
+            "default",
+            "generous"
+          ]
+        },
+        "figureStyle": {
+          "type": "string",
+          "enum": [
+            "line",
+            "filled"
+          ]
+        }
+      },
+      "required": [
+        "family",
+        "accentHue",
+        "density",
+        "corner",
+        "typeScale",
+        "figureStyle"
+      ],
+      "additionalProperties": false
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "briefMarkdown": {
+      "type": "string"
+    },
+    "visualClassifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "visualId": {
+            "type": "string"
+          },
+          "archetype": {
+            "type": "string",
+            "enum": [
+              "PROCESS",
+              "LIFECYCLE",
+              "TIMELINE",
+              "HIERARCHY",
+              "DECISION_TREE",
+              "COMPARISON",
+              "BEFORE_AFTER",
+              "LAYERED_SYSTEM",
+              "RESPONSIBILITY_MAP",
+              "FEEDBACK_LOOP",
+              "CAUSE_EFFECT",
+              "CONTINUUM",
+              "MATRIX",
+              "LABELED_OBJECT",
+              "EVIDENCE_MAP",
+              "FUNNEL",
+              "RELATIONSHIP_NETWORK",
+              "QUANTITATIVE_CHART",
+              "SCENARIO_MAP",
+              "SYSTEM_ARCHITECTURE",
+              "SEQUENCE",
+              "STATE_DIAGRAM"
+            ]
+          },
+          "rendererOverride": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "mermaid",
+                  "cf_svg",
+                  "svgjs",
+                  "vega_lite",
+                  "d3",
+                  "lucide",
+                  "text_equivalent"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "visualId",
+          "archetype",
+          "rendererOverride",
+          "rationale"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "direction",
+    "rationale",
+    "briefMarkdown",
+    "visualClassifications"
+  ],
+  "additionalProperties": false
+}

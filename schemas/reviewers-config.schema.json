@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/reviewers-config.schema.json",
+  "title": "reviewers-config",
+  "description": "config/reviewers.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "reviewers": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "rubric": {
+            "type": "string"
+          },
+          "promptTemplate": {
+            "type": "string"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "categories": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "accuracy",
+                "currentness",
+                "evidence",
+                "citation",
+                "completeness",
+                "scope",
+                "safety",
+                "alignment",
+                "instructional",
+                "cognitive-load",
+                "assessment",
+                "scenario",
+                "accessibility",
+                "editorial",
+                "consistency",
+                "visual",
+                "ui",
+                "ux",
+                "functional",
+                "performance",
+                "traceability",
+                "structure",
+                "other"
+              ]
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "needsScreenshots": {
+            "type": "boolean"
+          },
+          "network": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "description",
+          "rubric",
+          "promptTemplate",
+          "skills",
+          "tools",
+          "categories",
+          "inputs",
+          "needsScreenshots",
+          "network",
+          "enabled"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "reviewers"
+  ],
+  "additionalProperties": false
+}

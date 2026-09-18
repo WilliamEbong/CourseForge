@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/environment-manifest.schema.json",
+  "title": "environment-manifest",
+  "description": ".courseforge/environment.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string"
+    },
+    "release": {
+      "type": "string"
+    },
+    "architecture": {
+      "type": "string"
+    },
+    "cpu": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "cores": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "model",
+        "cores"
+      ]
+    },
+    "memoryGb": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number"
+        },
+        "free": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "total",
+        "free"
+      ]
+    },
+    "node": {
+      "type": "object",
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "compatible": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "installed",
+        "version",
+        "compatible",
+        "required"
+      ]
+    },
+    "npm": {
+      "type": "object",
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "installed",
+        "version"
+      ]
+    },
+    "git": {
+      "type": "object",
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "installed",
+        "version"
+      ]
+    },
+    "claude": {
+      "type": "object",
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "globalConfigDetected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "installed",
+        "version",
+        "ready",
+        "globalConfigDetected"
+      ]
+    },
+    "codex": {
+      "type": "object",
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "globalConfigDetected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "installed",
+        "version",
+        "ready",
+        "globalConfigDetected"
+      ]
+    },
+    "playwright": {
+      "type": "object",
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "chromium": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "installed",
+        "version",
+        "chromium",
+        "source"
+      ]
+    },
+    "packages": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "cloudSync": {
+      "type": "object",
+      "properties": {
+        "detected": {
+          "type": "boolean"
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "detected",
+        "provider"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "skip"
+            ]
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "repairable",
+              "manual",
+              "advisory"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "repair": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "repaired": {
+            "default": false,
+            "type": "boolean"
+          },
+          "durationMs": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "classification",
+          "message",
+          "repair",
+          "durationMs"
+        ]
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "repairable",
+        "manual",
+        "failed"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "platform",
+    "release",
+    "architecture",
+    "cpu",
+    "memoryGb",
+    "node",
+    "npm",
+    "git",
+    "claude",
+    "codex",
+    "playwright",
+    "packages",
+    "cloudSync",
+    "checks",
+    "status"
+  ]
+}

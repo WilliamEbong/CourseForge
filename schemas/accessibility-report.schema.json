@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/accessibility-report.schema.json",
+  "title": "accessibility-report",
+  "description": "review/accessibility-review.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "courseId": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "engine": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "viewport": {
+            "type": "number"
+          },
+          "violations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "impact": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "minor",
+                        "moderate",
+                        "serious",
+                        "critical"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "help": {
+                  "type": "string"
+                },
+                "helpUrl": {
+                  "type": "string"
+                },
+                "nodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "impact",
+                "help",
+                "helpUrl",
+                "nodes"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "viewport",
+          "violations"
+        ]
+      }
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "critical": {
+          "type": "number"
+        },
+        "serious": {
+          "type": "number"
+        },
+        "moderate": {
+          "type": "number"
+        },
+        "minor": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "critical",
+        "serious",
+        "moderate",
+        "minor"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "courseId",
+    "target",
+    "engine",
+    "tags",
+    "screens",
+    "totals"
+  ]
+}

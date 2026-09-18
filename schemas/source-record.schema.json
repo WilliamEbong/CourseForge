@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/source-record.schema.json",
+  "title": "source-record",
+  "description": "research/sources.jsonl line. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "title": {
+      "type": "string"
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "publisher": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "legislation",
+        "regulation",
+        "standard",
+        "government-guidance",
+        "professional-guidance",
+        "peer-reviewed",
+        "textbook",
+        "organization",
+        "dataset",
+        "news",
+        "internal",
+        "other"
+      ]
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "doi": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "date": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "accessed": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "jurisdiction": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "authority": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary",
+        "tertiary"
+      ]
+    },
+    "currentnessNotes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "licenseNotes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "author",
+    "publisher",
+    "type",
+    "url",
+    "doi",
+    "date",
+    "version",
+    "accessed",
+    "jurisdiction",
+    "authority",
+    "currentnessNotes",
+    "licenseNotes"
+  ],
+  "additionalProperties": false
+}

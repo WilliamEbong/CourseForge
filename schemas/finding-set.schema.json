@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/finding-set.schema.json",
+  "title": "finding-set",
+  "description": "Reviewer findings (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "blocker",
+              "critical",
+              "major",
+              "minor",
+              "style"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "accuracy",
+              "currentness",
+              "evidence",
+              "citation",
+              "completeness",
+              "scope",
+              "safety",
+              "alignment",
+              "instructional",
+              "cognitive-load",
+              "assessment",
+              "scenario",
+              "accessibility",
+              "editorial",
+              "consistency",
+              "visual",
+              "ui",
+              "ux",
+              "functional",
+              "performance",
+              "traceability",
+              "structure",
+              "other"
+            ]
+          },
+          "location": {
+            "type": "string"
+          },
+          "problem": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          }
+        },
+        "required": [
+          "severity",
+          "category",
+          "location",
+          "problem",
+          "evidence",
+          "recommendedAction",
+          "confidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "summary",
+    "findings"
+  ],
+  "additionalProperties": false
+}

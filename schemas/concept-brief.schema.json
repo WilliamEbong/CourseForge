@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/concept-brief.schema.json",
+  "title": "concept-brief",
+  "description": "CONCEPT stage output (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "targetDurationMinutes": {
+      "type": "integer"
+    },
+    "language": {
+      "type": "string"
+    },
+    "jurisdiction": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "riskTier": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "elevated",
+        "high_stakes"
+      ]
+    },
+    "riskRationale": {
+      "type": "string"
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "learningGoals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "highStakes": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "text",
+          "highStakes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outOfScope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "title",
+    "summary",
+    "audience",
+    "prerequisites",
+    "targetDurationMinutes",
+    "language",
+    "jurisdiction",
+    "riskTier",
+    "riskRationale",
+    "domains",
+    "learningGoals",
+    "assumptions",
+    "gaps",
+    "outOfScope"
+  ],
+  "additionalProperties": false
+}

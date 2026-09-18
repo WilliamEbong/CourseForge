@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/classify-visual-archetype.schema.json",
+  "title": "classify-visual-archetype",
+  "description": "Visual archetype classifier (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "string",
+      "enum": [
+        "PROCESS",
+        "LIFECYCLE",
+        "TIMELINE",
+        "HIERARCHY",
+        "DECISION_TREE",
+        "COMPARISON",
+        "BEFORE_AFTER",
+        "LAYERED_SYSTEM",
+        "RESPONSIBILITY_MAP",
+        "FEEDBACK_LOOP",
+        "CAUSE_EFFECT",
+        "CONTINUUM",
+        "MATRIX",
+        "LABELED_OBJECT",
+        "EVIDENCE_MAP",
+        "FUNNEL",
+        "RELATIONSHIP_NETWORK",
+        "QUANTITATIVE_CHART",
+        "SCENARIO_MAP",
+        "SYSTEM_ARCHITECTURE",
+        "SEQUENCE",
+        "STATE_DIAGRAM"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "value",
+    "confidence",
+    "evidence"
+  ],
+  "additionalProperties": false
+}

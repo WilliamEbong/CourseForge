@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/design-direction.schema.json",
+  "title": "design-direction",
+  "description": "Bounded visual direction. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "family": {
+      "type": "string",
+      "enum": [
+        "scientific-clinical",
+        "technical-industrial",
+        "corporate-professional",
+        "editorial-humanities",
+        "modern-technology",
+        "environmental-natural"
+      ]
+    },
+    "accentHue": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 345,
+      "multipleOf": 15
+    },
+    "density": {
+      "type": "string",
+      "enum": [
+        "comfortable",
+        "compact"
+      ]
+    },
+    "corner": {
+      "type": "string",
+      "enum": [
+        "sharp",
+        "soft",
+        "round"
+      ]
+    },
+    "typeScale": {
+      "type": "string",
+      "enum": [
+        "compact",
+        "default",
+        "generous"
+      ]
+    },
+    "figureStyle": {
+      "type": "string",
+      "enum": [
+        "line",
+        "filled"
+      ]
+    }
+  },
+  "required": [
+    "family",
+    "accentHue",
+    "density",
+    "corner",
+    "typeScale",
+    "figureStyle"
+  ],
+  "additionalProperties": false
+}

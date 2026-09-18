@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/course-manifest.schema.json",
+  "title": "course-manifest",
+  "description": "course.yaml. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "course": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "default": "en",
+          "type": "string"
+        },
+        "target_duration_minutes": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "audience": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "jurisdiction": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "risk_tier": {
+          "default": "standard",
+          "type": "string",
+          "enum": [
+            "standard",
+            "elevated",
+            "high_stakes"
+          ]
+        },
+        "risk_override": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "acknowledged"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ]
+    },
+    "pipeline": {
+      "default": {
+        "start_stage": "CONCEPT",
+        "target_stage": "RELEASE",
+        "agent_backend": "auto",
+        "backend_fallback": false,
+        "max_repair_cycles": null,
+        "visual_family": null
+      },
+      "type": "object",
+      "properties": {
+        "start_stage": {
+          "default": "CONCEPT",
+          "type": "string",
+          "enum": [
+            "CONCEPT",
+            "RESEARCH_BRIEF",
+            "RESEARCH_DOSSIER",
+            "INSTRUCTIONAL_DESIGN",
+            "STORYBOARD",
+            "EDITORIAL",
+            "VISUAL_DIRECTION",
+            "COURSE_MODEL",
+            "COURSE_BUILD",
+            "COURSE_QA",
+            "RELEASE"
+          ]
+        },
+        "target_stage": {
+          "default": "RELEASE",
+          "type": "string",
+          "enum": [
+            "CONCEPT",
+            "RESEARCH_BRIEF",
+            "RESEARCH_DOSSIER",
+            "INSTRUCTIONAL_DESIGN",
+            "STORYBOARD",
+            "EDITORIAL",
+            "VISUAL_DIRECTION",
+            "COURSE_MODEL",
+            "COURSE_BUILD",
+            "COURSE_QA",
+            "RELEASE"
+          ]
+        },
+        "agent_backend": {
+          "default": "auto",
+          "type": "string",
+          "enum": [
+            "auto",
+            "claude",
+            "codex"
+          ]
+        },
+        "backend_fallback": {
+          "default": false,
+          "type": "boolean"
+        },
+        "max_repair_cycles": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "visual_family": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "human_review": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "CONCEPT",
+          "RESEARCH_BRIEF",
+          "RESEARCH_DOSSIER",
+          "INSTRUCTIONAL_DESIGN",
+          "STORYBOARD",
+          "EDITORIAL",
+          "VISUAL_DIRECTION",
+          "COURSE_MODEL",
+          "COURSE_BUILD",
+          "COURSE_QA",
+          "RELEASE"
+        ]
+      },
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "hybrid",
+          "human"
+        ]
+      }
+    },
+    "improvement": {
+      "default": {
+        "preserve_human_edits": true,
+        "default_import_mode": "improve"
+      },
+      "type": "object",
+      "properties": {
+        "preserve_human_edits": {
+          "default": true,
+          "type": "boolean"
+        },
+        "default_import_mode": {
+          "default": "improve",
+          "type": "string",
+          "enum": [
+            "preserve",
+            "review-only",
+            "improve",
+            "rebuild"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "course"
+  ]
+}

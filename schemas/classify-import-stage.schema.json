@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/classify-import-stage.schema.json",
+  "title": "classify-import-stage",
+  "description": "Stage classifier (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "string",
+      "enum": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "value",
+    "confidence",
+    "evidence"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/tools-config.schema.json",
+  "title": "tools-config",
+  "description": "config/tools.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "tools": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "renderer",
+              "asset",
+              "qa",
+              "agent-tool",
+              "parser",
+              "bundler"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "package": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "agentTools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "kind",
+          "description",
+          "capabilities",
+          "required",
+          "package",
+          "agentTools"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "tools"
+  ],
+  "additionalProperties": false
+}

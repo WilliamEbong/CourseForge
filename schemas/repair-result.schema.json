@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/repair-result.schema.json",
+  "title": "repair-result",
+  "description": "Object replacements for JSON artifacts (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "replacements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "targetId": {
+            "type": "string"
+          },
+          "objectJson": {
+            "type": "string"
+          },
+          "actionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "targetId",
+          "objectJson",
+          "actionIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "replacements",
+    "notes"
+  ],
+  "additionalProperties": false
+}

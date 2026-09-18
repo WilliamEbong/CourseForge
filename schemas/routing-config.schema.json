@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/routing-config.schema.json",
+  "title": "routing-config",
+  "description": "config/routing.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "stageRoutes": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "CONCEPT",
+          "RESEARCH_BRIEF",
+          "RESEARCH_DOSSIER",
+          "INSTRUCTIONAL_DESIGN",
+          "STORYBOARD",
+          "EDITORIAL",
+          "VISUAL_DIRECTION",
+          "COURSE_MODEL",
+          "COURSE_BUILD",
+          "COURSE_QA",
+          "RELEASE"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "rule": {
+            "type": "string",
+            "pattern": "^STG-[A-Z_]+-\\d{3}$"
+          }
+        },
+        "required": [
+          "rule"
+        ],
+        "additionalProperties": false
+      },
+      "required": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "visualRoutes": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule": {
+            "type": "string",
+            "pattern": "^VIS-[A-Z0-9_]+-\\d{3}$"
+          },
+          "when": {
+            "type": "object",
+            "properties": {
+              "archetype": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "PROCESS",
+                      "LIFECYCLE",
+                      "TIMELINE",
+                      "HIERARCHY",
+                      "DECISION_TREE",
+                      "COMPARISON",
+                      "BEFORE_AFTER",
+                      "LAYERED_SYSTEM",
+                      "RESPONSIBILITY_MAP",
+                      "FEEDBACK_LOOP",
+                      "CAUSE_EFFECT",
+                      "CONTINUUM",
+                      "MATRIX",
+                      "LABELED_OBJECT",
+                      "EVIDENCE_MAP",
+                      "FUNNEL",
+                      "RELATIONSHIP_NETWORK",
+                      "QUANTITATIVE_CHART",
+                      "SCENARIO_MAP",
+                      "SYSTEM_ARCHITECTURE",
+                      "SEQUENCE",
+                      "STATE_DIAGRAM"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "interaction": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "reveal",
+                      "interactive-data"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "archetype",
+              "interaction"
+            ],
+            "additionalProperties": false
+          },
+          "primary": {
+            "type": "string",
+            "enum": [
+              "mermaid",
+              "cf_svg",
+              "svgjs",
+              "vega_lite",
+              "d3",
+              "lucide",
+              "text_equivalent"
+            ]
+          },
+          "fallbacks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "mermaid",
+                "cf_svg",
+                "svgjs",
+                "vega_lite",
+                "d3",
+                "lucide",
+                "text_equivalent"
+              ]
+            }
+          }
+        },
+        "required": [
+          "rule",
+          "when",
+          "primary",
+          "fallbacks"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "icons": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "components": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "version",
+    "stageRoutes",
+    "visualRoutes",
+    "icons",
+    "components"
+  ],
+  "additionalProperties": false
+}

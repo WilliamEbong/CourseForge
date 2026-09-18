@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/screenshot-manifest.schema.json",
+  "title": "screenshot-manifest",
+  "description": "review/screenshots/manifest.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "screenId": {
+            "type": "string"
+          },
+          "viewport": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "screenId",
+          "viewport",
+          "path",
+          "sha256",
+          "bytes"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "items"
+  ]
+}

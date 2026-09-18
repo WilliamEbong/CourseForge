@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/dossier-section.schema.json",
+  "title": "dossier-section",
+  "description": "One research dossier section with sources and claims (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "sectionId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "markdown": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publisher": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "legislation",
+              "regulation",
+              "standard",
+              "government-guidance",
+              "professional-guidance",
+              "peer-reviewed",
+              "textbook",
+              "organization",
+              "dataset",
+              "news",
+              "internal",
+              "other"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "doi": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "accessed": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "jurisdiction": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authority": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "secondary",
+              "tertiary"
+            ]
+          },
+          "currentnessNotes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "licenseNotes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "author",
+          "publisher",
+          "type",
+          "url",
+          "doi",
+          "date",
+          "version",
+          "accessed",
+          "jurisdiction",
+          "authority",
+          "currentnessNotes",
+          "licenseNotes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "law-regulation",
+              "scientific-technical",
+              "statistic",
+              "version-currentness",
+              "guidance-recommendation",
+              "definition",
+              "scenario-synthesis"
+            ]
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceId": {
+                  "type": "string"
+                },
+                "locator": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "sourceId",
+                "locator"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "sectionId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "jurisdiction": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "qualifications": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "category",
+          "citations",
+          "sectionId",
+          "jurisdiction",
+          "confidence",
+          "qualifications"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "sectionId",
+    "title",
+    "markdown",
+    "sources",
+    "claims"
+  ],
+  "additionalProperties": false
+}

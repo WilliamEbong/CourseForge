@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/instructional-design.schema.json",
+  "title": "instructional-design",
+  "description": "INSTRUCTIONAL_DESIGN stage output (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scopeBoundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "durationMinutes": {
+      "type": "integer"
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "verb": {
+            "type": "string"
+          },
+          "bloomLevel": {
+            "type": "string",
+            "enum": [
+              "remember",
+              "understand",
+              "apply",
+              "analyze",
+              "evaluate",
+              "create"
+            ]
+          },
+          "claimIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "statement",
+          "verb",
+          "bloomLevel",
+          "claimIds",
+          "sourceIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string"
+          },
+          "disposition": {
+            "type": "string",
+            "enum": [
+              "core",
+              "enrichment",
+              "reference",
+              "excluded"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "topic",
+          "disposition",
+          "reason",
+          "sourceIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "loIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contentSequence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "misconceptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "formativePractice": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "durationMinutes": {
+            "type": "integer"
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "purpose",
+          "loIds",
+          "contentSequence",
+          "misconceptions",
+          "examples",
+          "formativePractice",
+          "durationMinutes",
+          "sourceIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "alignment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "loId": {
+            "type": "string"
+          },
+          "moduleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "formativeMethod": {
+            "type": "string"
+          },
+          "gradedMethod": {
+            "type": "string"
+          },
+          "cognitiveLevel": {
+            "type": "string",
+            "enum": [
+              "remember",
+              "understand",
+              "apply",
+              "analyze",
+              "evaluate",
+              "create"
+            ]
+          }
+        },
+        "required": [
+          "loId",
+          "moduleIds",
+          "formativeMethod",
+          "gradedMethod",
+          "cognitiveLevel"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "assessmentStrategy": {
+      "type": "object",
+      "properties": {
+        "formativePerModule": {
+          "type": "integer"
+        },
+        "gradedItemCount": {
+          "type": "integer"
+        },
+        "passingPercent": {
+          "type": "integer"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "formativePerModule",
+        "gradedItemCount",
+        "passingPercent",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "scenarioStrategy": {
+      "type": "string"
+    },
+    "glossaryPlan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string"
+          },
+          "definition": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "term",
+          "definition"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidenceGaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description",
+          "impact",
+          "action"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "title",
+    "audience",
+    "prerequisites",
+    "scopeBoundaries",
+    "durationMinutes",
+    "objectives",
+    "dispositions",
+    "modules",
+    "alignment",
+    "assessmentStrategy",
+    "scenarioStrategy",
+    "glossaryPlan",
+    "evidenceGaps"
+  ],
+  "additionalProperties": false
+}

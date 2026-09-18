@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/research-brief.schema.json",
+  "title": "research-brief",
+  "description": "RESEARCH_BRIEF stage output (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "researchQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "core",
+              "supporting"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "question",
+          "priority"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sourceHierarchy": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer"
+          },
+          "sourceType": {
+            "type": "string",
+            "enum": [
+              "legislation",
+              "regulation",
+              "standard",
+              "government-guidance",
+              "professional-guidance",
+              "peer-reviewed",
+              "textbook",
+              "organization",
+              "dataset",
+              "news",
+              "internal",
+              "other"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "rank",
+          "sourceType",
+          "rationale"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "jurisdictions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "safetyBoundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dossierPlan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sectionId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "questionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sectionId",
+          "title",
+          "questionIds",
+          "notes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidenceRequirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "currentnessRequirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "title",
+    "purpose",
+    "audience",
+    "scope",
+    "exclusions",
+    "researchQuestions",
+    "sourceHierarchy",
+    "jurisdictions",
+    "safetyBoundaries",
+    "dossierPlan",
+    "evidenceRequirements",
+    "currentnessRequirements"
+  ],
+  "additionalProperties": false
+}

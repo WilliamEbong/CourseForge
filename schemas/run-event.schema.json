@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/run-event.schema.json",
+  "title": "run-event",
+  "description": "logs/run-events.jsonl line. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "ts": {
+      "type": "string",
+      "minLength": 10
+    },
+    "runId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stage": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CONCEPT",
+            "RESEARCH_BRIEF",
+            "RESEARCH_DOSSIER",
+            "INSTRUCTIONAL_DESIGN",
+            "STORYBOARD",
+            "EDITORIAL",
+            "VISUAL_DIRECTION",
+            "COURSE_MODEL",
+            "COURSE_BUILD",
+            "COURSE_QA",
+            "RELEASE"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "event": {
+      "type": "string"
+    },
+    "step": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "durationMs": {
+      "default": null,
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "detail": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "ts",
+    "runId",
+    "stage",
+    "event"
+  ]
+}

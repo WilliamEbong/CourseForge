@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/visual-spec.schema.json",
+  "title": "visual-spec",
+  "description": "One instructional visual specification (agent wire schema: strict subset). Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "archetype": {
+      "type": "string",
+      "enum": [
+        "PROCESS",
+        "LIFECYCLE",
+        "TIMELINE",
+        "HIERARCHY",
+        "DECISION_TREE",
+        "COMPARISON",
+        "BEFORE_AFTER",
+        "LAYERED_SYSTEM",
+        "RESPONSIBILITY_MAP",
+        "FEEDBACK_LOOP",
+        "CAUSE_EFFECT",
+        "CONTINUUM",
+        "MATRIX",
+        "LABELED_OBJECT",
+        "EVIDENCE_MAP",
+        "FUNNEL",
+        "RELATIONSHIP_NETWORK",
+        "QUANTITATIVE_CHART",
+        "SCENARIO_MAP",
+        "SYSTEM_ARCHITECTURE",
+        "SEQUENCE",
+        "STATE_DIAGRAM"
+      ]
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "group": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "detail",
+              "group",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "label",
+              "cells"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "axes": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "y": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ],
+          "additionalProperties": false
+        },
+        "chartType": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "bar",
+                "stacked-bar",
+                "line",
+                "area",
+                "point"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "links",
+        "groups",
+        "columns",
+        "rows",
+        "axes",
+        "chartType"
+      ],
+      "additionalProperties": false
+    },
+    "sourceIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "textEquivalent": {
+      "type": "object",
+      "properties": {
+        "short": {
+          "type": "string"
+        },
+        "long": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "short",
+        "long"
+      ],
+      "additionalProperties": false
+    },
+    "interaction": {
+      "type": "string",
+      "enum": [
+        "none",
+        "reveal",
+        "interactive-data"
+      ]
+    },
+    "rendererOverride": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "mermaid",
+            "cf_svg",
+            "svgjs",
+            "vega_lite",
+            "d3",
+            "lucide",
+            "text_equivalent"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mermaid": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "purpose",
+    "archetype",
+    "content",
+    "sourceIds",
+    "textEquivalent",
+    "interaction",
+    "rendererOverride",
+    "mermaid"
+  ],
+  "additionalProperties": false
+}

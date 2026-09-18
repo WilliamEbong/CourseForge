@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/build-report.schema.json",
+  "title": "build-report",
+  "description": "build/build-report.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "courseId": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "release",
+        "dev"
+      ]
+    },
+    "outputPath": {
+      "type": "string"
+    },
+    "outputHash": {
+      "type": "string"
+    },
+    "bytes": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "sizeBreakdown": {
+      "type": "object",
+      "properties": {
+        "html": {
+          "type": "number"
+        },
+        "css": {
+          "type": "number"
+        },
+        "js": {
+          "type": "number"
+        },
+        "data": {
+          "type": "number"
+        },
+        "svg": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "html",
+        "css",
+        "js",
+        "data",
+        "svg"
+      ]
+    },
+    "inputHashes": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "theme": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "contrast": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pair": {
+            "type": "string"
+          },
+          "scheme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark"
+            ]
+          },
+          "ratio": {
+            "type": "number"
+          },
+          "required": {
+            "type": "number"
+          },
+          "pass": {
+            "type": "boolean"
+          },
+          "adjusted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pair",
+          "scheme",
+          "ratio",
+          "required",
+          "pass",
+          "adjusted"
+        ]
+      }
+    },
+    "visuals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "visualId": {
+            "type": "string"
+          },
+          "archetype": {
+            "type": "string",
+            "enum": [
+              "PROCESS",
+              "LIFECYCLE",
+              "TIMELINE",
+              "HIERARCHY",
+              "DECISION_TREE",
+              "COMPARISON",
+              "BEFORE_AFTER",
+              "LAYERED_SYSTEM",
+              "RESPONSIBILITY_MAP",
+              "FEEDBACK_LOOP",
+              "CAUSE_EFFECT",
+              "CONTINUUM",
+              "MATRIX",
+              "LABELED_OBJECT",
+              "EVIDENCE_MAP",
+              "FUNNEL",
+              "RELATIONSHIP_NETWORK",
+              "QUANTITATIVE_CHART",
+              "SCENARIO_MAP",
+              "SYSTEM_ARCHITECTURE",
+              "SEQUENCE",
+              "STATE_DIAGRAM"
+            ]
+          },
+          "renderer": {
+            "type": "string",
+            "enum": [
+              "mermaid",
+              "cf_svg",
+              "svgjs",
+              "vega_lite",
+              "d3",
+              "lucide",
+              "text_equivalent"
+            ]
+          },
+          "rule": {
+            "type": "string"
+          },
+          "fallbackUsed": {
+            "type": "boolean"
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "renderer": {
+                  "type": "string",
+                  "enum": [
+                    "mermaid",
+                    "cf_svg",
+                    "svgjs",
+                    "vega_lite",
+                    "d3",
+                    "lucide",
+                    "text_equivalent"
+                  ]
+                },
+                "ok": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "renderer",
+                "ok",
+                "error"
+              ]
+            }
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "visualId",
+          "archetype",
+          "renderer",
+          "rule",
+          "fallbackUsed",
+          "attempts",
+          "bytes"
+        ]
+      }
+    },
+    "icons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "modules": {
+          "type": "number"
+        },
+        "screens": {
+          "type": "number"
+        },
+        "interactions": {
+          "type": "number"
+        },
+        "graded": {
+          "type": "number"
+        },
+        "visuals": {
+          "type": "number"
+        },
+        "glossary": {
+          "type": "number"
+        },
+        "references": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "modules",
+        "screens",
+        "interactions",
+        "graded",
+        "visuals",
+        "glossary",
+        "references"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pass": {
+            "type": "boolean"
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "pass",
+          "detail"
+        ]
+      }
+    },
+    "toolVersions": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "courseId",
+    "mode",
+    "outputPath",
+    "outputHash",
+    "bytes",
+    "sizeBreakdown",
+    "inputHashes",
+    "theme",
+    "contrast",
+    "visuals",
+    "icons",
+    "counts",
+    "checks",
+    "toolVersions"
+  ]
+}

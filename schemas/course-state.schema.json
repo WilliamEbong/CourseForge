@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/course-state.schema.json",
+  "title": "course-state",
+  "description": "state.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "courseId": {
+      "type": "string"
+    },
+    "currentStage": {
+      "type": "string",
+      "enum": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "targetStage": {
+      "type": "string",
+      "enum": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "activeRunId": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "canonicalArtifacts": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "stages": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "CONCEPT",
+          "RESEARCH_BRIEF",
+          "RESEARCH_DOSSIER",
+          "INSTRUCTIONAL_DESIGN",
+          "STORYBOARD",
+          "EDITORIAL",
+          "VISUAL_DIRECTION",
+          "COURSE_MODEL",
+          "COURSE_BUILD",
+          "COURSE_QA",
+          "RELEASE"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "default": "NOT_STARTED",
+            "type": "string",
+            "enum": [
+              "NOT_STARTED",
+              "INGESTED",
+              "VALIDATING",
+              "GENERATING",
+              "REVIEWING",
+              "REPAIRING",
+              "WAITING_FOR_HUMAN",
+              "APPROVED",
+              "LOCKED",
+              "FAILED",
+              "SUPERSEDED"
+            ]
+          },
+          "mode": {
+            "default": "generate",
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "preserve",
+                  "review-only",
+                  "improve",
+                  "rebuild"
+                ]
+              },
+              {
+                "type": "string",
+                "const": "generate"
+              }
+            ]
+          },
+          "planId": {
+            "default": null,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cyclesUsed": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "completedSteps": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gate": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "auto",
+                      "hybrid",
+                      "human"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "approved",
+                      "rejected"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "policy",
+                      "high_stakes",
+                      "cycle_cap",
+                      "lock_conflict",
+                      "low_confidence",
+                      "upstream_changed",
+                      "validator_failed"
+                    ]
+                  },
+                  "openedAt": {
+                    "type": "string",
+                    "minLength": 10
+                  },
+                  "decidedAt": {
+                    "default": null,
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 10
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "decidedBy": {
+                    "default": null,
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "reportPath": {
+                    "default": null,
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "instructions": {
+                    "default": null,
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "comments": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "at": {
+                          "type": "string",
+                          "minLength": 10
+                        },
+                        "by": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "targetId": {
+                          "default": null,
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "at",
+                        "by",
+                        "text"
+                      ]
+                    }
+                  },
+                  "findingDecisions": {
+                    "default": {},
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "string",
+                      "enum": [
+                        "accepted",
+                        "rejected"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "mode",
+                  "status",
+                  "reason",
+                  "openedAt"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stale": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "because": {
+                    "type": "string"
+                  },
+                  "at": {
+                    "type": "string",
+                    "minLength": 10
+                  }
+                },
+                "required": [
+                  "because",
+                  "at"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "failure": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "authentication_failed",
+                      "rate_limit",
+                      "overloaded",
+                      "billing_error",
+                      "invalid_request",
+                      "model_not_found",
+                      "server_error",
+                      "max_output_tokens",
+                      "timeout",
+                      "schema_invalid",
+                      "process_error",
+                      "unavailable",
+                      "unknown",
+                      "write_violation",
+                      "lock_violation",
+                      "validator_failed",
+                      "cycle_cap",
+                      "input_invalid",
+                      "renderer_failed",
+                      "qa_failed",
+                      "internal"
+                    ]
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "at": {
+                    "type": "string",
+                    "minLength": 10
+                  }
+                },
+                "required": [
+                  "kind",
+                  "message",
+                  "at"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastRunId": {
+            "default": null,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 10
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "updatedAt": {
+      "type": "string",
+      "minLength": 10
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "courseId",
+    "currentStage",
+    "targetStage",
+    "stages",
+    "updatedAt"
+  ]
+}

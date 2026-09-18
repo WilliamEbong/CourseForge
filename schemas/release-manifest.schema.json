@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/release-manifest.schema.json",
+  "title": "release-manifest",
+  "description": "release/release-manifest.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "courseId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "releaseVersion": {
+      "type": "string"
+    },
+    "releasedAt": {
+      "type": "string"
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "block"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "OPEN_BLOCKING_FINDING",
+                  "AXE_BLOCKING_VIOLATION",
+                  "FUNCTIONAL_FAILURE",
+                  "MISSING_ARTIFACT",
+                  "CITATION_INTEGRITY",
+                  "LOCK_CONFLICT",
+                  "CYCLES_EXHAUSTED",
+                  "ORIGINAL_MODIFIED",
+                  "BUILD_CHECK_FAILED",
+                  "HUMAN_APPROVAL_REQUIRED"
+                ]
+              },
+              "findingIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "detail": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "findingIds",
+              "detail"
+            ]
+          }
+        }
+      },
+      "required": [
+        "decision",
+        "reasons"
+      ]
+    },
+    "backends": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ]
+      }
+    },
+    "toolVersions": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifactId": {
+            "type": "string"
+          },
+          "logicalKey": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifactId",
+          "logicalKey",
+          "path",
+          "hash",
+          "label"
+        ]
+      }
+    },
+    "findings": {
+      "type": "object",
+      "properties": {
+        "open": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "blocker",
+              "critical",
+              "major",
+              "minor",
+              "style"
+            ]
+          },
+          "additionalProperties": {
+            "type": "number"
+          },
+          "required": [
+            "blocker",
+            "critical",
+            "major",
+            "minor",
+            "style"
+          ]
+        },
+        "accepted": {
+          "type": "number"
+        },
+        "waived": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "open",
+        "accepted",
+        "waived"
+      ]
+    },
+    "trace": {
+      "type": "object",
+      "properties": {
+        "objectives": {
+          "type": "number"
+        },
+        "screens": {
+          "type": "number"
+        },
+        "assessedObjectives": {
+          "type": "number"
+        },
+        "unassessedObjectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "danglingReferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourcesCited": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "objectives",
+        "screens",
+        "assessedObjectives",
+        "unassessedObjectives",
+        "danglingReferences",
+        "sourcesCited"
+      ]
+    },
+    "riskTier": {
+      "type": "string"
+    },
+    "riskOverride": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "humanApprovals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "CONCEPT",
+              "RESEARCH_BRIEF",
+              "RESEARCH_DOSSIER",
+              "INSTRUCTIONAL_DESIGN",
+              "STORYBOARD",
+              "EDITORIAL",
+              "VISUAL_DIRECTION",
+              "COURSE_MODEL",
+              "COURSE_BUILD",
+              "COURSE_QA",
+              "RELEASE"
+            ]
+          },
+          "by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "stage",
+          "by",
+          "at"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "courseId",
+    "title",
+    "releaseVersion",
+    "releasedAt",
+    "file",
+    "decision",
+    "backends",
+    "toolVersions",
+    "artifacts",
+    "findings",
+    "trace",
+    "riskTier",
+    "riskOverride",
+    "humanApprovals"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/routing-decision.schema.json",
+  "title": "routing-decision",
+  "description": "logs/routing-decisions.jsonl line. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "ts": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "planId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stage": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CONCEPT",
+            "RESEARCH_BRIEF",
+            "RESEARCH_DOSSIER",
+            "INSTRUCTIONAL_DESIGN",
+            "STORYBOARD",
+            "EDITORIAL",
+            "VISUAL_DIRECTION",
+            "COURSE_MODEL",
+            "COURSE_BUILD",
+            "COURSE_QA",
+            "RELEASE"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "stage",
+        "visual",
+        "backend",
+        "fallback",
+        "classification",
+        "gate",
+        "reviewer",
+        "skill",
+        "tool"
+      ]
+    },
+    "subject": {
+      "type": "string"
+    },
+    "input": {
+      "type": "string"
+    },
+    "selected": {
+      "type": "string"
+    },
+    "rule": {
+      "type": "string"
+    },
+    "fallback": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "ts",
+    "runId",
+    "planId",
+    "stage",
+    "kind",
+    "subject",
+    "input",
+    "selected",
+    "rule",
+    "fallback",
+    "reason"
+  ]
+}
