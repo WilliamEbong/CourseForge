@@ -1,0 +1,144 @@
+{
+  "stage": "STORYBOARD",
+  "cycle": 1,
+  "lockedIds": ["Q-02"],
+  "humanDecisions": { "SB-C1-010": "rejected", "SB-C1-005": "accepted" },
+  "repairSeverities": ["blocker", "critical", "major", "minor"],
+  "reviews": [
+    {
+      "reviewer": "safety-reviewer",
+      "artifactId": "ART-SB",
+      "set": {
+        "summary": "One blocker on respirator guidance.",
+        "findings": [
+          {
+            "severity": "blocker",
+            "category": "safety",
+            "location": "B-07",
+            "problem": "The warning block understates respirator fit testing requirements.",
+            "evidence": ["AB-OHS-4 s.250"],
+            "recommendedAction": "State that fit testing is required before first use.",
+            "confidence": "high"
+          },
+          {
+            "severity": "minor",
+            "category": "safety",
+            "location": "B-09",
+            "problem": "Glove material is not named.",
+            "evidence": [],
+            "recommendedAction": "Name nitrile gloves.",
+            "confidence": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "reviewer": "accuracy-reviewer",
+      "artifactId": "ART-SB",
+      "set": {
+        "summary": "Two accuracy issues.",
+        "findings": [
+          {
+            "severity": "major",
+            "category": "accuracy",
+            "location": "B-03",
+            "problem": "The claim about employer duties omits the qualification in section 21.",
+            "evidence": ["AB-OHS-4 s.21"],
+            "recommendedAction": "Restore the qualification from section 21 to the employer duties statement.",
+            "confidence": "high"
+          },
+          {
+            "severity": "critical",
+            "category": "safety",
+            "location": "B-07",
+            "problem": "Warning block understates respirator fit testing requirements",
+            "evidence": ["CLM-0012"],
+            "recommendedAction": "Require fit testing before first use.",
+            "confidence": "high"
+          }
+        ]
+      }
+    },
+    {
+      "reviewer": "instructional-reviewer",
+      "artifactId": "ART-SB",
+      "set": {
+        "summary": "Examples and distractors need work.",
+        "findings": [
+          {
+            "severity": "major",
+            "category": "instructional",
+            "location": "B-05",
+            "problem": "The concept is introduced without a worked example.",
+            "evidence": ["LO2"],
+            "recommendedAction": "Expand the block with a worked example of a hazard assessment.",
+            "confidence": "medium"
+          },
+          {
+            "severity": "major",
+            "category": "assessment",
+            "location": "Q-02",
+            "problem": "Distractor C is implausible.",
+            "evidence": ["LO3"],
+            "recommendedAction": "Replace distractor C with a plausible misconception.",
+            "confidence": "low"
+          }
+        ]
+      }
+    },
+    {
+      "reviewer": "citation-reviewer",
+      "artifactId": "ART-SB",
+      "set": {
+        "summary": "Citation locators incomplete.",
+        "findings": [
+          {
+            "severity": "minor",
+            "category": "citation",
+            "location": "B-03",
+            "problem": "Missing pinpoint locator on the AB-OHS-4 citation.",
+            "evidence": ["AB-OHS-4"],
+            "recommendedAction": "Add the section 21 locator to the employer duties citation.",
+            "confidence": "high"
+          },
+          {
+            "severity": "major",
+            "category": "accuracy",
+            "location": "B-03",
+            "problem": "Claim about employer duties omits the qualification in section 21",
+            "evidence": ["CLM-0004", "AB-OHS-4 s.21"],
+            "recommendedAction": "Add the section 21 qualification.",
+            "confidence": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "reviewer": "editorial-reviewer",
+      "artifactId": "ART-SB",
+      "set": {
+        "summary": "Density and consistency.",
+        "findings": [
+          {
+            "severity": "minor",
+            "category": "editorial",
+            "location": "B-05",
+            "problem": "The paragraph is too long and dense for a single screen.",
+            "evidence": [],
+            "recommendedAction": "Remove the second paragraph.",
+            "confidence": "medium"
+          },
+          {
+            "severity": "style",
+            "category": "editorial",
+            "location": "global",
+            "problem": "Inconsistent capitalisation of headings.",
+            "evidence": [],
+            "recommendedAction": "Use sentence case.",
+            "confidence": "high"
+          }
+        ]
+      }
+    }
+  ]
+}
