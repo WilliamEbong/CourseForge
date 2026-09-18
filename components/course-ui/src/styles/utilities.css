@@ -1,0 +1,92 @@
+/* CourseForge course UI — utilities and print. */
+@layer cf.utilities {
+  .cf-sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+  .cf-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  @media (forced-colors: active) {
+    .cf-progress-bar,
+    .cf-choice-mark,
+    .cf-nav-status {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+    .cf-choice,
+    .cf-callout,
+    .cf-fb {
+      border: 1px solid CanvasText;
+    }
+  }
+
+  /* Print linearises the whole course: every screen, no chrome, no controls. */
+  @media print {
+    :root {
+      --cf-bg: #fff;
+      --cf-surface: #fff;
+      --cf-fg: #000;
+      font-size: 11pt;
+    }
+    .cf-header,
+    .cf-sidebar,
+    .cf-pager,
+    .cf-dialog,
+    .cf-toast,
+    .cf-q-actions,
+    .cf-feedback,
+    .cf-results-actions,
+    .cf-skip {
+      display: none !important;
+    }
+    .cf-layout {
+      display: block !important;
+    }
+    .cf-main,
+    .cf-stage {
+      display: block;
+      max-width: none;
+      padding: 0;
+      min-height: 0;
+    }
+    .cf-screen,
+    .cf-screen[hidden] {
+      display: block !important;
+      animation: none !important;
+      break-inside: auto;
+      margin-bottom: 2rem;
+    }
+    .cf-screen--module-landing {
+      break-before: page;
+    }
+    .cf-screen--module-landing:first-child {
+      break-before: auto;
+    }
+    .cf-question,
+    .cf-figure,
+    .cf-callout,
+    .cf-card {
+      box-shadow: none !important;
+      break-inside: avoid;
+    }
+    .cf-screen-title {
+      font-size: 18pt;
+    }
+    a[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.85em;
+      color: #333;
+    }
+  }
+}

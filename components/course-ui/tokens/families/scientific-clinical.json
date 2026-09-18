@@ -1,0 +1,519 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "Precise, calm and evidence-forward. Cool clinical neutrals, crisp sans headings, restrained accent, tabular mono for data.",
+  "meta": {
+    "label": {
+      "$type": "string",
+      "$value": "Scientific / Clinical"
+    },
+    "defaultAccentHue": {
+      "$type": "number",
+      "$value": 195
+    }
+  },
+  "color": {
+    "light": {
+      "bg": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.975, 0.006, 230]
+        }
+      },
+      "surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [1, 0, 230]
+        }
+      },
+      "surface-2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.955, 0.0078, 230]
+        }
+      },
+      "fg": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.235, 0.0132, 230]
+        }
+      },
+      "fg-muted": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.475, 0.0132, 230]
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.9, 0.009, 230]
+        }
+      },
+      "control-border": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.62, 0.012, 230]
+        }
+      }
+    },
+    "dark": {
+      "bg": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.165, 0.014, 230]
+        }
+      },
+      "surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.2, 0.0154, 230]
+        }
+      },
+      "surface-2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.24, 0.0168, 230]
+        }
+      },
+      "fg": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.94, 0.007, 230]
+        }
+      },
+      "fg-muted": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.77, 0.014, 230]
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.31, 0.0168, 230]
+        }
+      },
+      "control-border": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.56, 0.0168, 230]
+        }
+      }
+    },
+    "accent": {
+      "chroma": {
+        "$type": "number",
+        "$value": 0.105
+      },
+      "lightness": {
+        "light": {
+          "$type": "number",
+          "$value": 0.5
+        },
+        "dark": {
+          "$type": "number",
+          "$value": 0.8
+        }
+      },
+      "softLightness": {
+        "light": {
+          "$type": "number",
+          "$value": 0.958
+        },
+        "dark": {
+          "$type": "number",
+          "$value": 0.3
+        }
+      }
+    },
+    "status": {
+      "light": {
+        "success": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.5, 0.12, 152]
+          }
+        },
+        "warning": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.53, 0.12, 62]
+          }
+        },
+        "danger": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.52, 0.17, 27]
+          }
+        },
+        "info": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.5, 0.11, 250]
+          }
+        }
+      },
+      "dark": {
+        "success": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.78, 0.1, 152]
+          }
+        },
+        "warning": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.8, 0.1, 75]
+          }
+        },
+        "danger": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.76, 0.1, 25]
+          }
+        },
+        "info": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.78, 0.09, 250]
+          }
+        }
+      }
+    },
+    "viz": {
+      "light": {
+        "viz-1": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.12, 200]
+          }
+        },
+        "viz-2": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.12, 255]
+          }
+        },
+        "viz-3": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.12, 28]
+          }
+        },
+        "viz-4": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.12, 150]
+          }
+        },
+        "viz-5": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.12, 305]
+          }
+        },
+        "viz-6": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.12, 75]
+          }
+        }
+      },
+      "dark": {
+        "viz-1": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.74, 0.11, 200]
+          }
+        },
+        "viz-2": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.74, 0.11, 255]
+          }
+        },
+        "viz-3": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.74, 0.11, 28]
+          }
+        },
+        "viz-4": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.74, 0.11, 150]
+          }
+        },
+        "viz-5": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.74, 0.11, 305]
+          }
+        },
+        "viz-6": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.74, 0.11, 75]
+          }
+        }
+      }
+    }
+  },
+  "font": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI Variable Text",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    "serif": {
+      "$type": "fontFamily",
+      "$value": ["Charter", "Bitstream Charter", "Sitka Text", "Cambria", "Georgia", "serif"]
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": ["Cascadia Mono", "SF Mono", "ui-monospace", "Menlo", "Consolas", "Liberation Mono", "monospace"]
+    },
+    "body": {
+      "$type": "fontFamily",
+      "$value": [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI Variable Text",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    "heading": {
+      "$type": "fontFamily",
+      "$value": [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI Variable Display",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    "headingWeight": {
+      "$type": "fontWeight",
+      "$value": 650
+    },
+    "headingTracking": {
+      "$type": "dimension",
+      "$value": {
+        "value": -0.018,
+        "unit": "em"
+      }
+    },
+    "eyebrowCase": {
+      "$type": "string",
+      "$value": "uppercase"
+    }
+  },
+  "type": {
+    "base": {
+      "$type": "dimension",
+      "$value": {
+        "value": 17,
+        "unit": "px"
+      }
+    },
+    "lineHeight": {
+      "$type": "number",
+      "$value": 1.65
+    },
+    "headingLineHeight": {
+      "$type": "number",
+      "$value": 1.2
+    },
+    "ratio": {
+      "compact": {
+        "$type": "number",
+        "$value": 1.18
+      },
+      "default": {
+        "$type": "number",
+        "$value": 1.24
+      },
+      "generous": {
+        "$type": "number",
+        "$value": 1.3
+      }
+    }
+  },
+  "space": {
+    "unit": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      }
+    }
+  },
+  "radius": {
+    "sharp": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      }
+    },
+    "soft": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      }
+    },
+    "round": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "shadow": {
+    "light": {
+      "1": {
+        "$type": "string",
+        "$value": "0 1px 2px rgb(15 30 45 / 0.06), 0 1px 3px rgb(15 30 45 / 0.08)",
+        "$description": "CSS box-shadow"
+      },
+      "2": {
+        "$type": "string",
+        "$value": "0 4px 12px rgb(15 30 45 / 0.08), 0 16px 40px rgb(15 30 45 / 0.10)",
+        "$description": "CSS box-shadow"
+      }
+    },
+    "dark": {
+      "1": {
+        "$type": "string",
+        "$value": "0 1px 2px rgb(0 0 0 / 0.5)",
+        "$description": "CSS box-shadow"
+      },
+      "2": {
+        "$type": "string",
+        "$value": "0 8px 28px rgb(0 0 0 / 0.55)",
+        "$description": "CSS box-shadow"
+      }
+    }
+  },
+  "motion": {
+    "duration": {
+      "fast": {
+        "$type": "duration",
+        "$value": {
+          "value": 120,
+          "unit": "ms"
+        }
+      },
+      "base": {
+        "$type": "duration",
+        "$value": {
+          "value": 200,
+          "unit": "ms"
+        }
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "$value": [0.2, 0, 0, 1]
+    }
+  }
+}

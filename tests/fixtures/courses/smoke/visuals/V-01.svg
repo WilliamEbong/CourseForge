@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 262" role="img" aria-labelledby="cf-V-01-t cf-V-01-d">
+<title id="cf-V-01-t">The 60-second SDS scan</title>
+<desc id="cf-V-01-d">Four steps in order: confirm identity (Section 1), read the hazards (Section 2), check controls (Section 8), emergency steps (Sections 4 and 6).</desc>
+<style>
+.cf-V-01-card{fill:var(--cf-surface-2,#f1f4f6);stroke:var(--cf-border,#d5dde2);stroke-width:1.5}
+.cf-V-01-num{fill:var(--cf-accent,#0b7285)}
+.cf-V-01-numt{fill:var(--cf-accent-fg,#fff);font-weight:700;font-size:16px;text-anchor:middle}
+.cf-V-01-lab{fill:var(--cf-fg,#1b2530);font-weight:650;font-size:18px}
+.cf-V-01-det{fill:var(--cf-fg-muted,#56616b);font-size:15px}
+.cf-V-01-arrow{fill:none;stroke:var(--cf-fg-muted,#56616b);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cf-V-01-head{fill:var(--cf-fg-muted,#56616b)}
+</style>
+<defs><marker id="cf-V-01-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="cf-V-01-head" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="cf-V-01-card" x="6" y="6" width="226" height="104" rx="12"/>
+<circle class="cf-V-01-num" cx="38" cy="42" r="17"/><text class="cf-V-01-numt" x="38" y="48">1</text>
+<text class="cf-V-01-lab" x="66" y="48">Confirm identity</text><text class="cf-V-01-det" x="66" y="76">Section 1</text>
+<rect class="cf-V-01-card" x="288" y="6" width="226" height="104" rx="12"/>
+<circle class="cf-V-01-num" cx="320" cy="42" r="17"/><text class="cf-V-01-numt" x="320" y="48">2</text>
+<text class="cf-V-01-lab" x="348" y="48">Read the hazards</text><text class="cf-V-01-det" x="348" y="76">Section 2</text>
+<rect class="cf-V-01-card" x="6" y="152" width="226" height="104" rx="12"/>
+<circle class="cf-V-01-num" cx="38" cy="188" r="17"/><text class="cf-V-01-numt" x="38" y="194">3</text>
+<text class="cf-V-01-lab" x="66" y="194">Check controls</text><text class="cf-V-01-det" x="66" y="222">Section 8</text>
+<rect class="cf-V-01-card" x="288" y="152" width="226" height="104" rx="12"/>
+<circle class="cf-V-01-num" cx="320" cy="188" r="17"/><text class="cf-V-01-numt" x="320" y="194">4</text>
+<text class="cf-V-01-lab" x="348" y="194">Emergency steps</text><text class="cf-V-01-det" x="348" y="222">Sections 4 and 6</text>
+<path class="cf-V-01-arrow" d="M240 58H278" marker-end="url(#cf-V-01-m)"/>
+<path class="cf-V-01-arrow" d="M401 116V131H119V144" marker-end="url(#cf-V-01-m)"/>
+<path class="cf-V-01-arrow" d="M240 204H278" marker-end="url(#cf-V-01-m)"/>
+</svg>

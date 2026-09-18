@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 236" role="img" aria-labelledby="cf-V-03-t cf-V-03-d">
+<title id="cf-V-03-t">Three exposure limits for acetone</title>
+<desc id="cf-V-03-d">Horizontal bar chart of 8-hour limits in ppm: OSHA PEL 1,000; NIOSH REL 250; ACGIH TLV 250.</desc>
+<style>
+.cf-V-03-grid{stroke:var(--cf-border,#d5dde2);stroke-width:1}
+.cf-V-03-axis{stroke:var(--cf-fg-muted,#56616b);stroke-width:1.5}
+.cf-V-03-b1{fill:var(--cf-viz-1,#0b7285)}
+.cf-V-03-b2{fill:var(--cf-viz-2,#2f6db5)}
+.cf-V-03-lab{fill:var(--cf-fg,#1b2530);font-weight:650;font-size:15px}
+.cf-V-03-sub{fill:var(--cf-fg-muted,#56616b);font-size:13px}
+.cf-V-03-val{fill:var(--cf-fg,#1b2530);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.cf-V-03-tick{fill:var(--cf-fg-muted,#56616b);font-size:12px;text-anchor:middle}
+</style>
+<line class="cf-V-03-grid" x1="140" y1="12" x2="140" y2="196"/>
+<line class="cf-V-03-grid" x1="222.5" y1="12" x2="222.5" y2="196"/>
+<line class="cf-V-03-grid" x1="305" y1="12" x2="305" y2="196"/>
+<line class="cf-V-03-grid" x1="387.5" y1="12" x2="387.5" y2="196"/>
+<line class="cf-V-03-grid" x1="470" y1="12" x2="470" y2="196"/>
+<text class="cf-V-03-lab" x="0" y="42">OSHA PEL</text><text class="cf-V-03-sub" x="0" y="60">enforceable</text>
+<rect class="cf-V-03-b1" x="140" y="26" width="330" height="36" rx="4"/>
+<text class="cf-V-03-val" x="476" y="49">1,000</text>
+<text class="cf-V-03-lab" x="0" y="102">NIOSH REL</text><text class="cf-V-03-sub" x="0" y="120">recommended</text>
+<rect class="cf-V-03-b2" x="140" y="86" width="82.5" height="36" rx="4"/>
+<text class="cf-V-03-val" x="230" y="109">250</text>
+<text class="cf-V-03-lab" x="0" y="162">ACGIH TLV</text><text class="cf-V-03-sub" x="0" y="180">recommended</text>
+<rect class="cf-V-03-b2" x="140" y="146" width="82.5" height="36" rx="4"/>
+<text class="cf-V-03-val" x="230" y="169">250</text>
+<line class="cf-V-03-axis" x1="140" y1="196" x2="470" y2="196"/>
+<text class="cf-V-03-tick" x="140" y="214">0</text>
+<text class="cf-V-03-tick" x="222.5" y="214">250</text>
+<text class="cf-V-03-tick" x="305" y="214">500</text>
+<text class="cf-V-03-tick" x="387.5" y="214">750</text>
+<text class="cf-V-03-tick" x="470" y="214">1,000</text>
+<text class="cf-V-03-tick" x="305" y="232">ppm, 8-hour time-weighted average</text>
+</svg>

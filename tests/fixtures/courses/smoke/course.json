@@ -1,0 +1,1333 @@
+{
+  "schemaVersion": "1",
+  "courseId": "smoke-sds",
+  "title": "Reading a Safety Data Sheet",
+  "subtitle": "Find what you need, when you need it",
+  "language": "en",
+  "estimatedMinutes": 20,
+  "version": "1.0.0",
+  "theme": {
+    "family": "scientific-clinical",
+    "accentHue": 195,
+    "density": "comfortable",
+    "corner": "soft",
+    "typeScale": "default",
+    "figureStyle": "line"
+  },
+  "objectives": [
+    {
+      "id": "LO1",
+      "text": "Explain what a Safety Data Sheet is for and who must provide and keep it."
+    },
+    {
+      "id": "LO2",
+      "text": "Locate key information quickly using the 16-section SDS format."
+    },
+    {
+      "id": "LO3",
+      "text": "Distinguish the information on a container label from the information on an SDS."
+    },
+    {
+      "id": "LO4",
+      "text": "Use the SDS to decide on safe immediate actions in a workplace situation."
+    }
+  ],
+  "modules": [
+    {
+      "id": "M1",
+      "title": "What an SDS is for",
+      "summary": "The purpose, the legal duties and the fixed structure that makes every SDS searchable.",
+      "role": "topic",
+      "loIds": [
+        "LO1",
+        "LO2"
+      ],
+      "screenIds": [
+        "SDS-01",
+        "SDS-02",
+        "SDS-03",
+        "SDS-04",
+        "SDS-05",
+        "SDS-06"
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Using an SDS at work",
+      "summary": "A fast, repeatable way to read an SDS, and where its limits are.",
+      "role": "topic",
+      "loIds": [
+        "LO2",
+        "LO3",
+        "LO4"
+      ],
+      "screenIds": [
+        "SDS-07",
+        "SDS-08",
+        "SDS-09",
+        "SDS-10",
+        "SDS-11",
+        "SDS-12",
+        "SDS-13",
+        "SDS-14",
+        "SDS-15",
+        "SDS-16"
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Assessment",
+      "summary": "Three questions across both modules.",
+      "role": "graded",
+      "loIds": [
+        "LO2",
+        "LO3",
+        "LO4"
+      ],
+      "screenIds": [
+        "SDS-17",
+        "SDS-18",
+        "SDS-19",
+        "SDS-20",
+        "SDS-21"
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "id": "SDS-01",
+      "index": 0,
+      "moduleId": "M1",
+      "kind": "topic-title",
+      "component": "module-landing",
+      "title": "Why the Safety Data Sheet matters",
+      "subtype": null,
+      "optional": false,
+      "body": "Every hazardous chemical in your workplace comes with a document that answers the questions you will have on a bad day: *What is this? How can it hurt me? What do I do right now?* This module explains what that document is, who has to provide it, and how its fixed structure lets you find answers in seconds.",
+      "treatment": "",
+      "loIds": [
+        "LO1",
+        "LO2"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-02",
+      "index": 1,
+      "moduleId": "M1",
+      "kind": "content",
+      "component": "content",
+      "title": "One format, sixteen sections",
+      "subtype": null,
+      "optional": false,
+      "body": "A **Safety Data Sheet** (SDS) is written by the chemical manufacturer, importer or distributor and travels with the product. Under the Hazard Communication Standard every SDS uses the same sixteen numbered sections in the same order, aligned with the GHS, so the answer to a given question is always in the same place — whichever supplier wrote it.\n\nSections 1–8 cover what most workers need in the moment:\n\n- **1 Identification** and **2 Hazard(s) identification** — what it is and how it can harm you\n- **4 First-aid measures**, **5 Fire-fighting measures** and **6 Accidental release measures** — what to do when something goes wrong\n- **7 Handling and storage** and **8 Exposure controls/personal protection** — how to work with it safely\n\nSections 9–16 carry the technical detail specialists use, ending with the date the sheet was prepared or last revised.",
+      "treatment": "",
+      "loIds": [
+        "LO1",
+        "LO2"
+      ],
+      "claimIds": [
+        "CLM-0001",
+        "CLM-0002"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(g)(2)"
+        },
+        {
+          "sourceId": "SRC-UN-GHS",
+          "locator": "Annex 4"
+        }
+      ],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-03",
+      "index": 2,
+      "moduleId": "M1",
+      "kind": "concept",
+      "component": "concept",
+      "title": "Hazard is not the same as risk",
+      "subtype": null,
+      "optional": false,
+      "body": "A **hazard** is the potential of a chemical to cause harm — it is flammable, corrosive, toxic if inhaled. That is fixed by the chemical itself and it is what the SDS describes.\n\n**Risk** is the chance that the harm actually happens *in your task*: how much you use, for how long, with what ventilation and protection. The same solvent is a very different risk in a sealed dispensing system than in an open bucket in a small room.\n\nThe SDS tells you the hazard and the controls that work. Judging the risk of your specific task is still your job and your employer’s.",
+      "treatment": "",
+      "loIds": [
+        "LO1"
+      ],
+      "claimIds": [
+        "CLM-0003"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-BRIEF",
+          "locator": "p.1"
+        }
+      ],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-04",
+      "index": 3,
+      "moduleId": "M1",
+      "kind": "evidence",
+      "component": "evidence-callout",
+      "title": "What the regulation requires",
+      "subtype": null,
+      "optional": false,
+      "body": "The Hazard Communication Standard places two duties side by side:\n\n1. Chemical manufacturers and importers must obtain or develop an SDS for each hazardous chemical they produce or import.\n2. Employers must keep a copy for each hazardous chemical they use and make it **readily accessible during each work shift** to employees in their work areas.\n\nElectronic access is acceptable, provided there are no barriers to immediate access.",
+      "treatment": "",
+      "loIds": [
+        "LO1"
+      ],
+      "claimIds": [
+        "CLM-0004",
+        "CLM-0005"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(g)(1)"
+        },
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(g)(8)"
+        }
+      ],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-05",
+      "index": 4,
+      "moduleId": "M1",
+      "kind": "formative",
+      "component": "question",
+      "title": "Where would you look first?",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO2"
+      ],
+      "claimIds": [],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "Appendix D"
+        }
+      ],
+      "visualId": null,
+      "interaction": {
+        "mode": "single",
+        "stem": "A colleague has red, itching skin after handling a cleaning concentrate. Which SDS section tells you what to do **right now**?",
+        "options": [
+          {
+            "key": "a",
+            "text": "Section 2 — Hazard(s) identification"
+          },
+          {
+            "key": "b",
+            "text": "Section 4 — First-aid measures"
+          },
+          {
+            "key": "c",
+            "text": "Section 8 — Exposure controls/personal protection"
+          },
+          {
+            "key": "d",
+            "text": "Section 11 — Toxicological information"
+          }
+        ],
+        "targets": [],
+        "correctKeys": [
+          "b"
+        ],
+        "mapping": [],
+        "order": [],
+        "feedbackCorrect": "Yes. Section 4 gives the immediate steps by route of exposure — skin, eyes, inhalation, ingestion — and when to seek medical attention.",
+        "feedbackIncorrect": "Not quite. For immediate action, go to the section written for exactly that moment.",
+        "optionFeedback": [
+          {
+            "key": "a",
+            "text": "Section 2 confirms the hazard (for example, skin irritation) but not the first-aid steps."
+          },
+          {
+            "key": "c",
+            "text": "Section 8 helps prevent the next exposure; it does not tell you how to treat this one."
+          },
+          {
+            "key": "d",
+            "text": "Section 11 describes health effects in depth — useful later, too slow now."
+          }
+        ],
+        "rationale": "Knowing that first aid is always Section 4 turns a stressful search into a reflex."
+      },
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-06",
+      "index": 5,
+      "moduleId": "M1",
+      "kind": "formative",
+      "component": "question",
+      "title": "Access during the shift",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO1"
+      ],
+      "claimIds": [],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(g)(8)–(10)"
+        }
+      ],
+      "visualId": null,
+      "interaction": {
+        "mode": "multiple",
+        "stem": "Which statements about SDS access are consistent with the Hazard Communication Standard?",
+        "options": [
+          {
+            "key": "a",
+            "text": "Workers must be able to get the SDS during every work shift, in their work area."
+          },
+          {
+            "key": "b",
+            "text": "An electronic system is acceptable if nothing prevents immediate access."
+          },
+          {
+            "key": "c",
+            "text": "SDSs may be kept in a locked office as long as workers can request them in writing."
+          },
+          {
+            "key": "d",
+            "text": "Only supervisors need to be able to read the SDS."
+          }
+        ],
+        "targets": [],
+        "correctKeys": [
+          "a",
+          "b"
+        ],
+        "mapping": [],
+        "order": [],
+        "feedbackCorrect": "Correct. Access must be immediate and available to the people who work with the chemical.",
+        "feedbackIncorrect": "Look again at who needs access and how quickly.",
+        "optionFeedback": [
+          {
+            "key": "c",
+            "text": "A written request is a barrier; the SDS must be readily accessible."
+          },
+          {
+            "key": "d",
+            "text": "The duty is to employees in their work areas, not only supervisors."
+          }
+        ],
+        "rationale": "An SDS that cannot be reached in the first minutes of an incident does not do its job."
+      },
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-07",
+      "index": 6,
+      "moduleId": "M2",
+      "kind": "topic-title",
+      "component": "module-landing",
+      "title": "Reading an SDS under time pressure",
+      "subtype": null,
+      "optional": false,
+      "body": "Knowing the structure is half the skill. The other half is a routine you can run in under a minute, and knowing where the SDS ends and your own judgement begins.",
+      "treatment": "",
+      "loIds": [
+        "LO2",
+        "LO3",
+        "LO4"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-08",
+      "index": 7,
+      "moduleId": "M2",
+      "kind": "process",
+      "component": "process",
+      "title": "The 60-second scan",
+      "subtype": null,
+      "optional": false,
+      "body": "Before you open a container for the first time, run the same four checks in the same order:\n\n1. **Confirm identity (Section 1).** Does the product name and supplier match the container in your hand?\n2. **Read the hazards (Section 2).** Note the signal word — *Danger* or *Warning* — and each hazard statement.\n3. **Check controls (Section 8).** What ventilation, gloves and eye protection does the supplier specify?\n4. **Know the emergency steps (Sections 4 and 6).** First aid and spill response, before you need them.",
+      "treatment": "",
+      "loIds": [
+        "LO2",
+        "LO4"
+      ],
+      "claimIds": [
+        "CLM-0006"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-BRIEF",
+          "locator": "p.2"
+        }
+      ],
+      "visualId": "V-01",
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-09",
+      "index": 8,
+      "moduleId": "M2",
+      "kind": "comparison",
+      "component": "comparison",
+      "title": "Label or Safety Data Sheet?",
+      "subtype": null,
+      "optional": false,
+      "body": "The label and the SDS are designed to work together. The label is the short version that must stay on the container; the SDS is the full reference.\n\n| | Container label | Safety Data Sheet |\n|---|---|---|\n| Where | On the container | Kept accessible in the work area |\n| Content | Product identifier, signal word, pictograms, hazard and precautionary statements, supplier | All of the label content plus composition, first aid, controls, properties and more |\n| Use it to | Recognise the hazard at a glance | Decide how to work safely and respond |",
+      "treatment": "",
+      "loIds": [
+        "LO3"
+      ],
+      "claimIds": [
+        "CLM-0007"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(f)(1)"
+        },
+        {
+          "sourceId": "SRC-UN-GHS",
+          "locator": "Chapter 1.4"
+        }
+      ],
+      "visualId": "V-02",
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-10",
+      "index": 9,
+      "moduleId": "M2",
+      "kind": "warning",
+      "component": "warning-callout",
+      "title": "An SDS is not your risk assessment",
+      "subtype": null,
+      "optional": false,
+      "body": "The SDS describes the chemical, not your workplace. It cannot know that your extraction fan is weak, that the task runs for six hours, or that the product will be heated.\n\nWhen your task differs from ordinary use — larger quantities, heating, spraying, confined spaces — treat the SDS as the **starting point** for a task-specific assessment, and ask before you begin.",
+      "treatment": "",
+      "loIds": [
+        "LO4"
+      ],
+      "claimIds": [
+        "CLM-0003"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-BRIEF",
+          "locator": "p.1"
+        }
+      ],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-11",
+      "index": 10,
+      "moduleId": "M2",
+      "kind": "technical-depth",
+      "component": "technical-depth",
+      "title": "Reading exposure limits in Section 8",
+      "subtype": null,
+      "optional": true,
+      "body": "Section 8 often lists several airborne exposure limits for the same substance. They come from different bodies and do not carry the same weight.\n\n- The **permissible exposure limit** (PEL) is set by OSHA and is legally enforceable.\n- The NIOSH recommended exposure limit (REL) and the ACGIH threshold limit value (TLV) are recommendations, often based on more recent evidence.\n\nFor acetone, a representative SDS lists an OSHA PEL of 1,000 ppm and a NIOSH REL and ACGIH TLV of 250 ppm, each as an 8-hour time-weighted average. When limits differ, good practice is to control to the lowest.",
+      "treatment": "",
+      "loIds": [
+        "LO2"
+      ],
+      "claimIds": [
+        "CLM-0008"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "Appendix D, Section 8"
+        }
+      ],
+      "visualId": "V-03",
+      "interaction": null,
+      "graded": false,
+      "difficulty": "integrative",
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-12",
+      "index": 11,
+      "moduleId": "M2",
+      "kind": "scenario",
+      "component": "scenario",
+      "title": "The unlabelled spray bottle",
+      "subtype": "decision",
+      "optional": false,
+      "body": "Near the end of a shift you find a spray bottle of clear liquid on a workbench. A strip of tape reads “degreaser”. There is no other marking, and the person who filled it has gone home.\n\nYou need the bench clean before the morning.",
+      "treatment": "",
+      "loIds": [
+        "LO4"
+      ],
+      "claimIds": [
+        "CLM-0009"
+      ],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(f)(6)"
+        }
+      ],
+      "visualId": null,
+      "interaction": {
+        "mode": "reveal",
+        "stem": "What do you do with the bottle, and why?",
+        "options": [
+          {
+            "key": "p1",
+            "text": "Think about what you can and cannot know from the tape."
+          },
+          {
+            "key": "p2",
+            "text": "Consider where the SDS would come from."
+          }
+        ],
+        "targets": [],
+        "correctKeys": [],
+        "mapping": [],
+        "order": [],
+        "feedbackCorrect": "Don’t use it. Without a product identifier you cannot find the right SDS, so you cannot know its hazards, controls or first aid. Set it aside, find the stock container it was filled from, and relabel the bottle with the product identifier and hazard information — or dispose of it through your site’s process if it cannot be identified.",
+        "feedbackIncorrect": "",
+        "optionFeedback": [],
+        "rationale": "Workplace containers must carry the product identifier and hazard information so that anyone can connect the container to its SDS."
+      },
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-13",
+      "index": 12,
+      "moduleId": "M2",
+      "kind": "formative",
+      "component": "question",
+      "title": "Match the question to the section",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO2"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": {
+        "mode": "matching",
+        "stem": "Match each question a worker might ask to the SDS section that answers it.",
+        "options": [
+          {
+            "key": "fire",
+            "text": "Will it burn, and what should we use to put out a fire?"
+          },
+          {
+            "key": "spill",
+            "text": "Half a litre has spilled on the floor — what now?"
+          },
+          {
+            "key": "store",
+            "text": "Where and how should we store it?"
+          },
+          {
+            "key": "ppe",
+            "text": "Which gloves and ventilation do I need?"
+          }
+        ],
+        "targets": [
+          {
+            "key": "s5",
+            "text": "Section 5 — Fire-fighting measures"
+          },
+          {
+            "key": "s6",
+            "text": "Section 6 — Accidental release measures"
+          },
+          {
+            "key": "s7",
+            "text": "Section 7 — Handling and storage"
+          },
+          {
+            "key": "s8",
+            "text": "Section 8 — Exposure controls/personal protection"
+          },
+          {
+            "key": "s11",
+            "text": "Section 11 — Toxicological information"
+          }
+        ],
+        "correctKeys": [],
+        "mapping": [
+          {
+            "key": "fire",
+            "target": "s5"
+          },
+          {
+            "key": "spill",
+            "target": "s6"
+          },
+          {
+            "key": "store",
+            "target": "s7"
+          },
+          {
+            "key": "ppe",
+            "target": "s8"
+          }
+        ],
+        "order": [],
+        "feedbackCorrect": "All four matched. Sections 4 to 8 are the ones to know by heart.",
+        "feedbackIncorrect": "Some matches are off. Rows marked in red need another look.",
+        "optionFeedback": [],
+        "rationale": "The fixed order means these answers are in the same place on every supplier’s sheet."
+      },
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-14",
+      "index": 13,
+      "moduleId": "M2",
+      "kind": "formative",
+      "component": "question",
+      "title": "On the label, or only on the SDS?",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO3"
+      ],
+      "claimIds": [],
+      "citations": [
+        {
+          "sourceId": "SRC-OSHA-HCS",
+          "locator": "§1910.1200(f)(1)"
+        }
+      ],
+      "visualId": null,
+      "interaction": {
+        "mode": "categorization",
+        "stem": "Sort each piece of information by where you will find it.",
+        "options": [
+          {
+            "key": "signal",
+            "text": "Signal word"
+          },
+          {
+            "key": "picto",
+            "text": "Hazard pictograms"
+          },
+          {
+            "key": "firstaid",
+            "text": "Detailed first-aid measures"
+          },
+          {
+            "key": "limits",
+            "text": "Occupational exposure limits"
+          },
+          {
+            "key": "supplier",
+            "text": "Supplier name, address and phone number"
+          }
+        ],
+        "targets": [
+          {
+            "key": "both",
+            "text": "Label and SDS"
+          },
+          {
+            "key": "sds",
+            "text": "SDS only"
+          }
+        ],
+        "correctKeys": [],
+        "mapping": [
+          {
+            "key": "signal",
+            "target": "both"
+          },
+          {
+            "key": "picto",
+            "target": "both"
+          },
+          {
+            "key": "firstaid",
+            "target": "sds"
+          },
+          {
+            "key": "limits",
+            "target": "sds"
+          },
+          {
+            "key": "supplier",
+            "target": "both"
+          }
+        ],
+        "order": [],
+        "feedbackCorrect": "Right. The label carries the essentials; the SDS repeats them and adds the detail.",
+        "feedbackIncorrect": "Not all of these are right. Remember the label has six required elements.",
+        "optionFeedback": [],
+        "rationale": "Knowing what the label cannot tell you is what sends you to the SDS."
+      },
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-15",
+      "index": 14,
+      "moduleId": "M2",
+      "kind": "formative",
+      "component": "question",
+      "title": "When a new SDS arrives",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO4"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": {
+        "mode": "sequencing",
+        "stem": "A supplier sends an updated SDS. Put the steps in a sensible order.",
+        "options": [
+          {
+            "key": "match",
+            "text": "Check it matches the product and supplier you hold"
+          },
+          {
+            "key": "date",
+            "text": "Check the revision date in Section 16 is newer than your copy"
+          },
+          {
+            "key": "replace",
+            "text": "Replace the old version wherever workers access SDSs"
+          },
+          {
+            "key": "tell",
+            "text": "Tell the people who use the product what has changed"
+          }
+        ],
+        "targets": [],
+        "correctKeys": [],
+        "mapping": [],
+        "order": [
+          "match",
+          "date",
+          "replace",
+          "tell"
+        ],
+        "feedbackCorrect": "Good order: verify, then replace, then communicate.",
+        "feedbackIncorrect": "Close. Think about what must be true before you replace anything.",
+        "optionFeedback": [],
+        "rationale": "Replacing an SDS with the wrong product’s sheet is worse than not updating at all."
+      },
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-16",
+      "index": 15,
+      "moduleId": "M2",
+      "kind": "review",
+      "component": "review",
+      "title": "Key takeaways",
+      "subtype": null,
+      "optional": false,
+      "body": "- Every SDS has the same **sixteen sections** in the same order; first aid is always Section 4.\n- Employers must keep SDSs **readily accessible during every shift**.\n- The **label** is for recognition; the **SDS** is for decisions.\n- The SDS describes hazards and controls. Your **task-specific risk** still needs judgement.",
+      "treatment": "",
+      "loIds": [
+        "LO1",
+        "LO2",
+        "LO3",
+        "LO4"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-17",
+      "index": 16,
+      "moduleId": "M3",
+      "kind": "section-title",
+      "component": "module-landing",
+      "title": "Final assessment",
+      "subtype": null,
+      "optional": false,
+      "body": "Three questions check the essentials from both modules. Your answers are recorded when you submit them, and you will see your score, the correct answers and explanations on the results screen. You need **65%** to pass, and you can retake the assessment.",
+      "treatment": "",
+      "loIds": [
+        "LO2",
+        "LO3",
+        "LO4"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-18",
+      "index": 17,
+      "moduleId": "M3",
+      "kind": "graded",
+      "component": "assessment-question",
+      "title": "Assessment question 1",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO2"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": {
+        "mode": "single",
+        "stem": "A worker is splashed in the eye with a solvent. Which SDS section gives the immediate first-aid steps?",
+        "options": [
+          {
+            "key": "a",
+            "text": "Section 2 — Hazard(s) identification"
+          },
+          {
+            "key": "b",
+            "text": "Section 4 — First-aid measures"
+          },
+          {
+            "key": "c",
+            "text": "Section 8 — Exposure controls/personal protection"
+          },
+          {
+            "key": "d",
+            "text": "Section 16 — Other information"
+          }
+        ],
+        "targets": [],
+        "correctKeys": [
+          "b"
+        ],
+        "mapping": [],
+        "order": [],
+        "feedbackCorrect": "Correct.",
+        "feedbackIncorrect": "Incorrect.",
+        "optionFeedback": [],
+        "rationale": "Section 4 always holds first-aid measures, organised by route of exposure."
+      },
+      "graded": true,
+      "difficulty": "foundational",
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-19",
+      "index": 18,
+      "moduleId": "M3",
+      "kind": "graded",
+      "component": "assessment-question",
+      "title": "Assessment question 2",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO3"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": {
+        "mode": "multiple",
+        "stem": "Which of these are required elements of a shipped container label under the Hazard Communication Standard?",
+        "options": [
+          {
+            "key": "a",
+            "text": "Signal word"
+          },
+          {
+            "key": "b",
+            "text": "Hazard pictograms"
+          },
+          {
+            "key": "c",
+            "text": "Hazard statements"
+          },
+          {
+            "key": "d",
+            "text": "Occupational exposure limits"
+          },
+          {
+            "key": "e",
+            "text": "Disposal considerations"
+          }
+        ],
+        "targets": [],
+        "correctKeys": [
+          "a",
+          "b",
+          "c"
+        ],
+        "mapping": [],
+        "order": [],
+        "feedbackCorrect": "Correct.",
+        "feedbackIncorrect": "Incorrect.",
+        "optionFeedback": [],
+        "rationale": "Labels carry the product identifier, signal word, hazard statements, pictograms, precautionary statements and supplier details. Exposure limits and disposal information are found only on the SDS."
+      },
+      "graded": true,
+      "difficulty": "applied",
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-20",
+      "index": 19,
+      "moduleId": "M3",
+      "kind": "graded",
+      "component": "assessment-question",
+      "title": "Assessment question 3",
+      "subtype": null,
+      "optional": false,
+      "body": "",
+      "treatment": "",
+      "loIds": [
+        "LO4"
+      ],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": {
+        "mode": "sequencing",
+        "stem": "Put the 60-second SDS scan in order.",
+        "options": [
+          {
+            "key": "id",
+            "text": "Confirm the product identity (Section 1)"
+          },
+          {
+            "key": "haz",
+            "text": "Read the signal word and hazard statements (Section 2)"
+          },
+          {
+            "key": "ctl",
+            "text": "Check the required controls and PPE (Section 8)"
+          },
+          {
+            "key": "emg",
+            "text": "Note the first-aid and spill steps (Sections 4 and 6)"
+          }
+        ],
+        "targets": [],
+        "correctKeys": [],
+        "mapping": [],
+        "order": [
+          "id",
+          "haz",
+          "ctl",
+          "emg"
+        ],
+        "feedbackCorrect": "Correct.",
+        "feedbackIncorrect": "Incorrect.",
+        "optionFeedback": [],
+        "rationale": "Identity first — every other answer is only valid for the right product. Then hazards, then controls, then the emergency steps you hope not to need."
+      },
+      "graded": true,
+      "difficulty": "applied",
+      "accessibility": ""
+    },
+    {
+      "id": "SDS-21",
+      "index": 20,
+      "moduleId": "M3",
+      "kind": "summary",
+      "component": "results",
+      "title": "Your results",
+      "subtype": null,
+      "optional": false,
+      "body": "Here is how you did. Use the review to see the reasoning behind each answer.",
+      "treatment": "",
+      "loIds": [],
+      "claimIds": [],
+      "citations": [],
+      "visualId": null,
+      "interaction": null,
+      "graded": false,
+      "difficulty": null,
+      "accessibility": ""
+    }
+  ],
+  "glossary": [
+    {
+      "id": "GL-SDS",
+      "term": "Safety Data Sheet",
+      "definition": "A 16-section document from the manufacturer, importer or distributor that describes a hazardous chemical’s hazards, safe handling, and emergency measures.",
+      "sourceIds": [
+        "SRC-OSHA-HCS"
+      ]
+    },
+    {
+      "id": "GL-HAZSTMT",
+      "term": "hazard statement",
+      "definition": "A standard phrase assigned to a hazard class and category that describes the nature and degree of the hazard, for example “Causes serious eye irritation”.",
+      "sourceIds": [
+        "SRC-UN-GHS"
+      ]
+    },
+    {
+      "id": "GL-PEL",
+      "term": "permissible exposure limit",
+      "definition": "OSHA’s legally enforceable limit on a worker’s airborne exposure to a substance, usually expressed as an 8-hour time-weighted average.",
+      "sourceIds": [
+        "SRC-OSHA-HCS"
+      ]
+    }
+  ],
+  "acronyms": [
+    {
+      "id": "AC-GHS",
+      "acronym": "GHS",
+      "expansion": "Globally Harmonized System of Classification and Labelling of Chemicals",
+      "firstUseBlockId": "SDS-02"
+    }
+  ],
+  "references": [
+    {
+      "id": "SRC-OSHA-HCS",
+      "title": "Hazard Communication, 29 CFR 1910.1200",
+      "author": null,
+      "publisher": "U.S. Occupational Safety and Health Administration",
+      "type": "regulation",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200",
+      "doi": null,
+      "date": "2024-05-20",
+      "version": "As amended 2024",
+      "accessed": "2026-09-01",
+      "jurisdiction": "United States",
+      "authority": "primary",
+      "currentnessNotes": null,
+      "licenseNotes": null
+    },
+    {
+      "id": "SRC-UN-GHS",
+      "title": "Globally Harmonized System of Classification and Labelling of Chemicals (GHS)",
+      "author": null,
+      "publisher": "United Nations",
+      "type": "standard",
+      "url": null,
+      "doi": null,
+      "date": "2023",
+      "version": "Rev. 10",
+      "accessed": null,
+      "jurisdiction": "International",
+      "authority": "primary",
+      "currentnessNotes": null,
+      "licenseNotes": null
+    },
+    {
+      "id": "SRC-OSHA-BRIEF",
+      "title": "Hazard Communication Standard: Safety Data Sheets (OSHA Brief DSG BR-3514)",
+      "author": null,
+      "publisher": "U.S. Occupational Safety and Health Administration",
+      "type": "government-guidance",
+      "url": null,
+      "doi": null,
+      "date": "2012-02",
+      "version": null,
+      "accessed": null,
+      "jurisdiction": "United States",
+      "authority": "secondary",
+      "currentnessNotes": null,
+      "licenseNotes": null
+    }
+  ],
+  "visuals": [
+    {
+      "id": "V-01",
+      "title": "The 60-second SDS scan",
+      "purpose": "Give learners a memorable, ordered routine for a first read of any SDS.",
+      "archetype": "PROCESS",
+      "content": {
+        "items": [
+          {
+            "id": "s1",
+            "label": "Confirm identity",
+            "detail": "Section 1",
+            "group": null,
+            "value": null
+          },
+          {
+            "id": "s2",
+            "label": "Read the hazards",
+            "detail": "Section 2",
+            "group": null,
+            "value": null
+          },
+          {
+            "id": "s3",
+            "label": "Check controls",
+            "detail": "Section 8",
+            "group": null,
+            "value": null
+          },
+          {
+            "id": "s4",
+            "label": "Know the emergency steps",
+            "detail": "Sections 4 and 6",
+            "group": null,
+            "value": null
+          }
+        ],
+        "links": [
+          {
+            "from": "s1",
+            "to": "s2",
+            "label": null
+          },
+          {
+            "from": "s2",
+            "to": "s3",
+            "label": null
+          },
+          {
+            "from": "s3",
+            "to": "s4",
+            "label": null
+          }
+        ],
+        "groups": [],
+        "columns": [],
+        "rows": [],
+        "axes": {
+          "x": null,
+          "y": null
+        },
+        "chartType": null
+      },
+      "sourceIds": [
+        "SRC-OSHA-BRIEF"
+      ],
+      "textEquivalent": {
+        "short": "Four steps in order: confirm identity, read the hazards, check controls, know the emergency steps.",
+        "long": "A four-step sequence. Step 1, confirm the product identity in Section 1. Step 2, read the signal word and hazard statements in Section 2. Step 3, check the required controls and personal protective equipment in Section 8. Step 4, note the first-aid measures in Section 4 and the spill response in Section 6."
+      },
+      "interaction": "none",
+      "rendererOverride": null,
+      "mermaid": null
+    },
+    {
+      "id": "V-02",
+      "title": "What the label carries and what only the SDS carries",
+      "purpose": "Show that the SDS is a superset of the label, so learners know when to go beyond the label.",
+      "archetype": "COMPARISON",
+      "content": {
+        "items": [],
+        "links": [],
+        "groups": [],
+        "columns": [
+          "Container label",
+          "Safety Data Sheet"
+        ],
+        "rows": [
+          {
+            "label": "Signal word and pictograms",
+            "cells": [
+              "Yes",
+              "Yes (Section 2)"
+            ]
+          },
+          {
+            "label": "Hazard and precautionary statements",
+            "cells": [
+              "Yes",
+              "Yes (Section 2)"
+            ]
+          },
+          {
+            "label": "First aid, fire and spill response",
+            "cells": [
+              "Brief precautions only",
+              "Yes (Sections 4–6)"
+            ]
+          },
+          {
+            "label": "Exposure limits and PPE detail",
+            "cells": [
+              "No",
+              "Yes (Section 8)"
+            ]
+          }
+        ],
+        "axes": {
+          "x": null,
+          "y": null
+        },
+        "chartType": null
+      },
+      "sourceIds": [
+        "SRC-OSHA-HCS",
+        "SRC-UN-GHS"
+      ],
+      "textEquivalent": {
+        "short": "The label and SDS share hazard essentials; only the SDS gives full emergency, exposure-limit and PPE detail.",
+        "long": "Comparison of two columns, container label and Safety Data Sheet. Both carry the signal word, pictograms, hazard statements and precautionary statements. For first aid, fire and spill response, the label gives brief precautions only while the SDS gives full detail in Sections 4 to 6. Exposure limits and PPE detail appear only on the SDS, in Section 8."
+      },
+      "interaction": "none",
+      "rendererOverride": null,
+      "mermaid": null
+    },
+    {
+      "id": "V-03",
+      "title": "Three exposure limits for acetone",
+      "purpose": "Show that limits listed in Section 8 can differ by a factor of four depending on the issuing body.",
+      "archetype": "QUANTITATIVE_CHART",
+      "content": {
+        "items": [
+          {
+            "id": "pel",
+            "label": "OSHA PEL (enforceable)",
+            "detail": "8-hour TWA",
+            "group": null,
+            "value": 1000
+          },
+          {
+            "id": "rel",
+            "label": "NIOSH REL (recommended)",
+            "detail": "8-hour TWA",
+            "group": null,
+            "value": 250
+          },
+          {
+            "id": "tlv",
+            "label": "ACGIH TLV (recommended)",
+            "detail": "8-hour TWA",
+            "group": null,
+            "value": 250
+          }
+        ],
+        "links": [],
+        "groups": [],
+        "columns": [],
+        "rows": [],
+        "axes": {
+          "x": "Exposure limit",
+          "y": "ppm"
+        },
+        "chartType": "bar"
+      },
+      "sourceIds": [
+        "SRC-OSHA-HCS"
+      ],
+      "textEquivalent": {
+        "short": "Bar chart: OSHA PEL 1,000 ppm; NIOSH REL 250 ppm; ACGIH TLV 250 ppm, all 8-hour averages.",
+        "long": "A bar chart comparing three 8-hour time-weighted average exposure limits for acetone as listed on a representative SDS. The OSHA permissible exposure limit, which is legally enforceable, is 1,000 ppm. The NIOSH recommended exposure limit and the ACGIH threshold limit value are both 250 ppm, one quarter of the OSHA figure."
+      },
+      "interaction": "none",
+      "rendererOverride": null,
+      "mermaid": null
+    }
+  ],
+  "visualRoutes": [
+    {
+      "visualId": "V-01",
+      "renderer": "cf_svg",
+      "fallbacks": [
+        "mermaid",
+        "text_equivalent"
+      ],
+      "rule": "PROCESS → cf_svg"
+    },
+    {
+      "visualId": "V-02",
+      "renderer": "cf_svg",
+      "fallbacks": [
+        "svgjs",
+        "text_equivalent"
+      ],
+      "rule": "COMPARISON → cf_svg"
+    },
+    {
+      "visualId": "V-03",
+      "renderer": "vega_lite",
+      "fallbacks": [
+        "d3",
+        "text_equivalent"
+      ],
+      "rule": "QUANTITATIVE_CHART → vega_lite"
+    }
+  ],
+  "assessment": {
+    "passingPercent": 65,
+    "gradedScreenIds": [
+      "SDS-18",
+      "SDS-19",
+      "SDS-20"
+    ]
+  },
+  "sourceArtifacts": []
+}
