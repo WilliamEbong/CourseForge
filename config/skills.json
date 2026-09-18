@@ -1,0 +1,132 @@
+{
+  "$schema": "../schemas/skills-config.schema.json",
+  "version": 1,
+  "skills": {
+    "research-planning": {
+      "path": ".claude/skills/research-planning/SKILL.md",
+      "description": "Scoping concepts and planning research",
+      "stages": ["CONCEPT", "RESEARCH_BRIEF"],
+      "roles": ["concept-analyst", "research-planner", "reviewer"],
+      "maxBytes": 16000
+    },
+    "research-authoring": {
+      "path": ".claude/skills/research-authoring/SKILL.md",
+      "description": "Writing cited research dossier sections",
+      "stages": ["RESEARCH_DOSSIER"],
+      "roles": ["researcher", "repairer"],
+      "maxBytes": 16000
+    },
+    "research-review": {
+      "path": ".claude/skills/research-review/SKILL.md",
+      "description": "Reviewing research briefs and dossiers",
+      "stages": ["RESEARCH_BRIEF", "RESEARCH_DOSSIER"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "instructional-design": {
+      "path": ".claude/skills/instructional-design/SKILL.md",
+      "description": "Objectives, modules and learning architecture",
+      "stages": ["INSTRUCTIONAL_DESIGN", "STORYBOARD", "COURSE_QA"],
+      "roles": ["instructional-designer", "reviewer"],
+      "maxBytes": 16000
+    },
+    "alignment-review": {
+      "path": ".claude/skills/alignment-review/SKILL.md",
+      "description": "Objective/content/assessment alignment review",
+      "stages": ["INSTRUCTIONAL_DESIGN", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "storyboard-authoring": {
+      "path": ".claude/skills/storyboard-authoring/SKILL.md",
+      "description": "Complete learner-facing storyboard authoring",
+      "stages": ["STORYBOARD"],
+      "roles": ["storyboard-author", "repairer"],
+      "maxBytes": 16000
+    },
+    "scenario-design": {
+      "path": ".claude/skills/scenario-design/SKILL.md",
+      "description": "Scenario and case design",
+      "stages": ["STORYBOARD"],
+      "roles": ["storyboard-author", "reviewer"],
+      "maxBytes": 16000
+    },
+    "assessment-design": {
+      "path": ".claude/skills/assessment-design/SKILL.md",
+      "description": "Assessment item authoring",
+      "stages": ["STORYBOARD"],
+      "roles": ["storyboard-author"],
+      "maxBytes": 16000
+    },
+    "assessment-review": {
+      "path": ".claude/skills/assessment-review/SKILL.md",
+      "description": "Assessment item and strategy review",
+      "stages": ["INSTRUCTIONAL_DESIGN", "STORYBOARD", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "editorial-humanization": {
+      "path": ".claude/skills/editorial-humanization/SKILL.md",
+      "description": "Meaning-preserving editorial humanization",
+      "stages": ["STORYBOARD", "EDITORIAL"],
+      "roles": ["editor", "reviewer"],
+      "maxBytes": 16000
+    },
+    "course-gap-analysis": {
+      "path": ".claude/skills/course-gap-analysis/SKILL.md",
+      "description": "Coverage and gap analysis",
+      "stages": ["STORYBOARD", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "fact-check": {
+      "path": ".claude/skills/fact-check/SKILL.md",
+      "description": "Fact and citation checking",
+      "stages": ["RESEARCH_DOSSIER", "INSTRUCTIONAL_DESIGN", "STORYBOARD", "VISUAL_DIRECTION", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "visual-direction": {
+      "path": ".claude/skills/visual-direction/SKILL.md",
+      "description": "Bounded visual direction choices",
+      "stages": ["VISUAL_DIRECTION"],
+      "roles": ["visual-director", "reviewer"],
+      "maxBytes": 16000
+    },
+    "instructional-graphics": {
+      "path": ".claude/skills/instructional-graphics/SKILL.md",
+      "description": "Instructional visual archetypes and text equivalents",
+      "stages": ["STORYBOARD", "VISUAL_DIRECTION", "COURSE_QA"],
+      "roles": ["storyboard-author", "visual-director", "reviewer"],
+      "maxBytes": 16000
+    },
+    "html-intake-review": {
+      "path": ".claude/skills/html-intake-review/SKILL.md",
+      "description": "Reviewing existing or built HTML courses",
+      "stages": ["COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "accessibility-review": {
+      "path": ".claude/skills/accessibility-review/SKILL.md",
+      "description": "Accessibility review (WCAG 2.1 AA)",
+      "stages": ["STORYBOARD", "VISUAL_DIRECTION", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "ui-review": {
+      "path": ".claude/skills/ui-review/SKILL.md",
+      "description": "UI review",
+      "stages": ["VISUAL_DIRECTION", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    },
+    "ux-review": {
+      "path": ".claude/skills/ux-review/SKILL.md",
+      "description": "UX review",
+      "stages": ["VISUAL_DIRECTION", "COURSE_QA"],
+      "roles": ["reviewer"],
+      "maxBytes": 16000
+    }
+  }
+}

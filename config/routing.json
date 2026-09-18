@@ -1,0 +1,311 @@
+{
+  "$schema": "../schemas/routing-config.schema.json",
+  "version": 1,
+  "stageRoutes": {
+    "CONCEPT": {
+      "rule": "STG-CONCEPT-001"
+    },
+    "RESEARCH_BRIEF": {
+      "rule": "STG-RESEARCH_BRIEF-001"
+    },
+    "RESEARCH_DOSSIER": {
+      "rule": "STG-RESEARCH_DOSSIER-001"
+    },
+    "INSTRUCTIONAL_DESIGN": {
+      "rule": "STG-INSTRUCTIONAL_DESIGN-001"
+    },
+    "STORYBOARD": {
+      "rule": "STG-STORYBOARD-001"
+    },
+    "EDITORIAL": {
+      "rule": "STG-EDITORIAL-001"
+    },
+    "VISUAL_DIRECTION": {
+      "rule": "STG-VISUAL_DIRECTION-001"
+    },
+    "COURSE_MODEL": {
+      "rule": "STG-COURSE_MODEL-001"
+    },
+    "COURSE_BUILD": {
+      "rule": "STG-COURSE_BUILD-001"
+    },
+    "COURSE_QA": {
+      "rule": "STG-COURSE_QA-001"
+    },
+    "RELEASE": {
+      "rule": "STG-RELEASE-001"
+    }
+  },
+  "visualRoutes": [
+    {
+      "rule": "VIS-PROCESS-001",
+      "when": {
+        "archetype": "PROCESS",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-TIMELINE-001",
+      "when": {
+        "archetype": "TIMELINE",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-DECISION_TREE-001",
+      "when": {
+        "archetype": "DECISION_TREE",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-CAUSE_EFFECT-001",
+      "when": {
+        "archetype": "CAUSE_EFFECT",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-SYSTEM_ARCHITECTURE-001",
+      "when": {
+        "archetype": "SYSTEM_ARCHITECTURE",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-SEQUENCE-001",
+      "when": {
+        "archetype": "SEQUENCE",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-STATE_DIAGRAM-001",
+      "when": {
+        "archetype": "STATE_DIAGRAM",
+        "interaction": null
+      },
+      "primary": "mermaid",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-LIFECYCLE-001",
+      "when": {
+        "archetype": "LIFECYCLE",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-COMPARISON-001",
+      "when": {
+        "archetype": "COMPARISON",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-BEFORE_AFTER-001",
+      "when": {
+        "archetype": "BEFORE_AFTER",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-LAYERED_SYSTEM-001",
+      "when": {
+        "archetype": "LAYERED_SYSTEM",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-RESPONSIBILITY_MAP-001",
+      "when": {
+        "archetype": "RESPONSIBILITY_MAP",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-FEEDBACK_LOOP-001",
+      "when": {
+        "archetype": "FEEDBACK_LOOP",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-CONTINUUM-001",
+      "when": {
+        "archetype": "CONTINUUM",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-MATRIX-001",
+      "when": {
+        "archetype": "MATRIX",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-EVIDENCE_MAP-001",
+      "when": {
+        "archetype": "EVIDENCE_MAP",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-FUNNEL-001",
+      "when": {
+        "archetype": "FUNNEL",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-SCENARIO_MAP-001",
+      "when": {
+        "archetype": "SCENARIO_MAP",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["svgjs"]
+    },
+    {
+      "rule": "VIS-HIERARCHY-001",
+      "when": {
+        "archetype": "HIERARCHY",
+        "interaction": null
+      },
+      "primary": "cf_svg",
+      "fallbacks": ["mermaid"]
+    },
+    {
+      "rule": "VIS-LABELED_OBJECT-001",
+      "when": {
+        "archetype": "LABELED_OBJECT",
+        "interaction": null
+      },
+      "primary": "svgjs",
+      "fallbacks": ["cf_svg"]
+    },
+    {
+      "rule": "VIS-RELATIONSHIP_NETWORK-001",
+      "when": {
+        "archetype": "RELATIONSHIP_NETWORK",
+        "interaction": null
+      },
+      "primary": "svgjs",
+      "fallbacks": ["d3"]
+    },
+    {
+      "rule": "VIS-QUANT-002",
+      "when": {
+        "archetype": "QUANTITATIVE_CHART",
+        "interaction": "interactive-data"
+      },
+      "primary": "d3",
+      "fallbacks": ["vega_lite"]
+    },
+    {
+      "rule": "VIS-QUANTITATIVE_CHART-001",
+      "when": {
+        "archetype": "QUANTITATIVE_CHART",
+        "interaction": null
+      },
+      "primary": "vega_lite",
+      "fallbacks": ["d3"]
+    }
+  ],
+  "icons": {
+    "warning": "triangle-alert",
+    "info": "info",
+    "evidence": "file-search",
+    "law": "scale",
+    "guidance": "compass",
+    "check": "check",
+    "cross": "x",
+    "lightbulb": "lightbulb",
+    "book": "book-open",
+    "glossary": "book-a",
+    "reference": "library",
+    "menu": "menu",
+    "close": "x",
+    "next": "chevron-right",
+    "previous": "chevron-left",
+    "progress": "gauge",
+    "clock": "clock",
+    "flask": "flask-conical",
+    "shield": "shield-check",
+    "alert": "circle-alert",
+    "danger": "octagon-alert",
+    "users": "users",
+    "target": "target",
+    "list": "list",
+    "search": "search",
+    "reset": "rotate-ccw",
+    "download": "download",
+    "external-link": "external-link",
+    "scenario": "map",
+    "question": "circle-help",
+    "success": "circle-check",
+    "error": "circle-x",
+    "chart": "chart-column",
+    "layers": "layers",
+    "workflow": "workflow",
+    "compare": "git-compare",
+    "timeline": "calendar-range",
+    "history": "history",
+    "home": "house",
+    "settings": "settings",
+    "print": "printer",
+    "document": "file-text",
+    "bookmark": "bookmark"
+  },
+  "components": {
+    "section-title": "module-landing",
+    "topic-title": "module-landing",
+    "content": "content",
+    "concept": "concept",
+    "technical-depth": "technical-depth",
+    "example": "content",
+    "comparison": "comparison",
+    "process": "process",
+    "evidence": "evidence-callout",
+    "warning": "warning-callout",
+    "misconception": "misconception",
+    "scenario": "scenario",
+    "review": "review",
+    "summary": "review",
+    "formative": "question",
+    "graded": "assessment-question"
+  }
+}

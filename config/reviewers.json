@@ -1,0 +1,583 @@
+{
+  "$schema": "../schemas/reviewers-config.schema.json",
+  "version": 1,
+  "reviewers": {
+    "concept-scope-safety": {
+      "description": "Concept scope, audience fit, risk tier and safety boundaries",
+      "rubric": "prompts/rubrics/concept-scope-safety.md",
+      "promptTemplate": "review",
+      "skills": ["research-planning"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["scope", "safety", "completeness"],
+      "inputs": ["input/concept.json", "input/concept-request.md"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "brief-scope-completeness": {
+      "description": "Research brief scope and question coverage",
+      "rubric": "prompts/rubrics/brief-scope-completeness.md",
+      "promptTemplate": "review",
+      "skills": ["research-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["scope", "completeness"],
+      "inputs": ["research/research-brief.json", "input/concept.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "brief-evidence-strategy": {
+      "description": "Source hierarchy, evidence and currentness strategy",
+      "rubric": "prompts/rubrics/brief-evidence-strategy.md",
+      "promptTemplate": "review",
+      "skills": ["research-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["evidence", "currentness"],
+      "inputs": ["research/research-brief.json", "input/concept.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "brief-safety": {
+      "description": "Safety boundaries and exclusions in the brief",
+      "rubric": "prompts/rubrics/brief-safety.md",
+      "promptTemplate": "review",
+      "skills": ["research-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["safety", "scope"],
+      "inputs": ["research/research-brief.json", "input/concept.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "evidence-source": {
+      "description": "Source quality, citation accuracy and claim support",
+      "rubric": "prompts/rubrics/evidence-source.md",
+      "promptTemplate": "review",
+      "skills": ["research-review", "fact-check"],
+      "tools": ["read", "grep", "glob", "web-search", "web-fetch"],
+      "categories": ["evidence", "citation", "accuracy"],
+      "inputs": ["research/research-dossier.json", "research/sources.jsonl", "research/claims.jsonl", "research/research-brief.json"],
+      "needsScreenshots": false,
+      "network": true,
+      "enabled": true
+    },
+    "domain-completeness": {
+      "description": "Domain coverage against the research brief",
+      "rubric": "prompts/rubrics/domain-completeness.md",
+      "promptTemplate": "review",
+      "skills": ["research-review"],
+      "tools": ["read", "grep", "glob", "web-search", "web-fetch"],
+      "categories": ["completeness", "scope"],
+      "inputs": ["research/research-dossier.json", "research/sources.jsonl", "research/claims.jsonl", "research/research-brief.json"],
+      "needsScreenshots": false,
+      "network": true,
+      "enabled": true
+    },
+    "currentness-jurisdiction": {
+      "description": "Currentness, versions and jurisdictional applicability",
+      "rubric": "prompts/rubrics/currentness-jurisdiction.md",
+      "promptTemplate": "review",
+      "skills": ["research-review", "fact-check"],
+      "tools": ["read", "grep", "glob", "web-search", "web-fetch"],
+      "categories": ["currentness", "accuracy"],
+      "inputs": ["research/research-dossier.json", "research/sources.jsonl", "research/claims.jsonl", "research/research-brief.json"],
+      "needsScreenshots": false,
+      "network": true,
+      "enabled": true
+    },
+    "safety-scope": {
+      "description": "Safety-critical content and scope boundaries in research",
+      "rubric": "prompts/rubrics/safety-scope.md",
+      "promptTemplate": "review",
+      "skills": ["research-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["safety", "scope"],
+      "inputs": ["research/research-dossier.json", "research/sources.jsonl", "research/claims.jsonl", "research/research-brief.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "adversarial-research": {
+      "description": "Adversarial challenge of claims, gaps and overstatement",
+      "rubric": "prompts/rubrics/adversarial-research.md",
+      "promptTemplate": "review",
+      "skills": ["research-review", "fact-check"],
+      "tools": ["read", "grep", "glob", "web-search", "web-fetch"],
+      "categories": ["accuracy", "evidence"],
+      "inputs": ["research/research-dossier.json", "research/sources.jsonl", "research/claims.jsonl", "research/research-brief.json"],
+      "needsScreenshots": false,
+      "network": true,
+      "enabled": true
+    },
+    "learning-architecture": {
+      "description": "Module structure and learning sequence",
+      "rubric": "prompts/rubrics/learning-architecture.md",
+      "promptTemplate": "review",
+      "skills": ["instructional-design"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["instructional", "structure"],
+      "inputs": ["design/instructional-design.json", "research/research-dossier.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "alignment": {
+      "description": "Objective, content and assessment alignment",
+      "rubric": "prompts/rubrics/alignment.md",
+      "promptTemplate": "review",
+      "skills": ["alignment-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["alignment", "assessment"],
+      "inputs": ["design/instructional-design.json", "research/research-dossier.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "audience-cognitive-load": {
+      "description": "Audience fit and cognitive load",
+      "rubric": "prompts/rubrics/audience-cognitive-load.md",
+      "promptTemplate": "review",
+      "skills": ["instructional-design"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["cognitive-load", "instructional"],
+      "inputs": ["design/instructional-design.json", "research/research-dossier.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "source-fidelity": {
+      "description": "Fidelity of the design to research evidence",
+      "rubric": "prompts/rubrics/source-fidelity.md",
+      "promptTemplate": "review",
+      "skills": ["fact-check"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["evidence", "citation", "accuracy"],
+      "inputs": ["design/instructional-design.json", "research/research-dossier.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "assessment-strategy": {
+      "description": "Assessment strategy and item planning",
+      "rubric": "prompts/rubrics/assessment-strategy.md",
+      "promptTemplate": "review",
+      "skills": ["assessment-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["assessment", "alignment"],
+      "inputs": ["design/instructional-design.json", "research/research-dossier.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "content-completeness": {
+      "description": "Storyboard completeness against the design",
+      "rubric": "prompts/rubrics/content-completeness.md",
+      "promptTemplate": "review",
+      "skills": ["course-gap-analysis"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["completeness", "instructional"],
+      "inputs": ["storyboard/storyboard.json", "design/instructional-design.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "instructional": {
+      "description": "Instructional quality, scenarios and examples",
+      "rubric": "prompts/rubrics/instructional.md",
+      "promptTemplate": "review",
+      "skills": ["instructional-design", "scenario-design"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["instructional", "scenario", "cognitive-load"],
+      "inputs": ["storyboard/storyboard.json", "design/instructional-design.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "assessment": {
+      "description": "Item quality, answer keys and feedback",
+      "rubric": "prompts/rubrics/assessment.md",
+      "promptTemplate": "review",
+      "skills": ["assessment-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["assessment", "alignment"],
+      "inputs": ["storyboard/storyboard.json", "design/instructional-design.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "citation-evidence": {
+      "description": "Citations resolve and claims are supported",
+      "rubric": "prompts/rubrics/citation-evidence.md",
+      "promptTemplate": "review",
+      "skills": ["fact-check"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["citation", "evidence", "accuracy"],
+      "inputs": ["storyboard/storyboard.json", "design/instructional-design.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "accessibility-planning": {
+      "description": "Accessibility of planned interactions and visuals",
+      "rubric": "prompts/rubrics/accessibility-planning.md",
+      "promptTemplate": "review",
+      "skills": ["accessibility-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["accessibility"],
+      "inputs": ["storyboard/storyboard.json", "design/instructional-design.json", "research/claims.jsonl", "research/sources.jsonl"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "editorial-readability": {
+      "description": "Readability, tone and consistency of learner-facing text",
+      "rubric": "prompts/rubrics/editorial-readability.md",
+      "promptTemplate": "review",
+      "skills": ["editorial-humanization"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["editorial", "consistency"],
+      "inputs": [
+        "storyboard/storyboard.json",
+        "design/instructional-design.json",
+        "research/claims.jsonl",
+        "research/sources.jsonl",
+        "storyboard/storyboard-edited.json"
+      ],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "editorial-integrity": {
+      "description": "Editorial edits preserve meaning, polarity and structure",
+      "rubric": "prompts/rubrics/editorial-integrity.md",
+      "promptTemplate": "review",
+      "skills": ["editorial-humanization"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["editorial", "accuracy", "consistency"],
+      "inputs": ["storyboard/storyboard-edited.json", "storyboard/storyboard.json", "storyboard/editorial-diff.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "information-design": {
+      "description": "Visual specs communicate the instructional job",
+      "rubric": "prompts/rubrics/information-design.md",
+      "promptTemplate": "review",
+      "skills": ["instructional-graphics"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["visual", "instructional"],
+      "inputs": [
+        "visual/direction.json",
+        "visual/visual-specs.json",
+        "visual/component-plan.json",
+        "visual/design-tokens.json",
+        "storyboard/storyboard-edited.json"
+      ],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "visual-ui": {
+      "description": "Visual direction and component plan quality",
+      "rubric": "prompts/rubrics/visual-ui.md",
+      "promptTemplate": "review",
+      "skills": ["visual-direction", "ui-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["ui", "visual"],
+      "inputs": [
+        "visual/direction.json",
+        "visual/visual-specs.json",
+        "visual/component-plan.json",
+        "visual/design-tokens.json",
+        "storyboard/storyboard-edited.json"
+      ],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "responsive-planning": {
+      "description": "Responsive and small-screen planning",
+      "rubric": "prompts/rubrics/responsive-planning.md",
+      "promptTemplate": "review",
+      "skills": ["ui-review", "ux-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["ui", "ux", "accessibility"],
+      "inputs": [
+        "visual/direction.json",
+        "visual/visual-specs.json",
+        "visual/component-plan.json",
+        "visual/design-tokens.json",
+        "storyboard/storyboard-edited.json"
+      ],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "accessibility-visual": {
+      "description": "Contrast, text equivalents and non-visual access",
+      "rubric": "prompts/rubrics/accessibility-visual.md",
+      "promptTemplate": "review",
+      "skills": ["accessibility-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["accessibility", "visual"],
+      "inputs": [
+        "visual/direction.json",
+        "visual/visual-specs.json",
+        "visual/component-plan.json",
+        "visual/design-tokens.json",
+        "storyboard/storyboard-edited.json"
+      ],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "content-integrity": {
+      "description": "Visuals stay faithful to storyboard content and sources",
+      "rubric": "prompts/rubrics/content-integrity.md",
+      "promptTemplate": "review",
+      "skills": ["fact-check"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["accuracy", "consistency", "traceability"],
+      "inputs": [
+        "visual/direction.json",
+        "visual/visual-specs.json",
+        "visual/component-plan.json",
+        "visual/design-tokens.json",
+        "storyboard/storyboard-edited.json"
+      ],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "factual-currentness": {
+      "description": "Final factual accuracy and currentness",
+      "rubric": "prompts/rubrics/factual-currentness.md",
+      "promptTemplate": "review",
+      "skills": ["fact-check"],
+      "tools": ["read", "grep", "glob", "web-search", "web-fetch"],
+      "categories": ["accuracy", "currentness"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "research/sources.jsonl",
+        "research/claims.jsonl"
+      ],
+      "needsScreenshots": false,
+      "network": true,
+      "enabled": true
+    },
+    "gap-analysis": {
+      "description": "Final course gap analysis",
+      "rubric": "prompts/rubrics/gap-analysis.md",
+      "promptTemplate": "review",
+      "skills": ["course-gap-analysis"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["completeness"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "instructional-final": {
+      "description": "Final instructional quality and alignment",
+      "rubric": "prompts/rubrics/instructional-final.md",
+      "promptTemplate": "review",
+      "skills": ["instructional-design", "alignment-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["instructional", "alignment"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "assessment-engine": {
+      "description": "Assessment behaviour, scoring and feedback",
+      "rubric": "prompts/rubrics/assessment-engine.md",
+      "promptTemplate": "review",
+      "skills": ["assessment-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["assessment", "functional"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "functional-browser": {
+      "description": "Functional browser test results",
+      "rubric": "prompts/rubrics/functional-browser.md",
+      "promptTemplate": "review",
+      "skills": ["html-intake-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["functional"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": true
+    },
+    "accessibility-final": {
+      "description": "Final accessibility (axe, keyboard, focus)",
+      "rubric": "prompts/rubrics/accessibility-final.md",
+      "promptTemplate": "review",
+      "skills": ["accessibility-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["accessibility"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": true
+    },
+    "ui": {
+      "description": "Final UI quality across viewports",
+      "rubric": "prompts/rubrics/ui.md",
+      "promptTemplate": "review",
+      "skills": ["ui-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["ui", "visual"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": true
+    },
+    "ux": {
+      "description": "Final learner experience and navigation",
+      "rubric": "prompts/rubrics/ux.md",
+      "promptTemplate": "review",
+      "skills": ["ux-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["ux"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": true
+    },
+    "visual-consistency": {
+      "description": "Visual consistency of figures and components",
+      "rubric": "prompts/rubrics/visual-consistency.md",
+      "promptTemplate": "review",
+      "skills": ["ui-review", "instructional-graphics"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["visual", "consistency"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": true
+    },
+    "release-adversarial": {
+      "description": "Adversarial release readiness review",
+      "rubric": "prompts/rubrics/release-adversarial.md",
+      "promptTemplate": "review",
+      "skills": ["course-gap-analysis", "fact-check"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["safety", "accuracy", "traceability", "other"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": true
+    },
+    "learner-novice": {
+      "description": "Novice learner perspective",
+      "rubric": "prompts/rubrics/learner-novice.md",
+      "promptTemplate": "review",
+      "skills": ["ux-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["instructional", "cognitive-load"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": false
+    },
+    "learner-practitioner": {
+      "description": "Experienced practitioner perspective",
+      "rubric": "prompts/rubrics/learner-practitioner.md",
+      "promptTemplate": "review",
+      "skills": ["ux-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["instructional", "scenario"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": false
+    },
+    "learner-keyboard": {
+      "description": "Keyboard-only learner perspective",
+      "rubric": "prompts/rubrics/learner-keyboard.md",
+      "promptTemplate": "review",
+      "skills": ["accessibility-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["accessibility", "functional"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": false
+    },
+    "learner-mobile": {
+      "description": "Mobile learner perspective",
+      "rubric": "prompts/rubrics/learner-mobile.md",
+      "promptTemplate": "review",
+      "skills": ["ux-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["ui", "ux"],
+      "inputs": [
+        "build/index.html",
+        "model/course.json",
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json"
+      ],
+      "needsScreenshots": true,
+      "network": false,
+      "enabled": false
+    },
+    "learner-returning": {
+      "description": "Returning learner perspective (progress, resume)",
+      "rubric": "prompts/rubrics/learner-returning.md",
+      "promptTemplate": "review",
+      "skills": ["ux-review"],
+      "tools": ["read", "grep", "glob"],
+      "categories": ["ux", "instructional"],
+      "inputs": ["build/index.html", "model/course.json", "review/functional-tests.json", "review/accessibility-review.json"],
+      "needsScreenshots": false,
+      "network": false,
+      "enabled": false
+    }
+  }
+}

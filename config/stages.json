@@ -1,0 +1,540 @@
+{
+  "$schema": "../schemas/stages-config.schema.json",
+  "version": 1,
+  "stages": {
+    "CONCEPT": {
+      "kind": "agent",
+      "description": "Normalise the concept request into a scoped concept brief",
+      "inputs": {
+        "required": ["input/concept-request.md"],
+        "optional": []
+      },
+      "outputs": ["input/concept.json", "input/concept.md"],
+      "artifacts": {
+        "concept": "input/concept.json"
+      },
+      "generator": {
+        "role": "concept-analyst",
+        "promptTemplate": "concept",
+        "skills": ["research-planning"],
+        "tools": ["read"],
+        "outputSchema": "concept-brief",
+        "fanOut": "none",
+        "writeMode": "structured",
+        "network": false
+      },
+      "compiler": "concept",
+      "validators": ["schema", "concept-complete"],
+      "reviewers": ["concept-scope-safety"],
+      "rerunMap": {
+        "completeness": ["concept-scope-safety"],
+        "safety": ["concept-scope-safety"],
+        "scope": ["concept-scope-safety"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/input/**"],
+      "readOnly": []
+    },
+    "RESEARCH_BRIEF": {
+      "kind": "agent",
+      "description": "Plan the research: questions, source hierarchy, dossier sections",
+      "inputs": {
+        "required": ["input/concept.json"],
+        "optional": []
+      },
+      "outputs": ["research/research-brief.json", "research/research-brief.md"],
+      "artifacts": {
+        "research-brief": "research/research-brief.json"
+      },
+      "generator": {
+        "role": "research-planner",
+        "promptTemplate": "research-brief",
+        "skills": ["research-planning"],
+        "tools": ["read", "grep", "glob"],
+        "outputSchema": "research-brief",
+        "fanOut": "none",
+        "writeMode": "structured",
+        "network": false
+      },
+      "compiler": "research-brief",
+      "validators": ["schema", "brief-sections"],
+      "reviewers": ["brief-scope-completeness", "brief-evidence-strategy", "brief-safety"],
+      "rerunMap": {
+        "completeness": ["brief-scope-completeness"],
+        "currentness": ["brief-evidence-strategy"],
+        "evidence": ["brief-evidence-strategy"],
+        "safety": ["brief-safety"],
+        "scope": ["brief-scope-completeness", "brief-safety"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/research/**"],
+      "readOnly": ["{course}/input/**"]
+    },
+    "RESEARCH_DOSSIER": {
+      "kind": "agent",
+      "description": "Research each planned section into a cited dossier with sources and claims",
+      "inputs": {
+        "required": ["research/research-brief.json"],
+        "optional": []
+      },
+      "outputs": ["research/research-dossier.json", "research/research-dossier.md", "research/sources.jsonl", "research/claims.jsonl"],
+      "artifacts": {
+        "dossier": "research/research-dossier.json",
+        "sources": "research/sources.jsonl",
+        "claims": "research/claims.jsonl"
+      },
+      "generator": {
+        "role": "researcher",
+        "promptTemplate": "dossier-section",
+        "skills": ["research-authoring"],
+        "tools": ["read", "web-search", "web-fetch"],
+        "outputSchema": "dossier-section",
+        "fanOut": "per-section",
+        "writeMode": "structured",
+        "network": true
+      },
+      "compiler": "dossier",
+      "validators": ["schema", "dossier-integrity", "no-placeholders"],
+      "reviewers": ["evidence-source", "domain-completeness", "currentness-jurisdiction", "safety-scope", "adversarial-research"],
+      "rerunMap": {
+        "accuracy": ["evidence-source", "currentness-jurisdiction", "adversarial-research"],
+        "citation": ["evidence-source"],
+        "completeness": ["domain-completeness"],
+        "currentness": ["currentness-jurisdiction"],
+        "evidence": ["evidence-source", "adversarial-research"],
+        "safety": ["safety-scope"],
+        "scope": ["domain-completeness", "safety-scope"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 60,
+        "processRetries": 2
+      },
+      "writable": ["{course}/research/**"],
+      "readOnly": ["{course}/input/**"]
+    },
+    "INSTRUCTIONAL_DESIGN": {
+      "kind": "agent",
+      "description": "Design objectives, modules, alignment and assessment strategy",
+      "inputs": {
+        "required": ["research/research-dossier.json", "research/claims.jsonl", "research/sources.jsonl"],
+        "optional": []
+      },
+      "outputs": ["design/instructional-design.json", "design/instructional-design.md"],
+      "artifacts": {
+        "design": "design/instructional-design.json"
+      },
+      "generator": {
+        "role": "instructional-designer",
+        "promptTemplate": "instructional-design",
+        "skills": ["instructional-design"],
+        "tools": ["read", "grep", "glob"],
+        "outputSchema": "instructional-design",
+        "fanOut": "none",
+        "writeMode": "structured",
+        "network": false
+      },
+      "compiler": "design",
+      "validators": ["schema", "design-alignment", "ids-unique", "no-placeholders"],
+      "reviewers": ["learning-architecture", "alignment", "audience-cognitive-load", "source-fidelity", "assessment-strategy"],
+      "rerunMap": {
+        "accuracy": ["source-fidelity"],
+        "alignment": ["alignment", "assessment-strategy"],
+        "assessment": ["alignment", "assessment-strategy"],
+        "citation": ["source-fidelity"],
+        "cognitive-load": ["audience-cognitive-load"],
+        "evidence": ["source-fidelity"],
+        "instructional": ["learning-architecture", "audience-cognitive-load"],
+        "structure": ["learning-architecture"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/design/**"],
+      "readOnly": ["{course}/input/**", "{course}/research/**"]
+    },
+    "STORYBOARD": {
+      "kind": "agent",
+      "description": "Author complete learner-facing storyboard modules, items and visual specs",
+      "inputs": {
+        "required": ["design/instructional-design.json"],
+        "optional": ["research/sources.jsonl", "research/claims.jsonl", "research/research-dossier.json"]
+      },
+      "outputs": ["storyboard/storyboard.json", "storyboard/storyboard.md"],
+      "artifacts": {
+        "storyboard": "storyboard/storyboard.json"
+      },
+      "generator": {
+        "role": "storyboard-author",
+        "promptTemplate": "storyboard-module",
+        "skills": ["storyboard-authoring", "scenario-design", "assessment-design", "instructional-graphics"],
+        "tools": ["read", "grep", "glob"],
+        "outputSchema": "storyboard-module",
+        "fanOut": "per-module",
+        "writeMode": "structured",
+        "network": false
+      },
+      "compiler": "storyboard",
+      "validators": [
+        "schema",
+        "ids-unique",
+        "no-placeholders",
+        "answer-keys",
+        "lo-coverage",
+        "citations-resolve",
+        "visual-text-equivalents",
+        "no-drag-only",
+        "locks-intact"
+      ],
+      "reviewers": [
+        "content-completeness",
+        "instructional",
+        "assessment",
+        "citation-evidence",
+        "accessibility-planning",
+        "editorial-readability"
+      ],
+      "rerunMap": {
+        "accessibility": ["accessibility-planning"],
+        "accuracy": ["citation-evidence"],
+        "alignment": ["assessment"],
+        "assessment": ["assessment"],
+        "citation": ["citation-evidence"],
+        "cognitive-load": ["instructional"],
+        "completeness": ["content-completeness"],
+        "consistency": ["editorial-readability"],
+        "editorial": ["editorial-readability"],
+        "evidence": ["citation-evidence"],
+        "instructional": ["content-completeness", "instructional"],
+        "scenario": ["instructional"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "hybrid",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/storyboard/**"],
+      "readOnly": ["{course}/input/**", "{course}/research/**", "{course}/design/**"]
+    },
+    "EDITORIAL": {
+      "kind": "agent",
+      "description": "Text-only editorial pass with structural and polarity guards",
+      "inputs": {
+        "required": ["storyboard/storyboard.json"],
+        "optional": []
+      },
+      "outputs": ["storyboard/storyboard-edited.json", "storyboard/storyboard-edited.md", "storyboard/editorial-diff.json"],
+      "artifacts": {
+        "storyboard-edited": "storyboard/storyboard-edited.json"
+      },
+      "generator": {
+        "role": "editor",
+        "promptTemplate": "editorial",
+        "skills": ["editorial-humanization"],
+        "tools": ["read", "grep", "glob"],
+        "outputSchema": "editorial-result",
+        "fanOut": "per-module",
+        "writeMode": "structured",
+        "network": false
+      },
+      "compiler": "editorial",
+      "validators": ["schema", "editorial-structure", "editorial-polarity", "no-placeholders", "locks-intact"],
+      "reviewers": ["editorial-integrity", "editorial-readability"],
+      "rerunMap": {
+        "accuracy": ["editorial-integrity"],
+        "consistency": ["editorial-integrity", "editorial-readability"],
+        "editorial": ["editorial-integrity", "editorial-readability"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/storyboard/**"],
+      "readOnly": ["{course}/input/**", "{course}/research/**", "{course}/design/**"]
+    },
+    "VISUAL_DIRECTION": {
+      "kind": "agent",
+      "description": "Choose bounded visual direction, tokens, component plan and visual routes",
+      "inputs": {
+        "required": [["storyboard/storyboard-edited.json", "storyboard/storyboard.json"]],
+        "optional": []
+      },
+      "outputs": [
+        "visual/direction.json",
+        "visual/design-brief.md",
+        "visual/design-tokens.json",
+        "visual/component-plan.json",
+        "visual/visual-specs.json"
+      ],
+      "artifacts": {
+        "direction": "visual/direction.json",
+        "visual-specs": "visual/visual-specs.json"
+      },
+      "generator": {
+        "role": "visual-director",
+        "promptTemplate": "visual-direction",
+        "skills": ["visual-direction", "instructional-graphics"],
+        "tools": ["read", "grep", "glob"],
+        "outputSchema": "visual-direction",
+        "fanOut": "none",
+        "writeMode": "structured",
+        "network": false
+      },
+      "compiler": "visual-direction",
+      "validators": ["schema", "direction-contrast", "visual-routes", "visual-text-equivalents"],
+      "reviewers": ["information-design", "visual-ui", "responsive-planning", "accessibility-visual", "content-integrity"],
+      "rerunMap": {
+        "accessibility": ["responsive-planning", "accessibility-visual"],
+        "accuracy": ["content-integrity"],
+        "consistency": ["content-integrity"],
+        "instructional": ["information-design"],
+        "traceability": ["content-integrity"],
+        "ui": ["visual-ui", "responsive-planning"],
+        "ux": ["responsive-planning"],
+        "visual": ["information-design", "visual-ui", "accessibility-visual"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/visual/**"],
+      "readOnly": ["{course}/input/**", "{course}/research/**", "{course}/design/**", "{course}/storyboard/**"]
+    },
+    "COURSE_MODEL": {
+      "kind": "deterministic",
+      "description": "Compile the canonical course model, build manifest and trace graph",
+      "inputs": {
+        "required": [
+          ["storyboard/storyboard-edited.json", "storyboard/storyboard.json"],
+          "visual/direction.json",
+          "visual/visual-specs.json"
+        ],
+        "optional": []
+      },
+      "outputs": ["model/course.json", "model/build-manifest.json", "model/trace.json"],
+      "artifacts": {
+        "course-model": "model/course.json"
+      },
+      "generator": null,
+      "compiler": "course-model",
+      "validators": ["schema", "model-integrity", "trace", "lo-coverage", "citations-resolve"],
+      "reviewers": [],
+      "rerunMap": {},
+      "repairer": null,
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 900,
+        "stageTimeoutSec": 3600,
+        "maxTurns": 0,
+        "processRetries": 0
+      },
+      "writable": ["{course}/model/**"],
+      "readOnly": ["{course}/input/**", "{course}/research/**", "{course}/design/**", "{course}/storyboard/**", "{course}/visual/**"]
+    },
+    "COURSE_BUILD": {
+      "kind": "deterministic",
+      "description": "Render graphics and components into a single-file HTML course",
+      "inputs": {
+        "required": ["model/course.json"],
+        "optional": []
+      },
+      "outputs": ["build/index.html", "build/build-report.json"],
+      "artifacts": {
+        "build": "build/index.html"
+      },
+      "generator": null,
+      "compiler": "build",
+      "validators": ["build-single-file", "build-ids-rendered", "build-no-runtime-deps", "build-size-budget", "visual-text-equivalents"],
+      "reviewers": [],
+      "rerunMap": {},
+      "repairer": null,
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 900,
+        "stageTimeoutSec": 3600,
+        "maxTurns": 0,
+        "processRetries": 0
+      },
+      "writable": ["{course}/build/**"],
+      "readOnly": [
+        "{course}/input/**",
+        "{course}/research/**",
+        "{course}/design/**",
+        "{course}/storyboard/**",
+        "{course}/visual/**",
+        "{course}/model/**"
+      ]
+    },
+    "COURSE_QA": {
+      "kind": "agent",
+      "description": "Browser QA, accessibility audit and final review panel",
+      "inputs": {
+        "required": ["build/index.html"],
+        "optional": ["model/course.json"]
+      },
+      "outputs": [
+        "review/functional-tests.json",
+        "review/accessibility-review.json",
+        "review/screenshots/manifest.json",
+        "review/consolidated-review.md",
+        "review/repair-plan.json",
+        "review/regression-report.json"
+      ],
+      "artifacts": {
+        "qa-functional": "review/functional-tests.json",
+        "qa-accessibility": "review/accessibility-review.json"
+      },
+      "generator": null,
+      "compiler": "qa",
+      "validators": ["qa-functional", "qa-accessibility", "qa-responsive"],
+      "reviewers": [
+        "factual-currentness",
+        "gap-analysis",
+        "instructional-final",
+        "assessment-engine",
+        "functional-browser",
+        "accessibility-final",
+        "ui",
+        "ux",
+        "visual-consistency",
+        "release-adversarial"
+      ],
+      "rerunMap": {
+        "accessibility": ["accessibility-final"],
+        "accuracy": ["factual-currentness", "release-adversarial"],
+        "alignment": ["instructional-final"],
+        "assessment": ["assessment-engine"],
+        "completeness": ["gap-analysis"],
+        "consistency": ["visual-consistency"],
+        "currentness": ["factual-currentness"],
+        "functional": ["assessment-engine", "functional-browser"],
+        "instructional": ["instructional-final"],
+        "other": ["release-adversarial"],
+        "safety": ["release-adversarial"],
+        "traceability": ["release-adversarial"],
+        "ui": ["ui"],
+        "ux": ["ux"],
+        "visual": ["ui", "visual-consistency"]
+      },
+      "repairer": {
+        "role": "repairer",
+        "promptTemplate": "repair",
+        "outputSchema": "repair-result"
+      },
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 1800,
+        "stageTimeoutSec": 14400,
+        "maxTurns": 40,
+        "processRetries": 2
+      },
+      "writable": ["{course}/review/**"],
+      "readOnly": [
+        "{course}/input/**",
+        "{course}/research/**",
+        "{course}/design/**",
+        "{course}/storyboard/**",
+        "{course}/visual/**",
+        "{course}/model/**",
+        "{course}/build/**"
+      ]
+    },
+    "RELEASE": {
+      "kind": "deterministic",
+      "description": "Apply the release gate and package the release",
+      "inputs": {
+        "required": ["build/index.html", "review/functional-tests.json", "review/accessibility-review.json"],
+        "optional": []
+      },
+      "outputs": ["release/course.html", "release/qa-report.md", "release/source-report.md", "release/release-manifest.json"],
+      "artifacts": {
+        "release": "release/course.html"
+      },
+      "generator": null,
+      "compiler": "release",
+      "validators": ["release-gate", "originals-intact"],
+      "reviewers": [],
+      "rerunMap": {},
+      "repairer": null,
+      "gateDefault": "auto",
+      "limits": {
+        "taskTimeoutSec": 900,
+        "stageTimeoutSec": 3600,
+        "maxTurns": 0,
+        "processRetries": 0
+      },
+      "writable": ["{course}/release/**"],
+      "readOnly": [
+        "{course}/input/**",
+        "{course}/research/**",
+        "{course}/design/**",
+        "{course}/storyboard/**",
+        "{course}/visual/**",
+        "{course}/model/**",
+        "{course}/build/**",
+        "{course}/review/**"
+      ]
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "$schema": "../schemas/tools-config.schema.json",
+  "version": 1,
+  "tools": {
+    "read": {
+      "kind": "agent-tool",
+      "description": "Read files",
+      "capabilities": [],
+      "required": false,
+      "package": null,
+      "agentTools": ["Read"]
+    },
+    "grep": {
+      "kind": "agent-tool",
+      "description": "Search file contents",
+      "capabilities": [],
+      "required": false,
+      "package": null,
+      "agentTools": ["Grep"]
+    },
+    "glob": {
+      "kind": "agent-tool",
+      "description": "Find files by pattern",
+      "capabilities": [],
+      "required": false,
+      "package": null,
+      "agentTools": ["Glob"]
+    },
+    "write": {
+      "kind": "agent-tool",
+      "description": "Create files",
+      "capabilities": [],
+      "required": false,
+      "package": null,
+      "agentTools": ["Write"]
+    },
+    "edit": {
+      "kind": "agent-tool",
+      "description": "Edit files",
+      "capabilities": [],
+      "required": false,
+      "package": null,
+      "agentTools": ["Edit"]
+    },
+    "web-search": {
+      "kind": "agent-tool",
+      "description": "Web search",
+      "capabilities": ["network"],
+      "required": false,
+      "package": null,
+      "agentTools": ["WebSearch"]
+    },
+    "web-fetch": {
+      "kind": "agent-tool",
+      "description": "Fetch web pages",
+      "capabilities": ["network"],
+      "required": false,
+      "package": null,
+      "agentTools": ["WebFetch"]
+    },
+    "mermaid": {
+      "kind": "renderer",
+      "description": "Mermaid diagrams rendered in the shared Chromium page",
+      "capabilities": ["flowchart", "sequence", "state", "timeline"],
+      "required": true,
+      "package": "mermaid",
+      "agentTools": []
+    },
+    "cf_svg": {
+      "kind": "renderer",
+      "description": "Native CourseForge SVG archetype builders",
+      "capabilities": ["native-archetypes"],
+      "required": true,
+      "package": null,
+      "agentTools": []
+    },
+    "svgjs": {
+      "kind": "renderer",
+      "description": "SVG.js programmatic drawing in the shared Chromium page",
+      "capabilities": ["labeled-object", "network"],
+      "required": true,
+      "package": "@svgdotjs/svg.js",
+      "agentTools": []
+    },
+    "vega_lite": {
+      "kind": "renderer",
+      "description": "Vega-Lite charts rendered headless to SVG",
+      "capabilities": ["quantitative-chart"],
+      "required": true,
+      "package": "vega-lite",
+      "agentTools": []
+    },
+    "d3": {
+      "kind": "renderer",
+      "description": "D3 for advanced networks and interactive data",
+      "capabilities": ["network", "interactive-data"],
+      "required": false,
+      "package": "d3",
+      "agentTools": []
+    },
+    "lucide": {
+      "kind": "asset",
+      "description": "Lucide icon SVGs (ISC) from a closed vocabulary",
+      "capabilities": ["icons"],
+      "required": true,
+      "package": "lucide-static",
+      "agentTools": []
+    },
+    "playwright": {
+      "kind": "qa",
+      "description": "Chromium automation for render and QA",
+      "capabilities": ["browser", "screenshots"],
+      "required": true,
+      "package": "playwright",
+      "agentTools": []
+    },
+    "axe": {
+      "kind": "qa",
+      "description": "axe-core accessibility audit",
+      "capabilities": ["wcag"],
+      "required": true,
+      "package": "@axe-core/playwright",
+      "agentTools": []
+    },
+    "esbuild": {
+      "kind": "bundler",
+      "description": "Bundles course runtime JS/CSS",
+      "capabilities": ["bundle", "minify"],
+      "required": true,
+      "package": "esbuild",
+      "agentTools": []
+    },
+    "marked": {
+      "kind": "parser",
+      "description": "Markdown lexer",
+      "capabilities": ["md"],
+      "required": true,
+      "package": "marked",
+      "agentTools": []
+    },
+    "cheerio": {
+      "kind": "parser",
+      "description": "HTML parsing",
+      "capabilities": ["html"],
+      "required": true,
+      "package": "cheerio",
+      "agentTools": []
+    },
+    "mammoth": {
+      "kind": "parser",
+      "description": "DOCX to HTML/text",
+      "capabilities": ["docx"],
+      "required": false,
+      "package": "mammoth",
+      "agentTools": []
+    },
+    "unpdf": {
+      "kind": "parser",
+      "description": "PDF text extraction",
+      "capabilities": ["pdf"],
+      "required": false,
+      "package": "unpdf",
+      "agentTools": []
+    }
+  }
+}

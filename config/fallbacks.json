@@ -1,0 +1,23 @@
+{
+  "$schema": "../schemas/fallbacks-config.schema.json",
+  "version": 1,
+  "renderer": {
+    "maxSemanticRepairs": 1,
+    "terminal": "text_equivalent"
+  },
+  "schemaRetries": 1,
+  "process": {
+    "retries": 2,
+    "backoffMs": [2000, 8000]
+  },
+  "backend": {
+    "enabled": false,
+    "order": ["claude", "codex"],
+    "triggers": ["unavailable", "authentication_failed", "billing_error", "model_not_found"],
+    "afterAttempts": 2
+  },
+  "concurrency": {
+    "reviewers": 3,
+    "fanOut": 3
+  }
+}

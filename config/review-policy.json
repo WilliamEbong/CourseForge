@@ -1,0 +1,46 @@
+{
+  "$schema": "../schemas/review-policy.schema.json",
+  "version": 1,
+  "maxRepairCycles": 3,
+  "perStageMaxRepairCycles": {},
+  "repairSeverities": ["blocker", "critical", "major"],
+  "releaseBlockingSeverities": ["blocker", "critical"],
+  "axeBlockingImpacts": ["serious", "critical"],
+  "onCapReached": "human",
+  "gateDefaults": {},
+  "riskFloors": {
+    "standard": {},
+    "elevated": {
+      "RELEASE": "hybrid"
+    },
+    "high_stakes": {
+      "RESEARCH_DOSSIER": "hybrid",
+      "INSTRUCTIONAL_DESIGN": "hybrid",
+      "STORYBOARD": "hybrid",
+      "COURSE_QA": "human",
+      "RELEASE": "human"
+    }
+  },
+  "intakeModes": {
+    "preserve": {
+      "generate": false,
+      "review": false,
+      "repair": false
+    },
+    "review-only": {
+      "generate": false,
+      "review": true,
+      "repair": false
+    },
+    "improve": {
+      "generate": false,
+      "review": true,
+      "repair": true
+    },
+    "rebuild": {
+      "generate": true,
+      "review": true,
+      "repair": true
+    }
+  }
+}
