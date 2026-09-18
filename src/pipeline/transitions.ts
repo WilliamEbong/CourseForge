@@ -46,7 +46,13 @@ const TABLE: Record<StageStatus, Partial<Record<Trigger, StageStatus>>> = {
     start: 'VALIDATING',
   },
   APPROVED: { lock: 'LOCKED' },
-  LOCKED: { 'upstream-changed': 'SUPERSEDED', 'upstream-changed-human': 'WAITING_FOR_HUMAN', ingest: 'INGESTED', start: 'VALIDATING' },
+  LOCKED: {
+    'upstream-changed': 'SUPERSEDED',
+    'upstream-changed-human': 'WAITING_FOR_HUMAN',
+    ingest: 'INGESTED',
+    start: 'VALIDATING',
+    reset: 'NOT_STARTED',
+  },
   FAILED: { start: 'VALIDATING', ingest: 'INGESTED', reset: 'NOT_STARTED' },
   SUPERSEDED: { start: 'VALIDATING', ingest: 'INGESTED', reset: 'NOT_STARTED' },
 };

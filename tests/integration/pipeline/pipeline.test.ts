@@ -206,3 +206,13 @@ describe('import stage inference fallback', () => {
     expect(decisions.some((d) => d.kind === 'classification' && d.rule === 'CLS-IMPORT-STAGE-001')).toBe(true);
   }, 120_000);
 });
+
+describe('forced re-run', () => {
+  it('@C1 a locked stage can be deliberately re-run with --force', async () => {
+    useFakeEnv();
+    const { courseId } = await api.newCourse({ title: TITLE, runTo: 'RESEARCH_BRIEF' });
+    const r = await api.run({ courseId, from: 'RESEARCH_BRIEF', to: 'RESEARCH_BRIEF', force: true });
+    expect(r.status).toBe('completed');
+    expect(loadState(courseDir(courseId)).stages.RESEARCH_BRIEF.status).toBe('LOCKED');
+  }, 120_000);
+});
