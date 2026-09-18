@@ -1,0 +1,11 @@
+{
+  "courseId":"example-course",
+  "currentStage":"STORYBOARD",
+  "targetStage":"RELEASE",
+  "canonicalArtifacts":{},
+  "stages":{
+    "RESEARCH_DOSSIER":{"status":"LOCKED"},
+    "INSTRUCTIONAL_DESIGN":{"status":"LOCKED"},
+    "STORYBOARD":{"status":"WAITING_FOR_HUMAN"}
+  }
+}

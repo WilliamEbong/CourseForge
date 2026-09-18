@@ -1,0 +1,11 @@
+{
+  "runId":"RUN-EXAMPLE",
+  "courseId":"chemical-risk",
+  "stage":"COURSE_BUILD",
+  "backend":"claude",
+  "inputs":["ART-STORYBOARD-APPROVED"],
+  "skills":["course-html-builder","frontend-design","instructional-graphics"],
+  "tools":["mermaid","svgjs","vega_lite","d3","lucide"],
+  "reviewersAfter":["content-integrity","visual","ux","accessibility","functional"],
+  "humanGate":"optional"
+}

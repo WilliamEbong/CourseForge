@@ -1,0 +1,13 @@
+{
+  "artifactId":"ART-EXAMPLE",
+  "stage":"STORYBOARD",
+  "path":"storyboard/storyboard.md",
+  "version":1,
+  "producer":"human",
+  "parents":["ART-DESIGN-APPROVED"],
+  "hash":"sha256:...",
+  "humanModified":true,
+  "approved":true,
+  "locked":true,
+  "reviewStatus":"passed"
+}

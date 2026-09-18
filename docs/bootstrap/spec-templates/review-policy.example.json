@@ -1,0 +1,12 @@
+{
+  "maxRepairCycles": 3,
+  "releaseBlockingSeverities": ["blocker", "critical"],
+  "humanGates": {
+    "RESEARCH_DOSSIER":"optional",
+    "INSTRUCTIONAL_DESIGN":"optional",
+    "STORYBOARD":"optional",
+    "VISUAL_DIRECTION":"optional",
+    "COURSE_QA":"optional",
+    "RELEASE":"optional"
+  }
+}

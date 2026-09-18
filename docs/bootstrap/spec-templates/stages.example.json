@@ -1,0 +1,15 @@
+{
+  "stages": [
+    "CONCEPT",
+    "RESEARCH_BRIEF",
+    "RESEARCH_DOSSIER",
+    "INSTRUCTIONAL_DESIGN",
+    "STORYBOARD",
+    "EDITORIAL",
+    "VISUAL_DIRECTION",
+    "COURSE_MODEL",
+    "COURSE_BUILD",
+    "COURSE_QA",
+    "RELEASE"
+  ]
+}

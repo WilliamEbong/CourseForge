@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/routing.schema.json",
+  "visualRoutes": {
+    "PROCESS": {"primary":"mermaid","fallback":"svgjs"},
+    "TIMELINE": {"primary":"mermaid","fallback":"svgjs"},
+    "SEQUENCE": {"primary":"mermaid","fallback":"svgjs"},
+    "LIFECYCLE": {"primary":"courseforge_svg","fallback":"svgjs"},
+    "COMPARISON": {"primary":"courseforge_svg","fallback":"svgjs"},
+    "QUANTITATIVE_CHART": {"primary":"vega_lite","fallback":"d3"},
+    "ADVANCED_DATA_VIS": {"primary":"d3","fallback":"vega_lite"},
+    "CUSTOM_CONCEPTUAL": {"primary":"svgjs","fallback":"courseforge_svg"}
+  }
+}

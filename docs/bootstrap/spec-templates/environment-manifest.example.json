@@ -1,0 +1,11 @@
+{
+  "generatedAt":"2026-09-18T00:00:00Z",
+  "platform":"win32",
+  "architecture":"x64",
+  "node":{"installed":true,"version":"22.x","compatible":true},
+  "git":{"installed":true,"version":"2.x"},
+  "claude":{"installed":true,"version":"unknown","ready":true},
+  "codex":{"installed":false,"version":null,"ready":false},
+  "playwright":{"installed":true,"chromium":true},
+  "status":"ready"
+}

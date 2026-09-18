@@ -1,0 +1,23 @@
+course:
+  id: example-course
+  title: Example Course
+  language: en-CA
+  target_duration_minutes: 120
+
+pipeline:
+  start_stage: CONCEPT
+  target_stage: RELEASE
+  agent_backend: auto
+  autonomy: high
+
+human_review:
+  RESEARCH_DOSSIER: optional
+  INSTRUCTIONAL_DESIGN: optional
+  STORYBOARD: optional
+  VISUAL_DIRECTION: optional
+  COURSE_QA: optional
+  RELEASE: optional
+
+improvement:
+  preserve_human_edits: true
+  default_import_mode: improve

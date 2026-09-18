@@ -1,0 +1,28 @@
+# Normalise text to LF in the repository so artifact SHA-256 hashes are stable across operating systems.
+* text=auto eol=lf
+
+# Windows-native scripts keep CRLF
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# POSIX scripts must stay LF
+*.sh text eol=lf
+courseforge text eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.docx binary
+*.pptx binary
+*.zip binary
+*.woff binary
+*.woff2 binary
+
+# Generated / noisy files
+package-lock.json text eol=lf -diff linguist-generated
+schemas/*.schema.json linguist-generated

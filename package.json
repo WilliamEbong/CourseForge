@@ -1,0 +1,37 @@
+{
+  "name": "courseforge",
+  "version": "0.1.0",
+  "description": "Local, deterministic, review-driven e-learning course engineering harness for Claude Code and Codex.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "courseforge": "bin/courseforge.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "setup": "node scripts/bootstrap.mjs",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "gen:schemas": "tsx scripts/gen-schemas.ts",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "test:acceptance": "node scripts/acceptance.mjs",
+    "coverage": "vitest run --coverage",
+    "doctor": "node bin/courseforge.mjs doctor",
+    "smoke": "node bin/courseforge.mjs smoke",
+    "smoke:clean": "node scripts/fresh-clone-smoke.mjs",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build -o storybook-static",
+    "courseforge": "node bin/courseforge.mjs",
+    "ci": "npm run typecheck && npm run lint && npm run test && npm run test:e2e"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "../schemas/tool-registry.schema.json",
+  "tools": {
+    "mermaid": {"kind":"renderer","capabilities":["flowchart","timeline","sequence","state_diagram"],"required":true},
+    "svgjs": {"kind":"renderer","capabilities":["custom_vector","conceptual_diagram"],"required":true},
+    "vega_lite": {"kind":"renderer","capabilities":["quantitative_chart"],"required":true},
+    "d3": {"kind":"renderer","capabilities":["advanced_data_visualization"],"required":true},
+    "lucide": {"kind":"asset","capabilities":["icon"],"required":true},
+    "playwright": {"kind":"qa","capabilities":["browser_test","screenshot","responsive_test","interaction_test"],"required":true},
+    "axe": {"kind":"qa","capabilities":["automated_accessibility"],"required":true}
+  }
+}
