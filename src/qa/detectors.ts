@@ -109,8 +109,8 @@ export async function detectIssues(page: Page, rootSelector?: string): Promise<D
       for (const svg of root.querySelectorAll('svg')) {
         if (svg.parentElement?.closest('svg') || !visible(svg)) continue;
         const r = svg.getBoundingClientRect();
-        const sized = svg.hasAttribute('viewBox') || (svg.hasAttribute('width') && svg.hasAttribute('height'));
-        if (!sized || r.width < 1 || r.height < 1 || svg.childElementCount === 0) push(out.brokenImages, describe(svg));
+        // Size may come from attributes or CSS (e.g. sprite icons via <use>); what matters is a rendered box with content.
+        if (r.width < 1 || r.height < 1 || svg.childElementCount === 0) push(out.brokenImages, describe(svg));
       }
       const controls = root.querySelectorAll(
         'button, a[href], [role=button], [role=link], [role=tab], [role=menuitem], input:not([type=hidden]), select, textarea, summary',

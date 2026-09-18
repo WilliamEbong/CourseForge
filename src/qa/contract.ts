@@ -316,7 +316,13 @@ async function readResult(page: Page, section: Locator, expected: string): Promi
 }
 
 /** Makes the item answerable: uses the retry control, or resets the assessment if a graded item is locked. */
-async function prepare(page: Page, s: QaScreen, form: Locator): Promise<void> {
+async function prepare(page: Page, s: QaScreen, form: Locator, isolate: boolean): Promise<void> {
+  // Graded items are single-attempt by design: when testing an item in isolation, reset the assessment first.
+  if (s.graded && isolate) {
+    await page.evaluate(() => (window as unknown as CfWindow).__cf.resetAssessment());
+    await goTo(page, s.id);
+    return;
+  }
   const retry = await visibleFirst(page, `${screenSel(s.id)} [data-cf-retry]`);
   if (retry) {
     await retry.click();
@@ -334,7 +340,7 @@ interface PathOutcome {
   detail: string;
 }
 
-async function answerItem(page: Page, s: QaScreen, correct: boolean): Promise<PathOutcome> {
+async function answerItem(page: Page, s: QaScreen, correct: boolean, isolate = true): Promise<PathOutcome> {
   const it = s.interaction;
   if (!it) return { status: 'skipped', detail: 'no interaction' };
   if (!(await goTo(page, s.id))) return { status: 'fail', detail: 'screen not shown' };
@@ -351,7 +357,7 @@ async function answerItem(page: Page, s: QaScreen, correct: boolean): Promise<Pa
   if (!(await form.count())) return { status: 'fail', detail: 'no form.cf-question' };
   const itemId = (await form.getAttribute('data-cf-item')) ?? s.id;
   try {
-    await prepare(page, s, form);
+    await prepare(page, s, form, isolate);
     const how = await applyAnswer(page, form, it, correct);
     if (how === null) return { status: 'skipped', detail: 'no incorrect answer constructible' };
     await form.locator('[data-cf-submit]').first().click();
@@ -408,10 +414,10 @@ async function checkScoring(page: Page, model: QaModel): Promise<{ scoring: Func
     let correctCount = 0;
     for (const [i, s] of graded.entries()) {
       let want = pick(i);
-      let r = await answerItem(page, s, want);
+      let r = await answerItem(page, s, want, false);
       if (!want && r.status === 'skipped') {
         want = true;
-        r = await answerItem(page, s, true);
+        r = await answerItem(page, s, true, false);
       }
       if (r.status === 'fail') problems.push(`${name}: ${s.id} ${r.detail}`);
       if (want) correctCount++;
