@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm test)",
+      "Bash(npm run test*)",
+      "Bash(node bin/courseforge.mjs *)"
+    ],
+    "deny": [
+      "Read(/.env)",
+      "Read(/.env.*)",
+      "Edit(/.env)",
+      "Edit(/.env.*)",
+      "Edit(/courses/*/input/originals/**)",
+      "Edit(/courses/*/versions/**)"
+    ]
+  }
+}
