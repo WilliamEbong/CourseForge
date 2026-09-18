@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Detector fixture: defects</title>
+<style>
+  body { margin: 0; font: 16px/1.5 sans-serif; }
+  button { min-width: 48px; min-height: 48px; }
+  #wide { width: 2000px; height: 20px; background: #ccc; }
+  #clip { width: 120px; overflow: hidden; white-space: nowrap; }
+  #tiny { min-width: 0; min-height: 0; width: 12px; height: 12px; padding: 0; }
+  #nofocus:focus { outline: none; }
+</style>
+</head>
+<body>
+  <main>
+    <div id="wide"></div>
+    <p id="clip">This sentence is far too long to fit inside its narrow clipped box.</p>
+    <button id="noname" type="button"></button>
+    <button id="tiny" type="button" aria-label="Tiny"></button>
+    <img id="broken" src="does-not-exist.png" alt="Missing picture" width="40" height="40">
+    <button id="nofocus" type="button">No focus style</button>
+  </main>
+</body>
+</html>

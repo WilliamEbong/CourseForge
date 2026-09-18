@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Detector fixture: clean</title>
+<style>
+  body { margin: 0; font: 16px/1.5 sans-serif; }
+  button { min-width: 48px; min-height: 48px; }
+  button:focus-visible { outline: 3px solid #1a5fb4; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .scroller { overflow-x: auto; max-width: 300px; }
+  .scroller table { width: 900px; }
+</style>
+</head>
+<body>
+  <main>
+    <p>Plain paragraph with an <a href="#x">inline link</a>.</p>
+    <span class="sr-only">Visually hidden helper text that is long</span>
+    <div class="scroller"><table><tr><td>Wide table inside a scroll container</td></tr></table></div>
+    <button id="focus-ok" type="button">Has focus style</button>
+    <svg viewBox="0 0 10 10" width="40" height="40" role="img" aria-label="Square"><rect width="10" height="10"/></svg>
+  </main>
+</body>
+</html>

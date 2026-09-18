@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract mini course</title>
+<!-- Hand-written stand-in for a CourseForge build: implements the data-cf-* DOM contract and window.__cf. -->
+<style>
+  :root { --fg: #1b1b1f; --bg: #ffffff; --accent: #1a5fb4; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: var(--fg); background: var(--bg); }
+  header, footer { display: flex; gap: 8px; align-items: center; padding: 8px 16px; flex-wrap: wrap; }
+  main { padding: 16px; max-width: 60rem; margin: 0 auto; }
+  button { min-height: 44px; min-width: 44px; padding: 8px 14px; font: inherit; border: 1px solid #555; border-radius: 6px; background: #f4f4f6; color: var(--fg); cursor: pointer; }
+  button:disabled { opacity: .6; cursor: default; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  [data-cf-nav-list] { padding: 8px 16px; }
+  [data-cf-nav-list] a { display: inline-block; min-height: 44px; padding: 10px 8px; }
+  [data-cf-progress] { width: 160px; height: 10px; background: #ddd; border-radius: 5px; overflow: hidden; }
+  [data-cf-progress] span { display: block; height: 100%; background: var(--accent); }
+  ol[data-cf-sequence] li { display: flex; gap: 8px; align-items: center; margin: 4px 0; }
+  label { display: flex; gap: 8px; align-items: center; min-height: 44px; }
+  input[type=radio] { width: 24px; height: 24px; }
+  input[type=search] { min-height: 44px; font: inherit; }
+  figure svg { max-width: 100%; height: auto; }
+  dialog { max-width: min(40rem, 90vw); }
+</style>
+</head>
+<body>
+<header>
+  <button type="button" data-cf-menu-toggle aria-expanded="false" aria-controls="cf-menu">Menu</button>
+  <div data-cf-progress role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+  <button type="button" data-cf-open="glossary">Glossary</button>
+  <button type="button" data-cf-open="references">References</button>
+</header>
+<nav id="cf-menu" data-cf-nav-list aria-label="Course menu" hidden></nav>
+<main id="cf-main"></main>
+<footer>
+  <button type="button" data-cf-nav="prev">Previous</button>
+  <button type="button" data-cf-nav="next">Next</button>
+</footer>
+
+<dialog id="cf-glossary" aria-labelledby="cf-glossary-h">
+  <h2 id="cf-glossary-h">Glossary</h2>
+  <label>Search glossary <input type="search" data-cf-search></label>
+  <dl id="cf-glossary-list"></dl>
+  <button type="button" data-cf-close>Close</button>
+</dialog>
+<dialog id="cf-references" aria-labelledby="cf-references-h">
+  <h2 id="cf-references-h">References</h2>
+  <ul id="cf-references-list"></ul>
+  <button type="button" data-cf-close>Close</button>
+</dialog>
+<dialog id="cf-source" aria-labelledby="cf-source-h">
+  <h2 id="cf-source-h">Source</h2>
+  <p id="cf-source-body"></p>
+  <button type="button" data-cf-close>Close</button>
+</dialog>
+<dialog id="cf-confirm" aria-labelledby="cf-confirm-h">
+  <h2 id="cf-confirm-h">Are you sure?</h2>
+  <button type="button" data-cf-confirm="yes">Yes, reset</button>
+  <button type="button" data-cf-confirm="no">Cancel</button>
+</dialog>
+
+<script id="cf-data" type="application/json">
+{
+  "courseId": "contract-mini",
+  "title": "Contract mini course",
+  "assessment": { "passingPercent": 70, "gradedScreenIds": ["q-single", "q-seq"] },
+  "modules": [{ "id": "m1", "title": "Basics" }, { "id": "m2", "title": "Check" }],
+  "glossary": [
+    { "id": "g-hazard", "term": "Hazard", "definition": "Something with the potential to cause harm.", "sourceIds": ["ref-a"] },
+    { "id": "g-risk", "term": "Risk", "definition": "Likelihood and severity of harm from a hazard.", "sourceIds": ["ref-b"] }
+  ],
+  "references": [
+    { "id": "ref-a", "title": "Workplace hazard guide" },
+    { "id": "ref-b", "title": "Risk assessment standard" }
+  ],
+  "screens": [
+    { "id": "intro", "index": 0, "moduleId": "m1", "kind": "section-title", "component": "module-landing", "title": "Welcome", "body": "This course covers hazards and risk.", "graded": false, "interaction": null, "citations": [{ "sourceId": "ref-a", "locator": "p.1" }], "visualId": null },
+    { "id": "concept", "index": 1, "moduleId": "m1", "kind": "concept", "component": "concept", "title": "Hazard versus risk", "body": "A hazard is a source of harm; risk combines likelihood and severity.", "graded": false, "interaction": null, "citations": [], "visualId": "v-matrix" },
+    { "id": "q-single", "index": 2, "moduleId": "m2", "kind": "graded", "component": "assessment-question", "title": "Question 1", "body": "", "graded": true, "citations": [], "visualId": null,
+      "interaction": { "mode": "single", "stem": "Which term combines likelihood and severity?",
+        "options": [{ "key": "a", "text": "Hazard" }, { "key": "b", "text": "Risk" }, { "key": "c", "text": "Exposure" }],
+        "targets": [], "correctKeys": ["b"], "mapping": [], "order": [],
+        "feedbackCorrect": "Correct.", "feedbackIncorrect": "Not quite.", "optionFeedback": [], "rationale": "Risk = likelihood × severity." } },
+    { "id": "q-seq", "index": 3, "moduleId": "m2", "kind": "graded", "component": "assessment-question", "title": "Question 2", "body": "", "graded": true, "citations": [], "visualId": null,
+      "interaction": { "mode": "sequencing", "stem": "Order the risk assessment steps.",
+        "options": [{ "key": "s1", "text": "Evaluate risk" }, { "key": "s2", "text": "Control risk" }, { "key": "s3", "text": "Identify hazards" }],
+        "targets": [], "correctKeys": [], "mapping": [], "order": ["s3", "s1", "s2"],
+        "feedbackCorrect": "Correct order.", "feedbackIncorrect": "Try again.", "optionFeedback": [], "rationale": "Identify, evaluate, control." } },
+    { "id": "results", "index": 4, "moduleId": "m2", "kind": "summary", "component": "results", "title": "Your results", "body": "", "graded": false, "interaction": null, "citations": [], "visualId": null }
+  ]
+}
+</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById('cf-data').textContent);
+  const KEY = `cf:${DATA.courseId}`;
+  const main = document.getElementById('cf-main');
+  const navList = document.querySelector('[data-cf-nav-list]');
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const fresh = () => ({ index: 0, visited: [DATA.screens[0].id], answers: {}, order: {} });
+  let state;
+  try { state = JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch { state = fresh(); }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
+
+  function graded() {
+    const ids = DATA.assessment.gradedScreenIds;
+    const answered = ids.filter((id) => state.answers[id]).length;
+    const correct = ids.filter((id) => state.answers[id]?.correct).length;
+    const percent = ids.length ? Math.round((100 * correct) / ids.length) : 0;
+    return { answered, correct, total: ids.length, percent, passed: percent >= DATA.assessment.passingPercent };
+  }
+
+  function questionHtml(s) {
+    const it = s.interaction;
+    let controls = '';
+    if (it.mode === 'single') {
+      controls = it.options.map((o) => `<label><input type="radio" name="${s.id}" value="${o.key}"> ${esc(o.text)}</label>`).join('');
+    } else if (it.mode === 'sequencing') {
+      const order = state.order[s.id] || it.options.map((o) => o.key);
+      const text = Object.fromEntries(it.options.map((o) => [o.key, o.text]));
+      controls = `<ol data-cf-sequence>${order.map((k) => `<li data-cf-key="${k}"><span>${esc(text[k])}</span>
+        <button type="button" data-cf-move="up" aria-label="Move ${esc(text[k])} up">Up</button>
+        <button type="button" data-cf-move="down" aria-label="Move ${esc(text[k])} down">Down</button></li>`).join('')}</ol>`;
+    }
+    const locked = s.graded && state.answers[s.id];
+    return `<form class="cf-question" data-cf-item="${s.id}" data-cf-mode="${it.mode}" data-cf-graded="${s.graded}">
+      <fieldset><legend>${esc(it.stem)}</legend>${controls}</fieldset>
+      <button type="submit" data-cf-submit ${locked ? 'disabled' : ''}>Check answer</button>
+      <div data-cf-feedback role="status"></div>
+      ${s.graded ? '' : '<button type="button" data-cf-retry hidden>Try again</button>'}
+    </form>`;
+  }
+
+  function screenHtml(s) {
+    let body = `<p>${esc(s.body)}</p>`;
+    if (s.citations.length) body += s.citations.map((c) => `<button type="button" data-cf-cite="${c.sourceId}">Source ${esc(c.sourceId)}</button>`).join(' ');
+    if (s.visualId) body += `<figure class="cf-figure" data-cf-visual="${s.visualId}"><svg viewBox="0 0 200 100" width="400" height="200" role="img" aria-labelledby="${s.visualId}-t"><title id="${s.visualId}-t">Risk matrix</title><rect x="0" y="0" width="200" height="100" fill="#e8eef8"/><text x="20" y="55">Likelihood × severity</text></svg><figcaption>Risk matrix: likelihood against severity.</figcaption></figure>`;
+    if (s.interaction) body += questionHtml(s);
+    if (s.component === 'results') {
+      body += `<div data-cf-results data-cf-score="0" data-cf-passed="false"><p data-cf-results-text></p></div>
+        <button type="button" data-cf-action="reset-assessment">Reset assessment</button>
+        <button type="button" data-cf-action="reset-course">Reset course</button>`;
+    }
+    return `<section class="cf-screen" data-cf-screen="${s.id}" data-cf-block="${s.id}" data-cf-module="${s.moduleId}" data-cf-kind="${s.kind}" data-cf-component="${s.component}" aria-labelledby="h-${s.id}" hidden>
+      <h1 class="cf-screen-title" id="h-${s.id}" tabindex="-1">${esc(s.title)}</h1>${body}</section>`;
+  }
+
+  main.innerHTML = DATA.screens.map(screenHtml).join('');
+  navList.innerHTML = `<ul>${DATA.screens.map((s) => `<li><a href="#" data-cf-goto="${s.id}">${esc(s.title)}</a></li>`).join('')}</ul>`;
+  document.getElementById('cf-glossary-list').innerHTML = DATA.glossary.map((g) => `<div data-cf-term="${g.id}"><dt>${esc(g.term)}</dt><dd>${esc(g.definition)}</dd></div>`).join('');
+  document.getElementById('cf-references-list').innerHTML = DATA.references.map((r) => `<li data-cf-ref="${r.id}">${esc(r.title)}</li>`).join('');
+
+  function renderSection(s) {
+    const sec = main.querySelector(`[data-cf-screen="${s.id}"]`);
+    sec.outerHTML = screenHtml(s);
+  }
+
+  function update() {
+    const s = DATA.screens[state.index];
+    for (const sec of main.querySelectorAll('.cf-screen')) sec.hidden = sec.dataset.cfScreen !== s.id;
+    document.querySelector('[data-cf-nav=prev]').disabled = state.index === 0;
+    document.querySelector('[data-cf-nav=next]').disabled = state.index === DATA.screens.length - 1;
+    const pct = Math.round((100 * state.visited.length) / DATA.screens.length);
+    const bar = document.querySelector('[data-cf-progress]');
+    bar.setAttribute('aria-valuenow', String(pct));
+    bar.firstElementChild.style.width = `${pct}%`;
+    const res = main.querySelector('[data-cf-results]');
+    const g = graded();
+    res.dataset.cfScore = String(g.percent);
+    res.dataset.cfPassed = String(g.passed);
+    res.querySelector('[data-cf-results-text]').textContent = `${g.correct} of ${g.total} correct (${g.percent}%) — ${g.passed ? 'passed' : 'not passed'}`;
+    save();
+  }
+
+  function go(target, focus = true) {
+    const i = typeof target === 'number' ? target : DATA.screens.findIndex((s) => s.id === target);
+    if (i < 0 || i >= DATA.screens.length) return;
+    state.index = i;
+    const id = DATA.screens[i].id;
+    if (!state.visited.includes(id)) state.visited.push(id);
+    update();
+    if (focus) main.querySelector(`[data-cf-screen="${id}"] h1`).focus();
+  }
+
+  main.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = form.dataset.cfItem;
+    const s = DATA.screens.find((x) => x.id === id);
+    const it = s.interaction;
+    let correct = false;
+    if (it.mode === 'single') correct = form.querySelector('input:checked')?.value === it.correctKeys[0];
+    if (it.mode === 'sequencing') correct = [...form.querySelectorAll('li[data-cf-key]')].map((li) => li.dataset.cfKey).join('|') === it.order.join('|');
+    const prev = state.answers[id];
+    state.answers[id] = { correct, attempts: (prev?.attempts ?? 0) + 1 };
+    const fb = form.querySelector('[data-cf-feedback]');
+    fb.dataset.cfResult = correct ? 'correct' : 'incorrect';
+    fb.textContent = correct ? it.feedbackCorrect : it.feedbackIncorrect;
+    if (s.graded) form.querySelector('[data-cf-submit]').disabled = true;
+    else form.querySelector('[data-cf-retry]').hidden = false;
+    update();
+  });
+
+  main.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (btn.dataset.cfMove) {
+      const li = btn.closest('li');
+      const ol = li.parentElement;
+      if (btn.dataset.cfMove === 'up' && li.previousElementSibling) ol.insertBefore(li, li.previousElementSibling);
+      if (btn.dataset.cfMove === 'down' && li.nextElementSibling) ol.insertBefore(li.nextElementSibling, li);
+      const form = btn.closest('form');
+      state.order[form.dataset.cfItem] = [...ol.children].map((x) => x.dataset.cfKey);
+      save();
+      btn.focus();
+    } else if (btn.hasAttribute('data-cf-retry')) {
+      const form = btn.closest('form');
+      const fb = form.querySelector('[data-cf-feedback]');
+      delete fb.dataset.cfResult;
+      fb.textContent = '';
+      btn.hidden = true;
+    } else if (btn.dataset.cfCite) {
+      const ref = DATA.references.find((r) => r.id === btn.dataset.cfCite);
+      document.getElementById('cf-source-body').textContent = ref ? ref.title : btn.dataset.cfCite;
+      openDialog('cf-source', btn);
+    } else if (btn.dataset.cfAction) {
+      pendingAction = btn.dataset.cfAction;
+      openDialog('cf-confirm', btn);
+    }
+  });
+
+  let pendingAction = null;
+  function openDialog(id, opener) {
+    const d = document.getElementById(id);
+    d.addEventListener('close', () => opener.isConnected && opener.focus(), { once: true });
+    d.showModal();
+  }
+  for (const b of document.querySelectorAll('[data-cf-close]')) b.addEventListener('click', () => b.closest('dialog').close());
+  for (const b of document.querySelectorAll('[data-cf-open]')) b.addEventListener('click', () => openDialog(`cf-${b.dataset.cfOpen}`, b));
+  document.querySelector('#cf-glossary [data-cf-search]').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    for (const t of document.querySelectorAll('[data-cf-term]')) t.hidden = !t.textContent.toLowerCase().includes(q);
+  });
+  document.getElementById('cf-confirm').addEventListener('click', (e) => {
+    const choice = e.target.closest('[data-cf-confirm]')?.dataset.cfConfirm;
+    if (!choice) return;
+    document.getElementById('cf-confirm').close();
+    if (choice === 'yes' && pendingAction === 'reset-course') api.reset();
+    if (choice === 'yes' && pendingAction === 'reset-assessment') api.resetAssessment();
+    pendingAction = null;
+  });
+
+  const toggle = document.querySelector('[data-cf-menu-toggle]');
+  toggle.addEventListener('click', () => {
+    navList.hidden = !navList.hidden;
+    toggle.setAttribute('aria-expanded', String(!navList.hidden));
+  });
+  navList.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-cf-goto]');
+    if (!a) return;
+    e.preventDefault();
+    navList.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    go(a.dataset.cfGoto);
+  });
+  document.querySelector('[data-cf-nav=next]').addEventListener('click', () => go(state.index + 1));
+  document.querySelector('[data-cf-nav=prev]').addEventListener('click', () => go(state.index - 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input, select, textarea, button, a') || document.querySelector('dialog[open]')) return;
+    if (e.key === 'ArrowRight') go(state.index + 1);
+    if (e.key === 'ArrowLeft') go(state.index - 1);
+  });
+
+  const api = {
+    version: 1,
+    courseId: DATA.courseId,
+    screenCount: () => DATA.screens.length,
+    screenIds: () => DATA.screens.map((s) => s.id),
+    current: () => ({ index: state.index, id: DATA.screens[state.index].id }),
+    go: (t) => go(t),
+    next: () => go(state.index + 1),
+    prev: () => go(state.index - 1),
+    getState: () => ({
+      index: state.index,
+      visited: [...state.visited],
+      answers: JSON.parse(JSON.stringify(state.answers)),
+      graded: graded(),
+      progressPercent: Math.round((100 * state.visited.length) / DATA.screens.length),
+    }),
+    reset: () => {
+      state = fresh();
+      for (const s of DATA.screens) if (s.interaction) renderSection(s);
+      go(0);
+    },
+    resetAssessment: () => {
+      for (const id of DATA.assessment.gradedScreenIds) {
+        delete state.answers[id];
+        delete state.order[id];
+        renderSection(DATA.screens.find((s) => s.id === id));
+      }
+      go(state.index, false);
+    },
+  };
+  window.__cf = api;
+  go(state.index, false);
+})();
+</script>
+</body>
+</html>
