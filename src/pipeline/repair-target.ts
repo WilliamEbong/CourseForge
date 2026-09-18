@@ -69,7 +69,10 @@ export function applyReplacements<T>(
   const targets = new Map(plan.actions.map((a) => [a.targetId, a]));
   const actionIds = new Set(plan.actions.map((a) => a.actionId));
   for (const r of result.replacements) {
-    const action = targets.get(r.targetId);
+    // Small single-object artifacts (concept, brief, design) may be replaced whole when findings point at
+    // fields rather than IDs; still only when the plan has approved actions and nothing is locked.
+    const wholeDoc = r.targetId === 'global' && !!opts.rootSchema && plan.actions.length > 0;
+    const action = targets.get(r.targetId) ?? (wholeDoc ? plan.actions[0] : undefined);
     if (!action) {
       rejected.push({ targetId: r.targetId, reason: 'not a target of the approved repair plan' });
       continue;
@@ -146,9 +149,10 @@ export function applyReplacements<T>(
 }
 
 /** Current objects for plan targets, passed to the repair agent as context. */
-export function targetObjects(doc: unknown, plan: RepairPlan): Record<string, unknown> {
+export function targetObjects(doc: unknown, plan: RepairPlan, wholeDocument = false): Record<string, unknown> {
   const slots = indexObjects(doc);
   const out: Record<string, unknown> = {};
+  if (wholeDocument) out.global = doc;
   for (const a of plan.actions) {
     const s = slots.get(a.targetId);
     if (s) out[a.targetId] = s.container[s.index];

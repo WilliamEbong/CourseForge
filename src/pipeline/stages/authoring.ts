@@ -223,7 +223,10 @@ export const researchBrief: StageHandler = {
   repair: () => ({
     path: F.researchBriefJson,
     logicalKey: 'research-brief',
-    schemas: {},
+    schemas: {
+      researchQuestions: ResearchBriefSchema.shape.researchQuestions.element,
+      dossierPlan: ResearchBriefSchema.shape.dossierPlan.element,
+    },
     rootSchema: ResearchBriefSchema,
     save: (ctx, doc) => researchBrief.merge?.(ctx, [{ subject: null, output: doc }]) ?? [],
   }),

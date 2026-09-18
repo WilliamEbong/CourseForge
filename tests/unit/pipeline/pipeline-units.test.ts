@@ -246,3 +246,33 @@ describe('merges and scoped repair', () => {
     );
   });
 });
+
+describe('whole-document repair of single-object artifacts', () => {
+  it('@E5 accepts a global replacement only with a root schema, approved actions and no locks', async () => {
+    const { ResearchBriefSchema } = await import('../../../src/core/schemas/index.js');
+    const brief = JSON.parse(readFileSync(join(repoRoot(), 'tests/fixtures/harness/demo/research-brief/default.json'), 'utf8')).output;
+    const fixed = { ...brief, jurisdictions: [...brief.jurisdictions, 'EU (reference)'] };
+    const plan: RepairPlan = {
+      schemaVersion: 1,
+      stage: 'RESEARCH_BRIEF',
+      cycle: 0,
+      artifactId: null,
+      target: 'model',
+      actions: [
+        { actionId: 'A0-01', targetId: 'jurisdictions', findingIds: ['F1'], severity: 'major', category: 'scope', instruction: 'add EU' },
+      ],
+      lockConflicts: [],
+      deferred: [],
+      rejected: [],
+      unrepairable: [],
+    };
+    const result = { replacements: [{ targetId: 'global', objectJson: JSON.stringify(fixed), actionIds: ['A0-01'] }], notes: '' };
+    const ok = applyReplacements(brief, result, plan, { schemas: {}, rootSchema: ResearchBriefSchema, locked: new Set() });
+    expect(ok.applied).toEqual(['global']);
+    expect((ok.doc as typeof brief).jurisdictions).toContain('EU (reference)');
+    const locked = applyReplacements(brief, result, plan, { schemas: {}, rootSchema: ResearchBriefSchema, locked: new Set(['RQ1']) });
+    expect(locked.applied).toEqual([]);
+    const noRoot = applyReplacements(brief, result, plan, { schemas: {}, locked: new Set() });
+    expect(noRoot.applied).toEqual([]);
+  });
+});

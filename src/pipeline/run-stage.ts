@@ -416,7 +416,11 @@ async function repair(
       subject: 'repairer',
       cycle,
       locks: [...locked],
-      extra: { actions: repairPlan.actions, targets: targetObjects(doc, repairPlan) },
+      extra: {
+        actions: repairPlan.actions,
+        targets: targetObjects(doc, repairPlan, !!spec.rootSchema && locked.size === 0),
+        wholeDocumentReplacementAllowed: !!spec.rootSchema && locked.size === 0,
+      },
     }),
   );
   const res = applyReplacements(doc, output, repairPlan, { schemas: spec.schemas, rootSchema: spec.rootSchema, locked });

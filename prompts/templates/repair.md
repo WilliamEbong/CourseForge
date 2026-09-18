@@ -28,6 +28,10 @@ You make exactly the changes the approved actions describe, nothing more. The pl
   - `targetId`: the ID of the object being replaced, exactly as in the plan.
   - `objectJson`: the whole replacement object serialised as a JSON string, in the same shape the artifact file uses for that object (for example a full storyboard block including its `interaction`; a full VisualSpec; a full learning objective; a full module plan; a full research-question or dossier-plan entry). It must parse as JSON and validate against that item's schema; do not wrap it in Markdown fences or add commentary.
   - `actionIds`: every action this replacement satisfies. Several actions on the same target go into one replacement.
+  - Whole-document repairs: when the context says `wholeDocumentReplacementAllowed: true` and a target is a field
+    or section rather than an object with an `id` (for example `jurisdictions` or `sourceHierarchy`), return ONE
+    replacement with `targetId` `global` whose `objectJson` is the complete artifact with every approved action
+    applied and nothing else changed; list all the action IDs it satisfies.
 - `notes`: one line per action, stating what you changed. If an action could not be carried out as written (the instruction contradicts the evidence, the target does not exist, or it would require touching a locked ID or another target), do not improvise: skip it and explain here.
 
 ## Constraints (checked by code)
