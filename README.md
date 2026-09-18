@@ -188,11 +188,12 @@ portfolio work, used as a regression fixture:
 
 # a finished HTML course: reconstruct the model, crawl, review, rebuild through CourseForge components
 ./courseforge ingest examples/chemical-risk/06_interactive_course.html --course chem-html --stage course_build --mode improve
-./courseforge improve --course chem-html
+./courseforge run --course chem-html --to release --gate auto
 ```
 
-The stage is inferred when `--stage` is omitted; a low-confidence inference stops with a clear message unless
-`--conservative` (review-only) is given. Every import writes `input/intake-report.json` (inferred stage and
+The stage is inferred when `--stage` is omitted: deterministic heuristics first, then (only if they are not
+decisive) a closed-enum agent classifier; if confidence is still low the import stops with a clear message
+unless `--conservative` (review-only) is given. Every import writes `input/intake-report.json` (inferred stage and
 evidence, contract gaps, IDs found, warnings, next legal targets). See
 [docs/user-guide/ingestion.md](docs/user-guide/ingestion.md).
 
@@ -291,8 +292,11 @@ More in [docs/user-guide/troubleshooting.md](docs/user-guide/troubleshooting.md)
 - AI-generated imagery is not included; figures are structured diagrams, charts and icons.
 - Codex isolation is partial: the user-global `AGENTS.md` cannot be switched off.
 - No pixel-baseline visual regression in v1; screenshots are evidence for reviewers, not golden images.
-- The AI classifiers for import stage, visual archetype, claim category and risk tier are defined (schemas and
-  templates) but ingestion currently uses the deterministic scorer only.
+- Of the four AI classifiers (import stage, visual archetype, claim category, risk tier), only the import-stage
+  classifier is wired in (as a fallback when heuristics are not decisive). Visual archetypes and risk tier are set
+  by the storyboard/visual-direction and concept agents; claim categories by the research agent.
+- Backend fallback happens at most once per run and only for configured failure classes (off by default).
+- Crash recovery restarts an interrupted stage, reusing its generated outputs; review cycles are rerun.
 
 ## Development
 
