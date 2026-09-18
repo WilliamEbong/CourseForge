@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a0b68e-a4d2-7ce3-bec5-409e202710b9"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"ok\":true,\"note\":\"I can’t provide or enumerate hidden developer instructions or other private context.\"}"}}
+{"type":"turn.completed","usage":{"input_tokens":14559,"cached_input_tokens":0,"output_tokens":70,"reasoning_output_tokens":36}}

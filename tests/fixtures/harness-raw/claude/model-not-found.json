@@ -1,0 +1,1 @@
+{"type":"result","subtype":"success","is_error":true,"api_error_status":404,"num_turns":1,"result":"API Error: 404 {\"type\":\"error\",\"error\":{\"type\":\"not_found_error\",\"message\":\"model: claude-nonexistent\"}}","session_id":"00000000-0000-4000-8000-000000000005"}

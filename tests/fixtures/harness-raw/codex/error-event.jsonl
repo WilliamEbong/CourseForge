@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"00000000-0000-4000-8000-00000000000b"}
+{"type":"turn.started"}
+{"type":"error","message":"stream disconnected before completion: 429 Too Many Requests; retrying 1/5"}
+{"type":"turn.failed","error":{"message":"exceeded retry limit, last status: 429 Too Many Requests"}}

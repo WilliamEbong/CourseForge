@@ -1,0 +1,10 @@
+noise: Reading prompt from stdin...
+{"type":"thread.started","thread_id":"00000000-0000-4000-8000-00000000000e"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"reasoning","text":"thinking"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"Get-Content x.md","aggregated_output":"","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"file_change","changes":[{"path":"out.md","kind":"add"}],"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"done"}}
+{"type":"turn.completed","usage":{"input_tokens":1000,"cached_input_tokens":0,"output_tokens":50,"reasoning_output_tokens":10}}
+{"type":"turn.started"}
+{"type":"turn.completed","usage":{"input_tokens":200,"cached_input_tokens":0,"output_tokens":5,"reasoning_output_tokens":0}}

@@ -1,0 +1,3 @@
+{"type":"system","subtype":"init","cwd":"<HOME>/repo","session_id":"00000000-0000-4000-8000-000000000008","tools":["Read"],"mcp_servers":[],"model":"claude-opus-5","permissionMode":"dontAsk","plugins":[],"output_style":"default"}
+{"type":"assistant","message":{"model":"claude-opus-5","role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Read","input":{"file_path":"x.md"}}]},"session_id":"00000000-0000-4000-8000-000000000008"}
+{"type":"result","subtype":"success","is_error":false,"result":"{\"ok\":tr

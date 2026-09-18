@@ -1,0 +1,1 @@
+2026-09-18T22:06:36.247169Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 132 column 5
