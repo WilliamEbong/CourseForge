@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><title>Embedded</title></head>
+<body><main id="app"></main>
+<script>
+const COURSE = {"id":"mini","version":"2.0.0","title":"Mini {braces} course","subtitle":null,"estimatedMinutes":10,
+"metadata":{"Learning objectives":"LO1 Tell hazard from risk. LO2 Pick controls."},
+"screens":[
+ {"id":"S1-01","kind":"content","type":"section title","subtype":"title","title":"Hi \"there\" }","contentHtml":"<p>Hazard is <strong>not</strong> risk.<br>Line two.</p><ul><li>one</li><li>two</li></ul>","treatment":"Intro","visualDirection":"Loop","accessibility":"Text","objectives":["LO1–LO2"],"sources":["SRC-A","source dossier §2"],"module":"S1","moduleTitle":"Intro","visual":"V-01","optional":false},
+ {"id":"F1-01","kind":"formative","type":"formative self-assessment","subtype":"sequencing","title":"Knowledge check","objectives":["LO2"],"sources":["SRC-A s.9"],"module":"S1","visual":null,"optional":false,
+  "question":{"itemType":"sequencing","questionHtml":"<p>Order</p>","items":["PPE","Elimination"],"correctSequence":["Elimination","PPE"],"feedbackCorrectHtml":"<p>Yes</p>","feedbackIncorrectHtml":"<p>No</p>","mode":"sequence","graded":false,"difficulty":null}},
+ {"id":"GA-01","kind":"graded","type":"graded assessment","subtype":"matching","title":"Assessment item 1","objectives":["LO1"],"sources":["SRC-A"],"module":"GA","moduleTitle":"Graded","visual":null,"optional":false,
+  "question":{"itemType":"matching","questionHtml":"<p>Match</p>","prompts":[{"key":"1","text":"Hood"},{"key":"2","text":"Gloves"}],"answerMap":{"1":"Engineering","2":"PPE"},"targets":["Engineering","PPE"],"feedbackCorrectHtml":"<p>Right</p>","feedbackIncorrectHtml":"<p>Wrong</p>","mode":"matching","graded":true,"difficulty":"Applied"}}
+],
+"modules":{"S1":"Introduction","GA":"Graded assessment"},
+"glossary":[{"term":"Hazard","definitionHtml":"<p>Can cause harm.</p>","sources":["SRC-A s.1"]}],
+"acronyms":[{"acronym":"PPE","term":"Personal Protective Equipment","firstUse":"F1-01"}],
+"references":{"SRC-A":{"id":"SRC-A","issuer":"Government of Alberta","title":"OHS Code","date":"accessed 1 Jan 2026","url":"https://example.org/a"}},
+"visuals":{"V-01":{"id":"V-01","purpose":"Show the loop","content":"Identify → assess → control","sources":["SRC-A"],"alt":"Alt text must state the loop.","note":"Create original diagram."}},
+"build":{"assessmentSuggestedPassing":"70%"}};
+function render() { return "{ not json }"; }
+</script>
+</body></html>

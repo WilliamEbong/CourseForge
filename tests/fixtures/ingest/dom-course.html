@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><title>Legacy Course</title></head>
+<body>
+  <nav><button>Menu</button><button>Next</button></nav>
+  <section id="intro"><h2>Welcome</h2><p>Chemical labels <strong>matter</strong>.</p>
+    <a href="https://example.org/whmis">WHMIS guidance</a></section>
+  <section id="quiz-1"><h2>Check</h2>
+    <form><fieldset><legend>Which pictogram means flammable?</legend>
+      <label><input type="radio" name="q1" value="flame" data-correct="true"> Flame</label>
+      <label><input type="radio" name="q1" value="skull"> Skull</label>
+    </fieldset><button type="submit">Submit</button></form></section>
+  <section id="figure"><h2>Diagram</h2><figure><svg aria-label="Label anatomy: pictogram, signal word, hazard statement"></svg></figure>
+    <figure><img src="x.png"></figure></section>
+  <dialog><dl><dt>SDS</dt><dd>Safety Data Sheet</dd></dl></dialog>
+  <script>document.querySelector('form').addEventListener('submit', (e) => e.preventDefault());</script>
+</body>
+</html>
