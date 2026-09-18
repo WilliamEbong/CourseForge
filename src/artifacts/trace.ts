@@ -215,7 +215,8 @@ export function buildTraceGraphFromParts(parts: TraceParts): TraceGraph {
       const ck = add('component', `C-${s.id}`, s.title);
       const ek = add('element', `cf-${s.id}`, s.title);
       link(ck, ek);
-      ref(ck, ['block', 'item'], s.id);
+      // Generated screens (e.g. the assessment results screen) have no storyboard block behind them.
+      if ((s as { component?: string }).component !== 'results') ref(ck, ['block', 'item'], s.id);
     }
   }
 

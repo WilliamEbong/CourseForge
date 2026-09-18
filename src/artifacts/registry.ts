@@ -38,6 +38,8 @@ export interface RegisterInput {
   humanModified?: boolean;
   notes?: string[];
   now?: string;
+  /** Record a new version even when content is unchanged (e.g. `human-approved` milestones). */
+  milestone?: boolean;
 }
 
 const registryPath = (courseDir: string) => join(courseDir, COURSE_FILES.artifacts);
@@ -80,14 +82,16 @@ export function registerArtifact(courseDir: string, input: RegisterInput): Artif
   if (!exists(abs)) throw new CfError('ARTIFACT_MISSING', `Cannot register ${input.path}: file not found`, { exitCode: 2 });
   const hash = hashFile(abs);
   const prev = latest(reg, input.logicalKey);
-  if (prev && prev.hash === hash) return prev;
+  if (prev && prev.hash === hash && !input.milestone) return prev;
 
   const now = input.now ?? new Date().toISOString();
   const version = (prev?.version ?? 0) + 1;
   const artifactId = formatSeq('ART', reg.nextSeq);
   const label = `${input.logicalKey}-v${version}-${input.event}`;
-  const snapshotPath = `${COURSE_FILES.versions}/${label}/${input.path}`;
-  copyFile(abs, join(courseDir, snapshotPath));
+  // Milestones (e.g. human approval) of unchanged content reuse the previous snapshot instead of copying.
+  const reuse = prev && prev.hash === hash && prev.snapshotPath;
+  const snapshotPath = reuse ? (prev.snapshotPath as string) : `${COURSE_FILES.versions}/${label}/${input.path}`;
+  if (!reuse) copyFile(abs, join(courseDir, snapshotPath));
 
   const record: ArtifactRecord = {
     artifactId,
@@ -110,8 +114,9 @@ export function registerArtifact(courseDir: string, input: RegisterInput): Artif
     modifiedAt: now,
     humanModified: input.humanModified ?? input.producer.kind === 'human',
     approval: 'none',
-    locked: false,
-    lockedIds: [],
+    // Locks belong to the logical artifact, not one version: they carry forward until explicitly removed.
+    locked: prev?.locked ?? false,
+    lockedIds: prev?.lockedIds ?? [],
     reviewStatus: 'unreviewed',
     supersededBy: null,
     snapshotPath,

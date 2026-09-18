@@ -1,0 +1,76 @@
+{
+  "output": {
+    "title": "Spotting Phishing Emails — research brief",
+    "purpose": "Establish an evidence base for a short awareness course on recognising, checking and reporting phishing emails.",
+    "audience": "Office staff with everyday email use and no security specialism",
+    "scope": [
+      "Common phishing warning signs",
+      "Safe verification behaviours",
+      "Reporting practices"
+    ],
+    "exclusions": [
+      "Technical email authentication (SPF, DKIM, DMARC) configuration",
+      "Incident forensics"
+    ],
+    "researchQuestions": [
+      {
+        "id": "RQ1",
+        "question": "What warning signs do authoritative agencies highlight for phishing emails?",
+        "priority": "core"
+      },
+      {
+        "id": "RQ2",
+        "question": "How should an employee verify a suspicious message without taking risky actions?",
+        "priority": "core"
+      },
+      {
+        "id": "RQ3",
+        "question": "What reporting behaviours do agencies recommend and why does fast reporting matter?",
+        "priority": "core"
+      }
+    ],
+    "sourceHierarchy": [
+      {
+        "rank": 1,
+        "sourceType": "government-guidance",
+        "rationale": "National cyber-security agencies publish current, authoritative guidance."
+      },
+      {
+        "rank": 2,
+        "sourceType": "professional-guidance",
+        "rationale": "Industry bodies add practical detail."
+      }
+    ],
+    "jurisdictions": [
+      "General (US and UK guidance used as reference)"
+    ],
+    "safetyBoundaries": [
+      "Do not instruct learners to open attachments or links to test them."
+    ],
+    "dossierPlan": [
+      {
+        "sectionId": "RS-01",
+        "title": "Warning signs of phishing",
+        "questionIds": [
+          "RQ1"
+        ],
+        "notes": "Focus on signs a non-specialist can check."
+      },
+      {
+        "sectionId": "RS-02",
+        "title": "Verifying and reporting",
+        "questionIds": [
+          "RQ2",
+          "RQ3"
+        ],
+        "notes": "Safe verification and reporting steps."
+      }
+    ],
+    "evidenceRequirements": [
+      "Every claim cites at least one authoritative source."
+    ],
+    "currentnessRequirements": [
+      "Record the access date of every web source."
+    ]
+  }
+}

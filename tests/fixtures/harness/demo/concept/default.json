@@ -1,0 +1,36 @@
+{
+  "output": {
+    "title": "Spotting Phishing Emails",
+    "summary": "A short, practical course that helps office staff recognise the common warning signs of phishing emails, check suspicious messages safely, and report them through the right channel.",
+    "audience": "Office staff with everyday email use and no security specialism",
+    "prerequisites": [
+      "Uses a work email account daily"
+    ],
+    "targetDurationMinutes": 20,
+    "language": "en",
+    "jurisdiction": null,
+    "riskTier": "standard",
+    "riskRationale": "General security awareness; no regulated or hazardous activity is taught.",
+    "domains": [
+      "information security awareness"
+    ],
+    "learningGoals": [
+      "Recognise phishing warning signs",
+      "Check a suspicious message safely",
+      "Report a suspected phish correctly"
+    ],
+    "assumptions": [
+      {
+        "text": "Learners have a reporting button or security mailbox at work.",
+        "highStakes": false
+      }
+    ],
+    "gaps": [
+      "Organisation-specific reporting channel must be configured before deployment."
+    ],
+    "outOfScope": [
+      "Technical email authentication (SPF, DKIM, DMARC) configuration",
+      "Incident forensics"
+    ]
+  }
+}

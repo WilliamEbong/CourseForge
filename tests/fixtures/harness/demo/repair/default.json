@@ -1,0 +1,14 @@
+{
+  "output": {
+    "replacements": [
+      {
+        "targetId": "M1-F01",
+        "objectJson": "{\"id\":\"M1-F01\",\"kind\":\"formative\",\"subtype\":null,\"title\":\"Spot the signs\",\"optional\":false,\"body\":\"Practice question.\",\"treatment\":\"Short explanatory screen.\",\"loIds\":[\"LO1\"],\"citations\":[{\"sourceId\":\"CISA-PHISH\",\"locator\":null}],\"claimIds\":[],\"visualId\":null,\"accessibility\":\"All content is available as text.\",\"interaction\":{\"mode\":\"multiple\",\"stem\":\"An email from “IT Service Desk” says your password expires in 30 minutes and asks you to sign in through the link. The sender address is it-desk@secure-helpdesk.net. Which signs are present? Select all that apply.\",\"options\":[{\"key\":\"A\",\"text\":\"Urgency\"},{\"key\":\"B\",\"text\":\"Unexpected request for credentials\"},{\"key\":\"C\",\"text\":\"Sender address that does not match the organisation\"},{\"key\":\"D\",\"text\":\"An attachment\"}],\"targets\":[],\"correctKeys\":[\"A\",\"B\",\"C\"],\"mapping\":[],\"order\":[],\"feedbackCorrect\":\"Right: the deadline, the sign-in request and the outside domain are all warning signs.\",\"feedbackIncorrect\":\"Look again: the deadline, the sign-in request and the outside domain are all warning signs. There is no attachment here — the message uses a link, which can be just as dangerous because it can lead to a fake sign-in page.\",\"optionFeedback\":[{\"key\":\"D\",\"text\":\"The message contains a link, not an attachment.\"}],\"rationale\":\"Three of the five agency-highlighted signs are present.\"},\"difficulty\":null}",
+        "actionIds": [
+          "A0-01"
+        ]
+      }
+    ],
+    "notes": "Extended incorrect feedback on M1-F01 only."
+  }
+}

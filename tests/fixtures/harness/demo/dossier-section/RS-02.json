@@ -1,0 +1,112 @@
+{
+  "output": {
+    "sectionId": "RS-02",
+    "title": "Verifying and reporting",
+    "markdown": "When a message is suspicious, agencies advise verifying through a separate, trusted channel — for example a known phone number or by typing the organisation’s address into the browser — rather than using links or contact details in the message [FTC-PHISH; CISA-PHISH].\n\nSuspected phishing should be reported through the organisation’s reporting route; early reports let security teams warn others and block the campaign [NCSC-PHISH; CISA-PHISH]. Someone who has already clicked or entered details should report immediately rather than hide it [NCSC-PHISH].",
+    "sources": [
+      {
+        "id": "CISA-PHISH",
+        "title": "Recognize and Report Phishing",
+        "author": null,
+        "publisher": "Cybersecurity and Infrastructure Security Agency (CISA)",
+        "type": "government-guidance",
+        "url": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing",
+        "doi": null,
+        "date": null,
+        "version": null,
+        "accessed": "2026-09-18",
+        "jurisdiction": "United States",
+        "authority": "primary",
+        "currentnessNotes": "Public guidance page; recheck before republication.",
+        "licenseNotes": "Paraphrased; no text reproduced."
+      },
+      {
+        "id": "NCSC-PHISH",
+        "title": "Phishing attacks: defending your organisation",
+        "author": null,
+        "publisher": "UK National Cyber Security Centre (NCSC)",
+        "type": "government-guidance",
+        "url": "https://www.ncsc.gov.uk/guidance/phishing",
+        "doi": null,
+        "date": null,
+        "version": null,
+        "accessed": "2026-09-18",
+        "jurisdiction": "United Kingdom",
+        "authority": "primary",
+        "currentnessNotes": "Guidance is periodically revised.",
+        "licenseNotes": "Paraphrased; no text reproduced."
+      },
+      {
+        "id": "FTC-PHISH",
+        "title": "How to Recognize and Avoid Phishing Scams",
+        "author": null,
+        "publisher": "US Federal Trade Commission (FTC) Consumer Advice",
+        "type": "government-guidance",
+        "url": "https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams",
+        "doi": null,
+        "date": null,
+        "version": null,
+        "accessed": "2026-09-18",
+        "jurisdiction": "United States",
+        "authority": "primary",
+        "currentnessNotes": null,
+        "licenseNotes": "Paraphrased; no text reproduced."
+      }
+    ],
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Verify suspicious requests through an independent, known channel, not the message itself.",
+        "category": "guidance-recommendation",
+        "citations": [
+          {
+            "sourceId": "FTC-PHISH",
+            "locator": null
+          },
+          {
+            "sourceId": "CISA-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      },
+      {
+        "id": "c2",
+        "text": "Reporting suspected phishing quickly helps protect colleagues.",
+        "category": "guidance-recommendation",
+        "citations": [
+          {
+            "sourceId": "NCSC-PHISH",
+            "locator": null
+          },
+          {
+            "sourceId": "CISA-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      },
+      {
+        "id": "c3",
+        "text": "People who have already interacted with a phish should report immediately.",
+        "category": "guidance-recommendation",
+        "citations": [
+          {
+            "sourceId": "NCSC-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      }
+    ]
+  }
+}

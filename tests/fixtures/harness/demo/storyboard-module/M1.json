@@ -1,0 +1,346 @@
+{
+  "output": {
+    "module": {
+      "id": "M1",
+      "title": "Recognising phishing",
+      "summary": "What phishing is, the warning signs agencies highlight, and why a clean-looking email still deserves care.",
+      "loIds": [
+        "LO1",
+        "LO2"
+      ],
+      "role": "intro",
+      "blocks": [
+        {
+          "id": "M1-B01",
+          "kind": "topic-title",
+          "subtype": null,
+          "title": "Recognising phishing",
+          "optional": false,
+          "body": "Phishing emails are designed to look ordinary. In this module you will learn the signs that should make you pause — and why they are prompts to check rather than proof.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO1",
+            "LO2"
+          ],
+          "citations": [],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M1-B02",
+          "kind": "concept",
+          "subtype": null,
+          "title": "What phishing is",
+          "optional": false,
+          "body": "A **phishing** email imitates someone you trust — a colleague, a supplier, a bank or an internal IT team — to get you to click a link, open an attachment or hand over information.\n\nThe goal is almost always one of three things: your password, a payment, or a foothold on your device.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO1"
+          ],
+          "citations": [
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            },
+            {
+              "sourceId": "FTC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [
+            "CLM-0001"
+          ],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M1-B03",
+          "kind": "comparison",
+          "subtype": null,
+          "title": "Five signs worth checking",
+          "optional": false,
+          "body": "National cyber-security agencies point to the same small set of warning signs:\n\n- an **unexpected request** for credentials, payment or personal data\n- **urgency or threats**, such as deadlines or account closure\n- a **sender** whose display name and real address do not match\n- a **link** whose text and real destination differ\n- a **generic greeting** or tone that feels unlike the sender",
+          "treatment": "Comparison table of signs with a text equivalent.",
+          "loIds": [
+            "LO1"
+          ],
+          "citations": [
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            },
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            },
+            {
+              "sourceId": "FTC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [
+            "CLM-0002",
+            "CLM-0003"
+          ],
+          "visualId": "V-01",
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M1-B04",
+          "kind": "misconception",
+          "subtype": null,
+          "title": "A clean-looking email is not a safe email",
+          "optional": false,
+          "body": "Well-crafted phishing can show few or none of these signs. Treat the signs as reasons to **verify**, not as a checklist that clears a message when nothing is ticked.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO2"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [
+            "CLM-0004"
+          ],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M1-F01",
+          "kind": "formative",
+          "subtype": null,
+          "title": "Spot the signs",
+          "optional": false,
+          "body": "Practice question.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO1"
+          ],
+          "citations": [
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "multiple",
+            "stem": "An email from “IT Service Desk” says your password expires in 30 minutes and asks you to sign in through the link. The sender address is it-desk@secure-helpdesk.net. Which signs are present? Select all that apply.",
+            "options": [
+              {
+                "key": "A",
+                "text": "Urgency"
+              },
+              {
+                "key": "B",
+                "text": "Unexpected request for credentials"
+              },
+              {
+                "key": "C",
+                "text": "Sender address that does not match the organisation"
+              },
+              {
+                "key": "D",
+                "text": "An attachment"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [
+              "A",
+              "B",
+              "C"
+            ],
+            "mapping": [],
+            "order": [],
+            "feedbackCorrect": "Right: the deadline, the sign-in request and the outside domain are all warning signs.",
+            "feedbackIncorrect": "Look again: there is no attachment, but the deadline, the sign-in request and the outside domain are all signs.",
+            "optionFeedback": [
+              {
+                "key": "D",
+                "text": "The message contains a link, not an attachment."
+              }
+            ],
+            "rationale": "Three of the five agency-highlighted signs are present."
+          },
+          "difficulty": null
+        },
+        {
+          "id": "M1-F02",
+          "kind": "formative",
+          "subtype": null,
+          "title": "Signal or not?",
+          "optional": false,
+          "body": "Practice question.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO2"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "categorization",
+            "stem": "Sort each observation.",
+            "options": [
+              {
+                "key": "o1",
+                "text": "The email asks you to confirm payroll bank details urgently"
+              },
+              {
+                "key": "o2",
+                "text": "The email uses your manager’s usual sign-off"
+              },
+              {
+                "key": "o3",
+                "text": "The link text shows the intranet but points elsewhere"
+              }
+            ],
+            "targets": [
+              {
+                "key": "warn",
+                "text": "Warning sign"
+              },
+              {
+                "key": "notproof",
+                "text": "Not proof of safety"
+              }
+            ],
+            "correctKeys": [],
+            "mapping": [
+              {
+                "key": "o1",
+                "target": "warn"
+              },
+              {
+                "key": "o2",
+                "target": "notproof"
+              },
+              {
+                "key": "o3",
+                "target": "warn"
+              }
+            ],
+            "order": [],
+            "feedbackCorrect": "Correct. A familiar sign-off is easy to copy, so it does not prove the email is genuine.",
+            "feedbackIncorrect": "Remember: familiar details can be copied; they are not proof that a message is safe.",
+            "optionFeedback": [],
+            "rationale": "Attackers imitate familiar details; only independent verification settles doubt."
+          },
+          "difficulty": null
+        }
+      ]
+    },
+    "visuals": [
+      {
+        "id": "V-01",
+        "title": "Five warning signs to check",
+        "purpose": "Give learners a compact mental checklist of the signs agencies highlight.",
+        "archetype": "COMPARISON",
+        "content": {
+          "items": [],
+          "links": [],
+          "groups": [],
+          "columns": [
+            "Warning sign",
+            "What to look for"
+          ],
+          "rows": [
+            {
+              "label": "Unexpected request",
+              "cells": [
+                "Credentials, payment or personal data you were not expecting to give"
+              ]
+            },
+            {
+              "label": "Urgency or threats",
+              "cells": [
+                "Deadlines, account closure, penalties"
+              ]
+            },
+            {
+              "label": "Mismatched sender",
+              "cells": [
+                "Display name and real address do not match"
+              ]
+            },
+            {
+              "label": "Mismatched link",
+              "cells": [
+                "Link text and real destination differ"
+              ]
+            },
+            {
+              "label": "Generic or odd tone",
+              "cells": [
+                "“Dear customer”, unusual wording or style"
+              ]
+            }
+          ],
+          "axes": {
+            "x": null,
+            "y": null
+          },
+          "chartType": null
+        },
+        "sourceIds": [
+          "CISA-PHISH",
+          "NCSC-PHISH",
+          "FTC-PHISH"
+        ],
+        "textEquivalent": {
+          "short": "Table of five phishing warning signs and what to look for",
+          "long": "Five warning signs: an unexpected request for credentials, payment or personal data; urgency or threats such as deadlines or account closure; a sender display name that does not match the real address; link text that does not match the real destination; and a generic greeting or unusual tone."
+        },
+        "interaction": "none",
+        "rendererOverride": null,
+        "mermaid": null
+      }
+    ],
+    "glossary": [
+      {
+        "id": "GL-001",
+        "term": "Phishing",
+        "definition": "A message that imitates a trusted sender to trick the recipient into an unsafe action.",
+        "sourceIds": [
+          "CISA-PHISH"
+        ]
+      },
+      {
+        "id": "GL-002",
+        "term": "Spoofing",
+        "definition": "Disguising a message’s sender or link so it appears to come from someone else.",
+        "sourceIds": [
+          "NCSC-PHISH"
+        ]
+      }
+    ],
+    "acronyms": [
+      {
+        "id": "AC-001",
+        "acronym": "IT",
+        "expansion": "Information technology",
+        "firstUseBlockId": "M1-B02"
+      }
+    ]
+  }
+}

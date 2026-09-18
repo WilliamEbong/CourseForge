@@ -88,9 +88,11 @@ export function assemblePrompt(args: AssemblePromptArgs): AssembledPrompt {
     const body = stripFrontmatter(readRequired(join(args.repoRoot, '.claude', 'skills', id, 'SKILL.md'), `Skill ${id}`));
     sections.push(`## Skill: ${id}\n\n${body}`);
   }
-  if (args.rubric) {
+  // Rubrics may be given as an id (`assessment`) or as the registry path (`prompts/rubrics/assessment.md`).
+  const rubricId = args.rubric?.replace(/^prompts\/rubrics\//, '').replace(/\.md$/, '') ?? null;
+  if (rubricId) {
     sections.push(
-      `## Rubric: ${args.rubric}\n\n${readRequired(join(args.repoRoot, 'prompts', 'rubrics', `${args.rubric}.md`), `Rubric ${args.rubric}`).trim()}`,
+      `## Rubric: ${rubricId}\n\n${readRequired(join(args.repoRoot, 'prompts', 'rubrics', `${rubricId}.md`), `Rubric ${rubricId}`).trim()}`,
     );
   }
   if (args.inputs.length) {

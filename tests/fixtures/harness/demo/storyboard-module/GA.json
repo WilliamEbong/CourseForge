@@ -1,0 +1,223 @@
+{
+  "output": {
+    "module": {
+      "id": "GA",
+      "title": "Final check",
+      "summary": "Four questions covering all four objectives.",
+      "loIds": [
+        "LO1",
+        "LO2",
+        "LO3",
+        "LO4"
+      ],
+      "role": "graded",
+      "blocks": [
+        {
+          "id": "GA-01",
+          "kind": "graded",
+          "subtype": null,
+          "title": "Question 1",
+          "optional": false,
+          "body": "Assessment item.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO1"
+          ],
+          "citations": [
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "single",
+            "stem": "Which of these is the strongest warning sign in an email from “HR”?",
+            "options": [
+              {
+                "key": "A",
+                "text": "It uses the company logo"
+              },
+              {
+                "key": "B",
+                "text": "It asks you to sign in via a link to view an urgent salary change"
+              },
+              {
+                "key": "C",
+                "text": "It arrives during working hours"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [
+              "B"
+            ],
+            "mapping": [],
+            "order": [],
+            "feedbackCorrect": "Correct: an urgent sign-in request via a link combines two warning signs.",
+            "feedbackIncorrect": "Logos and timing are easy to fake or ordinary; the urgent sign-in request is the warning sign.",
+            "optionFeedback": [],
+            "rationale": "Urgency plus a credential request are agency-highlighted signs."
+          },
+          "difficulty": "foundational"
+        },
+        {
+          "id": "GA-02",
+          "kind": "graded",
+          "subtype": null,
+          "title": "Question 2",
+          "optional": false,
+          "body": "Assessment item.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO2"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "single",
+            "stem": "An email shows none of the five warning signs but asks you to approve a large, unusual payment. What should you conclude?",
+            "options": [
+              {
+                "key": "A",
+                "text": "It is safe because no signs are present"
+              },
+              {
+                "key": "B",
+                "text": "It still needs verifying, because the absence of signs is not proof of safety"
+              },
+              {
+                "key": "C",
+                "text": "Forward it to colleagues to see what they think"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [
+              "B"
+            ],
+            "mapping": [],
+            "order": [],
+            "feedbackCorrect": "Correct: the signs prompt checks; their absence does not clear a message.",
+            "feedbackIncorrect": "Well-made phishing can show no signs. An unusual request still needs independent verification.",
+            "optionFeedback": [],
+            "rationale": "Absence of warning signs does not prove safety."
+          },
+          "difficulty": "applied"
+        },
+        {
+          "id": "GA-03",
+          "kind": "graded",
+          "subtype": null,
+          "title": "Question 3",
+          "optional": false,
+          "body": "Assessment item.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO3"
+          ],
+          "citations": [
+            {
+              "sourceId": "FTC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "single",
+            "stem": "Your “bank” texts and emails asking you to confirm a payment. How do you check?",
+            "options": [
+              {
+                "key": "A",
+                "text": "Use the link in the email"
+              },
+              {
+                "key": "B",
+                "text": "Call the number on the back of your card"
+              },
+              {
+                "key": "C",
+                "text": "Reply “STOP” to the message"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [
+              "B"
+            ],
+            "mapping": [],
+            "order": [],
+            "feedbackCorrect": "Correct: a number you already hold is an independent channel.",
+            "feedbackIncorrect": "Links and replies go back to the sender. Use a number you already hold.",
+            "optionFeedback": [],
+            "rationale": "Verify through a channel the sender cannot control."
+          },
+          "difficulty": "applied"
+        },
+        {
+          "id": "GA-04",
+          "kind": "graded",
+          "subtype": null,
+          "title": "Question 4",
+          "optional": false,
+          "body": "Assessment item.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO4"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "sequencing",
+            "stem": "You realise you entered your password on a suspicious page. Order your next steps.",
+            "options": [
+              {
+                "key": "change",
+                "text": "Change the password through the real site"
+              },
+              {
+                "key": "report",
+                "text": "Report the incident immediately"
+              },
+              {
+                "key": "stop",
+                "text": "Stop using the suspicious page"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [],
+            "mapping": [],
+            "order": [
+              "stop",
+              "report",
+              "change"
+            ],
+            "feedbackCorrect": "Correct: stop, report straight away, then change your password as instructed.",
+            "feedbackIncorrect": "Stop first, report immediately so the team can act, then change your password.",
+            "optionFeedback": [],
+            "rationale": "Immediate reporting lets the security team contain the incident."
+          },
+          "difficulty": "integrative"
+        }
+      ]
+    },
+    "visuals": [],
+    "glossary": [],
+    "acronyms": []
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "output": {
+    "sectionId": "RS-01",
+    "title": "Warning signs of phishing",
+    "markdown": "Phishing emails try to get the recipient to click a link, open an attachment or hand over information by imitating a trusted sender [CISA-PHISH; FTC-PHISH].\n\nAgencies consistently highlight a small set of warning signs: an unexpected request for credentials, payment or personal data; manufactured urgency or threats; a sender address or link destination that does not match the organisation it claims to be; and generic greetings or unusual tone [CISA-PHISH; NCSC-PHISH; FTC-PHISH].\n\nNo single sign proves a message is malicious, and well-crafted phishing may show few of them, so the signs are prompts to verify rather than a checklist that clears a message [NCSC-PHISH].",
+    "sources": [
+      {
+        "id": "CISA-PHISH",
+        "title": "Recognize and Report Phishing",
+        "author": null,
+        "publisher": "Cybersecurity and Infrastructure Security Agency (CISA)",
+        "type": "government-guidance",
+        "url": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing",
+        "doi": null,
+        "date": null,
+        "version": null,
+        "accessed": "2026-09-18",
+        "jurisdiction": "United States",
+        "authority": "primary",
+        "currentnessNotes": "Public guidance page; recheck before republication.",
+        "licenseNotes": "Paraphrased; no text reproduced."
+      },
+      {
+        "id": "NCSC-PHISH",
+        "title": "Phishing attacks: defending your organisation",
+        "author": null,
+        "publisher": "UK National Cyber Security Centre (NCSC)",
+        "type": "government-guidance",
+        "url": "https://www.ncsc.gov.uk/guidance/phishing",
+        "doi": null,
+        "date": null,
+        "version": null,
+        "accessed": "2026-09-18",
+        "jurisdiction": "United Kingdom",
+        "authority": "primary",
+        "currentnessNotes": "Guidance is periodically revised.",
+        "licenseNotes": "Paraphrased; no text reproduced."
+      },
+      {
+        "id": "FTC-PHISH",
+        "title": "How to Recognize and Avoid Phishing Scams",
+        "author": null,
+        "publisher": "US Federal Trade Commission (FTC) Consumer Advice",
+        "type": "government-guidance",
+        "url": "https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams",
+        "doi": null,
+        "date": null,
+        "version": null,
+        "accessed": "2026-09-18",
+        "jurisdiction": "United States",
+        "authority": "primary",
+        "currentnessNotes": null,
+        "licenseNotes": "Paraphrased; no text reproduced."
+      }
+    ],
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Phishing emails imitate trusted senders to obtain clicks, attachment opens or information.",
+        "category": "definition",
+        "citations": [
+          {
+            "sourceId": "CISA-PHISH",
+            "locator": null
+          },
+          {
+            "sourceId": "FTC-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      },
+      {
+        "id": "c2",
+        "text": "Urgency, threats and unexpected requests for credentials or payment are common phishing signs.",
+        "category": "guidance-recommendation",
+        "citations": [
+          {
+            "sourceId": "CISA-PHISH",
+            "locator": null
+          },
+          {
+            "sourceId": "FTC-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      },
+      {
+        "id": "c3",
+        "text": "A mismatch between the displayed sender or link text and the real address is a warning sign.",
+        "category": "guidance-recommendation",
+        "citations": [
+          {
+            "sourceId": "NCSC-PHISH",
+            "locator": null
+          },
+          {
+            "sourceId": "CISA-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      },
+      {
+        "id": "c4",
+        "text": "Absence of warning signs does not prove a message is safe.",
+        "category": "guidance-recommendation",
+        "citations": [
+          {
+            "sourceId": "NCSC-PHISH",
+            "locator": null
+          }
+        ],
+        "sectionId": null,
+        "jurisdiction": null,
+        "confidence": "high",
+        "qualifications": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "output": {
+    "edits": [
+      {
+        "blockId": "M1-B01",
+        "field": "body",
+        "key": null,
+        "text": "Phishing emails are built to look ordinary. This module shows you the signs that should make you pause — and why they are prompts to check rather than proof.",
+        "reason": "Tighter, more direct opening."
+      }
+    ],
+    "notes": "Light edit; no facts, keys or citations changed."
+  }
+}

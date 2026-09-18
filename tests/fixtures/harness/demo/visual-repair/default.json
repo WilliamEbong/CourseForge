@@ -1,0 +1,66 @@
+{
+  "output": {
+    "id": "V-01",
+    "title": "Five warning signs to check",
+    "purpose": "Give learners a compact mental checklist of the signs agencies highlight.",
+    "archetype": "COMPARISON",
+    "content": {
+      "items": [],
+      "links": [],
+      "groups": [],
+      "columns": [
+        "Warning sign",
+        "What to look for"
+      ],
+      "rows": [
+        {
+          "label": "Unexpected request",
+          "cells": [
+            "Credentials, payment or personal data you were not expecting to give"
+          ]
+        },
+        {
+          "label": "Urgency or threats",
+          "cells": [
+            "Deadlines, account closure, penalties"
+          ]
+        },
+        {
+          "label": "Mismatched sender",
+          "cells": [
+            "Display name and real address do not match"
+          ]
+        },
+        {
+          "label": "Mismatched link",
+          "cells": [
+            "Link text and real destination differ"
+          ]
+        },
+        {
+          "label": "Generic or odd tone",
+          "cells": [
+            "“Dear customer”, unusual wording or style"
+          ]
+        }
+      ],
+      "axes": {
+        "x": null,
+        "y": null
+      },
+      "chartType": null
+    },
+    "sourceIds": [
+      "CISA-PHISH",
+      "NCSC-PHISH",
+      "FTC-PHISH"
+    ],
+    "textEquivalent": {
+      "short": "Table of five phishing warning signs and what to look for",
+      "long": "Five warning signs: an unexpected request for credentials, payment or personal data; urgency or threats such as deadlines or account closure; a sender display name that does not match the real address; link text that does not match the real destination; and a generic greeting or unusual tone."
+    },
+    "interaction": "none",
+    "rendererOverride": null,
+    "mermaid": null
+  }
+}

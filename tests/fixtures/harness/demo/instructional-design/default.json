@@ -1,0 +1,211 @@
+{
+  "output": {
+    "title": "Spotting Phishing Emails",
+    "audience": "Office staff with everyday email use and no security specialism",
+    "prerequisites": [
+      "Uses a work email account daily"
+    ],
+    "scopeBoundaries": [
+      "Awareness level only; technical controls are out of scope."
+    ],
+    "durationMinutes": 20,
+    "objectives": [
+      {
+        "id": "LO1",
+        "statement": "Identify the common warning signs of a phishing email.",
+        "verb": "identify",
+        "bloomLevel": "understand",
+        "claimIds": [
+          "CLM-0001",
+          "CLM-0002",
+          "CLM-0003"
+        ],
+        "sourceIds": [
+          "CISA-PHISH",
+          "FTC-PHISH",
+          "NCSC-PHISH"
+        ]
+      },
+      {
+        "id": "LO2",
+        "statement": "Explain why the absence of warning signs does not prove an email is safe.",
+        "verb": "explain",
+        "bloomLevel": "understand",
+        "claimIds": [
+          "CLM-0004"
+        ],
+        "sourceIds": [
+          "NCSC-PHISH"
+        ]
+      },
+      {
+        "id": "LO3",
+        "statement": "Select a safe way to verify a suspicious request.",
+        "verb": "select",
+        "bloomLevel": "apply",
+        "claimIds": [
+          "CLM-0005"
+        ],
+        "sourceIds": [
+          "FTC-PHISH",
+          "CISA-PHISH"
+        ]
+      },
+      {
+        "id": "LO4",
+        "statement": "Sequence the correct steps for reporting a suspected phishing email.",
+        "verb": "sequence",
+        "bloomLevel": "apply",
+        "claimIds": [
+          "CLM-0006",
+          "CLM-0007"
+        ],
+        "sourceIds": [
+          "NCSC-PHISH",
+          "CISA-PHISH"
+        ]
+      }
+    ],
+    "dispositions": [
+      {
+        "topic": "Warning signs",
+        "disposition": "core",
+        "reason": "Central to recognition.",
+        "sourceIds": [
+          "CISA-PHISH"
+        ]
+      },
+      {
+        "topic": "Verification and reporting",
+        "disposition": "core",
+        "reason": "Turns recognition into safe action.",
+        "sourceIds": [
+          "NCSC-PHISH"
+        ]
+      },
+      {
+        "topic": "Email authentication protocols",
+        "disposition": "excluded",
+        "reason": "Technical administration beyond the audience.",
+        "sourceIds": []
+      }
+    ],
+    "modules": [
+      {
+        "id": "M1",
+        "title": "Recognising phishing",
+        "purpose": "Build recognition of warning signs and their limits.",
+        "loIds": [
+          "LO1",
+          "LO2"
+        ],
+        "contentSequence": [
+          "What phishing is",
+          "Warning signs",
+          "Limits of the checklist"
+        ],
+        "misconceptions": [
+          "A professional-looking email must be genuine"
+        ],
+        "examples": [
+          "Fake password-expiry notice"
+        ],
+        "formativePractice": [
+          "Spot the signs",
+          "Sort signals"
+        ],
+        "durationMinutes": 9,
+        "sourceIds": [
+          "CISA-PHISH",
+          "NCSC-PHISH",
+          "FTC-PHISH"
+        ]
+      },
+      {
+        "id": "M2",
+        "title": "Checking and reporting",
+        "purpose": "Practise safe verification and correct reporting.",
+        "loIds": [
+          "LO3",
+          "LO4"
+        ],
+        "contentSequence": [
+          "Verify through a separate channel",
+          "Report quickly",
+          "If you already clicked"
+        ],
+        "misconceptions": [
+          "Replying to ask whether it is real is safe"
+        ],
+        "examples": [
+          "Supplier bank-detail change"
+        ],
+        "formativePractice": [
+          "Choose the safe check",
+          "Order the reporting steps"
+        ],
+        "durationMinutes": 8,
+        "sourceIds": [
+          "FTC-PHISH",
+          "NCSC-PHISH"
+        ]
+      }
+    ],
+    "alignment": [
+      {
+        "loId": "LO1",
+        "moduleIds": [
+          "M1"
+        ],
+        "formativeMethod": "Multiple-response sign spotting",
+        "gradedMethod": "Scenario multiple choice",
+        "cognitiveLevel": "understand"
+      },
+      {
+        "loId": "LO2",
+        "moduleIds": [
+          "M1"
+        ],
+        "formativeMethod": "Categorisation of signals",
+        "gradedMethod": "Single choice",
+        "cognitiveLevel": "understand"
+      },
+      {
+        "loId": "LO3",
+        "moduleIds": [
+          "M2"
+        ],
+        "formativeMethod": "Scenario single choice",
+        "gradedMethod": "Scenario single choice",
+        "cognitiveLevel": "apply"
+      },
+      {
+        "loId": "LO4",
+        "moduleIds": [
+          "M2"
+        ],
+        "formativeMethod": "Sequencing",
+        "gradedMethod": "Sequencing",
+        "cognitiveLevel": "apply"
+      }
+    ],
+    "assessmentStrategy": {
+      "formativePerModule": 2,
+      "gradedItemCount": 4,
+      "passingPercent": 75,
+      "notes": "Each objective is practised once and assessed once in the graded quiz."
+    },
+    "scenarioStrategy": "One continuing workplace inbox scenario across both modules.",
+    "glossaryPlan": [
+      {
+        "term": "Phishing",
+        "definition": "A message that imitates a trusted sender to trick the recipient into an unsafe action."
+      },
+      {
+        "term": "Spoofing",
+        "definition": "Disguising a message’s sender or link so it appears to come from someone else."
+      }
+    ],
+    "evidenceGaps": []
+  }
+}

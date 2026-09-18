@@ -1,0 +1,19 @@
+{
+  "output": {
+    "summary": "Items are well aligned. One formative item could better teach its distractor.",
+    "findings": [
+      {
+        "severity": "major",
+        "category": "assessment",
+        "location": "M1-F01",
+        "problem": "The feedback does not explain why a link is not the same as an attachment, which is a common learner confusion.",
+        "evidence": [
+          "LO1",
+          "M1-F01"
+        ],
+        "recommendedAction": "Extend the incorrect-answer feedback to explain the link/attachment distinction.",
+        "confidence": "high"
+      }
+    ]
+  }
+}

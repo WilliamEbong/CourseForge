@@ -1,0 +1,34 @@
+{
+  "output": {
+    "direction": {
+      "family": "corporate-professional",
+      "accentHue": 210,
+      "density": "comfortable",
+      "corner": "soft",
+      "typeScale": "default",
+      "figureStyle": "line"
+    },
+    "rationale": "A calm, credible corporate look suits workplace security awareness; blue accent reads as trustworthy without alarm.",
+    "briefMarkdown": "# Design brief — Spotting Phishing Emails\n\nAudience: office staff. Tone: calm, practical, non-alarmist.\n\n- Corporate/professional family with a blue accent.\n- Comfortable density: short screens, generous spacing.\n- Diagrams use line style for clarity; warning signs are shown as a table so they read well on mobile.",
+    "visualClassifications": [
+      {
+        "visualId": "V-01",
+        "archetype": "COMPARISON",
+        "rendererOverride": null,
+        "rationale": "Sign-by-sign comparison reads best as a structured table."
+      },
+      {
+        "visualId": "V-02",
+        "archetype": "PROCESS",
+        "rendererOverride": null,
+        "rationale": "Linear five-step response."
+      },
+      {
+        "visualId": "V-03",
+        "archetype": "QUANTITATIVE_CHART",
+        "rendererOverride": null,
+        "rationale": "Simple bar comparison of illustrative values."
+      }
+    ]
+  }
+}

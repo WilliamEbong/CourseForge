@@ -1,0 +1,374 @@
+{
+  "output": {
+    "module": {
+      "id": "M2",
+      "title": "Checking and reporting",
+      "summary": "How to verify a suspicious request safely and report it so colleagues are protected.",
+      "loIds": [
+        "LO3",
+        "LO4"
+      ],
+      "role": "topic",
+      "blocks": [
+        {
+          "id": "M2-B01",
+          "kind": "topic-title",
+          "subtype": null,
+          "title": "Checking and reporting",
+          "optional": false,
+          "body": "Noticing a warning sign is only half the job. Here you will practise checking a request safely and reporting it the right way.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO3",
+            "LO4"
+          ],
+          "citations": [],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M2-B02",
+          "kind": "content",
+          "subtype": null,
+          "title": "Verify through a separate channel",
+          "optional": false,
+          "body": "If a message asks for something unusual, check it **outside the message**: call the sender on a number you already know, or type the organisation’s address into your browser yourself.\n\nDo not use the phone number, link or reply address in the suspicious email — they may lead straight back to the attacker.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO3"
+          ],
+          "citations": [
+            {
+              "sourceId": "FTC-PHISH",
+              "locator": null
+            },
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [
+            "CLM-0005"
+          ],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M2-B03",
+          "kind": "process",
+          "subtype": null,
+          "title": "From suspicion to report",
+          "optional": false,
+          "body": "Follow the same short sequence every time a message makes you pause.",
+          "treatment": "Process diagram with text equivalent.",
+          "loIds": [
+            "LO4"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            },
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [
+            "CLM-0006"
+          ],
+          "visualId": "V-02",
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M2-B04",
+          "kind": "evidence",
+          "subtype": null,
+          "title": "Why reporting quickly matters",
+          "optional": false,
+          "body": "Early reports let the security team warn colleagues and block the campaign before more people interact with it. If you have **already clicked** or entered details, report straight away — speed matters more than embarrassment.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO4"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            },
+            {
+              "sourceId": "CISA-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [
+            "CLM-0006",
+            "CLM-0007"
+          ],
+          "visualId": "V-03",
+          "accessibility": "All content is available as text.",
+          "interaction": null,
+          "difficulty": null
+        },
+        {
+          "id": "M2-F01",
+          "kind": "formative",
+          "subtype": null,
+          "title": "Choose the safe check",
+          "optional": false,
+          "body": "Practice question.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO3"
+          ],
+          "citations": [
+            {
+              "sourceId": "FTC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "single",
+            "stem": "A supplier emails new bank details for this month’s invoice. What is the safest way to check?",
+            "options": [
+              {
+                "key": "A",
+                "text": "Reply to the email and ask them to confirm"
+              },
+              {
+                "key": "B",
+                "text": "Call the supplier on the number already held in your records"
+              },
+              {
+                "key": "C",
+                "text": "Call the number in the email signature"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [
+              "B"
+            ],
+            "mapping": [],
+            "order": [],
+            "feedbackCorrect": "Yes — a contact route you already trust cannot be controlled by the sender of the suspicious email.",
+            "feedbackIncorrect": "Contact details inside a suspicious email may belong to the attacker. Use a route you already hold.",
+            "optionFeedback": [
+              {
+                "key": "A",
+                "text": "A reply goes back to whoever sent the message."
+              },
+              {
+                "key": "C",
+                "text": "The signature is part of the suspicious message."
+              }
+            ],
+            "rationale": "Independent verification uses a channel the attacker does not control."
+          },
+          "difficulty": null
+        },
+        {
+          "id": "M2-F02",
+          "kind": "formative",
+          "subtype": null,
+          "title": "Order the steps",
+          "optional": false,
+          "body": "Practice question.",
+          "treatment": "Short explanatory screen.",
+          "loIds": [
+            "LO4"
+          ],
+          "citations": [
+            {
+              "sourceId": "NCSC-PHISH",
+              "locator": null
+            }
+          ],
+          "claimIds": [],
+          "visualId": null,
+          "accessibility": "All content is available as text.",
+          "interaction": {
+            "mode": "sequencing",
+            "stem": "Put the response steps in order.",
+            "options": [
+              {
+                "key": "report",
+                "text": "Report it"
+              },
+              {
+                "key": "pause",
+                "text": "Pause — do not click or reply"
+              },
+              {
+                "key": "verify",
+                "text": "Verify through a known channel"
+              }
+            ],
+            "targets": [],
+            "correctKeys": [],
+            "mapping": [],
+            "order": [
+              "pause",
+              "verify",
+              "report"
+            ],
+            "feedbackCorrect": "Correct: pause, verify, then report.",
+            "feedbackIncorrect": "Start by pausing, verify separately, then report.",
+            "optionFeedback": [],
+            "rationale": "Pausing prevents harm; verifying and reporting protect you and colleagues."
+          },
+          "difficulty": null
+        }
+      ]
+    },
+    "visuals": [
+      {
+        "id": "V-02",
+        "title": "From suspicion to report",
+        "purpose": "Show the safe sequence from noticing a suspicious email to reporting it.",
+        "archetype": "PROCESS",
+        "content": {
+          "items": [
+            {
+              "id": "s1",
+              "label": "Pause",
+              "detail": "Do not click, open or reply",
+              "group": null,
+              "value": null
+            },
+            {
+              "id": "s2",
+              "label": "Check the signs",
+              "detail": "Sender, links, request, tone",
+              "group": null,
+              "value": null
+            },
+            {
+              "id": "s3",
+              "label": "Verify separately",
+              "detail": "Use a known contact route",
+              "group": null,
+              "value": null
+            },
+            {
+              "id": "s4",
+              "label": "Report",
+              "detail": "Use the report button or security mailbox",
+              "group": null,
+              "value": null
+            },
+            {
+              "id": "s5",
+              "label": "Delete",
+              "detail": "After reporting, remove the message",
+              "group": null,
+              "value": null
+            }
+          ],
+          "links": [
+            {
+              "from": "s1",
+              "to": "s2",
+              "label": null
+            },
+            {
+              "from": "s2",
+              "to": "s3",
+              "label": null
+            },
+            {
+              "from": "s3",
+              "to": "s4",
+              "label": null
+            },
+            {
+              "from": "s4",
+              "to": "s5",
+              "label": null
+            }
+          ],
+          "groups": [],
+          "columns": [],
+          "rows": [],
+          "axes": {
+            "x": null,
+            "y": null
+          },
+          "chartType": null
+        },
+        "sourceIds": [
+          "NCSC-PHISH",
+          "CISA-PHISH"
+        ],
+        "textEquivalent": {
+          "short": "Five-step process from pausing to reporting a suspicious email",
+          "long": "Step 1, pause: do not click, open attachments or reply. Step 2, check the warning signs: sender, links, request and tone. Step 3, verify through a separate known contact route. Step 4, report using the report button or security mailbox. Step 5, delete the message after reporting."
+        },
+        "interaction": "none",
+        "rendererOverride": null,
+        "mermaid": null
+      },
+      {
+        "id": "V-03",
+        "title": "Why speed matters: illustrative reporting timeline",
+        "purpose": "Illustrate that earlier reports protect more colleagues (illustrative figures, not statistics).",
+        "archetype": "QUANTITATIVE_CHART",
+        "content": {
+          "items": [
+            {
+              "id": "r1",
+              "label": "Reported in 5 min",
+              "detail": null,
+              "group": null,
+              "value": 2
+            },
+            {
+              "id": "r2",
+              "label": "Reported in 1 hour",
+              "detail": null,
+              "group": null,
+              "value": 9
+            },
+            {
+              "id": "r3",
+              "label": "Reported next day",
+              "detail": null,
+              "group": null,
+              "value": 24
+            }
+          ],
+          "links": [],
+          "groups": [],
+          "columns": [],
+          "rows": [],
+          "axes": {
+            "x": "When the first report arrived",
+            "y": "Colleagues who opened the email (illustrative)"
+          },
+          "chartType": "bar"
+        },
+        "sourceIds": [
+          "NCSC-PHISH"
+        ],
+        "textEquivalent": {
+          "short": "Illustrative bar chart: later reports mean more colleagues exposed",
+          "long": "An illustrative bar chart, not real data: if the first report arrives within 5 minutes, about 2 colleagues have opened the email; within 1 hour, about 9; if reported the next day, about 24. Earlier reporting limits exposure."
+        },
+        "interaction": "none",
+        "rendererOverride": null,
+        "mermaid": null
+      }
+    ],
+    "glossary": [],
+    "acronyms": []
+  }
+}
