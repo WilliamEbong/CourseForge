@@ -17,13 +17,14 @@ import {
 } from '../artifacts/index.js';
 import { EXIT, IntakeModeSchema, STAGES, type Stage } from '../core/enums.js';
 import { CfError, usageError } from '../core/errors.js';
-import { ensureDir, exists, readText, removePath, writeAtomic } from '../core/fsx.js';
+import { ensureDir, exists, readText, removePath, writeAtomic, writeJson } from '../core/fsx.js';
 import { slugify } from '../core/ids.js';
 import { COURSE_FILES, courseDir, coursesDir, localStateDir, repoRoot } from '../core/paths.js';
-import { CourseManifestSchema, type Finding } from '../core/schemas/index.js';
+import { CourseManifestSchema, type Finding, type TaskSpec } from '../core/schemas/index.js';
 import { ingestFile } from '../ingestion/intake.js';
 import { loadRegistries } from '../routing/registries.js';
-import type { PipelineApi, RunOutcome, StatusReport } from './api.js';
+import { runAgentTask } from './agent.js';
+import type { HarnessOptions, PipelineApi, RunOutcome, StatusReport } from './api.js';
 import { loadStageFindings, saveStageFindings } from './findings-store.js';
 import { defaultFromStage, openContext, runRange } from './runner.js';
 import { runSmoke } from './smoke.js';
@@ -32,6 +33,7 @@ import {
   initialState,
   loadManifest,
   loadState,
+  logDecisions,
   logEvent,
   requireCourse,
   saveManifest,
@@ -40,6 +42,54 @@ import {
 } from './store.js';
 
 const now = () => new Date().toISOString();
+
+/** Agent fallback for import-stage inference (closed enum + confidence + evidence), logged as a decision. */
+async function classifyStage(
+  courseId: string,
+  file: string,
+  h: HarnessOptions,
+): Promise<{ value: Stage; confidence: 'high' | 'medium' | 'low'; evidence: string[] }> {
+  const ctx = await openContext({ courseId, backend: h.backend, harness: h.harness });
+  ctx.stage = 'CONCEPT';
+  const task: TaskSpec = {
+    taskId: `${ctx.runId}:classify-import-stage`,
+    role: 'stage-classifier',
+    promptTemplate: 'classify-import-stage',
+    subject: basename(file),
+    rubric: null,
+    skills: [],
+    tools: ['read'],
+    agentTools: ['Read'],
+    inputPaths: [file],
+    readOnlyPaths: [],
+    writablePaths: [],
+    outputSchema: 'classify-import-stage',
+    writeMode: 'structured',
+    network: false,
+    timeoutSec: 600,
+    maxTurns: 6,
+  };
+  const { output } = await runAgentTask<{ value: Stage; confidence: 'high' | 'medium' | 'low'; evidence: string[] }>(ctx, task, {
+    subject: basename(file),
+    cycle: 0,
+  });
+  logDecisions(ctx.dir, [
+    {
+      ts: now(),
+      runId: ctx.runId,
+      planId: null,
+      stage: null,
+      kind: 'classification',
+      subject: basename(file),
+      input: 'import-stage',
+      selected: output.value,
+      rule: 'CLS-IMPORT-STAGE-001',
+      fallback: false,
+      reason: `${output.confidence}: ${output.evidence.slice(0, 2).join('; ')}`,
+    },
+  ]);
+  return output;
+}
 
 function courseReadme(title: string, id: string): string {
   return `# ${title}
@@ -166,14 +216,36 @@ export const pipelineApi: PipelineApi = {
     const manifest = loadManifest(dir);
     const mode = opts.mode ?? (opts.conservative ? 'review-only' : manifest.improvement.default_import_mode);
     IntakeModeSchema.parse(mode);
-    const { report, produced } = await ingestFile({
-      filePath: file,
-      courseDir: dir,
-      courseId: id,
-      declaredStage: opts.stage ?? null,
-      mode,
-      now: new Date(),
-    });
+    const intake = (declaredStage: Stage | null) =>
+      ingestFile({ filePath: file, courseDir: dir, courseId: id, declaredStage, mode, now: new Date() });
+    let ingested: Awaited<ReturnType<typeof ingestFile>> | null = null;
+    let undetermined: unknown = null;
+    try {
+      ingested = await intake(opts.stage ?? null);
+    } catch (err) {
+      if (!(err instanceof CfError && err.code === 'STAGE_UNDETERMINED')) throw err;
+      undetermined = err;
+    }
+    if (!opts.stage && (!ingested || ingested.report.inferred.confidence === 'low')) {
+      // Deterministic heuristics were not decisive: ask the agent classifier for a closed-enum stage.
+      const ai = await classifyStage(id, file, opts).catch((e) => {
+        if (process.env.COURSEFORGE_DEBUG) console.error(e);
+        return null;
+      });
+      if (ai && ai.confidence !== 'low') {
+        ingested = await intake(ai.value);
+        ingested.report.inferred = {
+          ...ingested.report.inferred,
+          stage: ai.value,
+          confidence: ai.confidence,
+          method: 'agent',
+          evidence: ai.evidence,
+        };
+        writeJson(join(dir, COURSE_FILES.intakeReport), ingested.report);
+      }
+    }
+    if (!ingested) throw undetermined;
+    const { report, produced } = ingested;
     if (!opts.stage && report.inferred.confidence === 'low' && !opts.conservative) {
       throw new CfError(
         'LOW_CONFIDENCE',

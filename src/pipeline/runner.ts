@@ -201,7 +201,7 @@ export async function runRange(ctx: RunContext, from: Stage, to: Stage, opts: { 
         const st = ctx.state.stages[stage];
         const msg =
           result === 'waiting'
-            ? `${stage} is waiting for human review (${st.gate?.reason ?? 'policy'}). Review, then: courseforge gate approve --course ${ctx.courseId} --stage ${stage.toLowerCase()} && courseforge continue --course ${ctx.courseId}`
+            ? `${stage} is waiting for human review (${st.gate?.reason ?? 'policy'}). Review it, then run: courseforge gate approve --course ${ctx.courseId} --stage ${stage.toLowerCase()} ; then: courseforge continue --course ${ctx.courseId}`
             : result === 'blocked'
               ? `Release blocked: see ${ctx.courseId}/release/release-decision.json and the QA findings.`
               : `${stage} failed: ${st.failure?.message ?? 'unknown error'}`;

@@ -818,6 +818,11 @@ function files(): Map<string, unknown> {
   put('repair', 'default', RepairResultSchema.parse(repair));
   put('repair-html', 'default', { edits: [], notes: 'No HTML edits.' });
   put('visual-repair', 'default', V_SIGNS);
+  put('classify-import-stage', 'default', {
+    value: 'CONCEPT',
+    confidence: 'medium',
+    evidence: ['Short, unstructured notes describing a course idea'],
+  });
   return m;
 }
 

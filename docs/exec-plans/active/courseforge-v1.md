@@ -32,7 +32,7 @@ below. Where analysts disagreed, §2 records the ruling.
 | Global agent config | `~/.claude`: SessionStart/Stop/PreCompact/SessionEnd hooks + 10 plugins, several **style-altering** (terse "caveman" output, etc.), global CLAUDE.md + rules. `~/.codex`: global AGENTS.md + config.toml. **Spawned agents would inherit these and corrupt course prose** unless adapters isolate them. Never modified by CourseForge |
 | Browsers | Playwright Chromium **not installed** (`%LOCALAPPDATA%\ms-playwright` has only an unrelated dir). System Chrome + Edge present (fallback channel) |
 | Other | python 3.14, bun, rustc, gh, winget, choco present; no Docker/Java. None will be required |
-| Project dir | `C:\Users\Owner\OneDrive\Documents\CourseForge` — under the OneDrive folder, but **user confirmed sync is disabled**; contains only the ZIP; no user work to preserve beyond it |
+| Project dir | `%USERPROFILE%\OneDrive\Documents\CourseForge` — under the OneDrive folder, but **user confirmed sync is disabled**; contains only the ZIP; no user work to preserve beyond it |
 
 Material consequences: (1) OneDrive path is an advisory only on this machine (sync off; see R1); (2) low RAM → one shared Chromium, QA workers ≤2, agent process pool ≤3, never overlap QA
 with a reviewer pool; (3) PS 5.1 → `setup.ps1` must avoid `&&`, ternaries, UTF-16 output; (4) CRLF → hash

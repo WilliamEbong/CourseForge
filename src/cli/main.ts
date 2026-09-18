@@ -91,11 +91,20 @@ const stageRun = (stage: Stage): Command => ({
 
 const COMMANDS: Record<string, Command> = {
   doctor: {
-    options: { repair: B, only: S },
+    options: { repair: B, only: S, live: B },
     run: async (ctx) => {
       const m = await ctx.doctor({ repair: flag(ctx.values, 'repair'), only: optList(ctx.values, 'only') });
-      print(ctx, m, () => formatDoctor(m, { color: useColor(ctx.io.stdout) }).trimEnd());
-      return m.status === 'ready' ? EXIT.OK : EXIT.ENVIRONMENT;
+      const live = flag(ctx.values, 'live') ? await (await import('../environment/canary.js')).runCanary(repoRoot()) : null;
+      print(ctx, live ? { ...m, live } : m, () =>
+        [
+          formatDoctor(m, { color: useColor(ctx.io.stdout) }).trimEnd(),
+          ...(live
+            ? ['', 'Live canary (one small model call per backend)', ...live.map((c) => `  ${c.ok ? '✓' : '✗'} ${c.backend}: ${c.detail}`)]
+            : []),
+        ].join('\n'),
+      );
+      const liveOk = !live || live.some((c) => c.ok);
+      return m.status === 'ready' && liveOk ? EXIT.OK : EXIT.ENVIRONMENT;
     },
   },
   setup: {

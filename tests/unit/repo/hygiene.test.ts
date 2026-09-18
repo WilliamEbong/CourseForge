@@ -93,10 +93,7 @@ const SECRET_ALLOWLIST = new Set(['tests/unit/harness/fake.test.ts']);
  * Known findings awaiting a scrub by the file's owner. Each entry must still contain the finding, so the
  * exception is removed as soon as the file is fixed.
  */
-const PENDING_SCRUB: Record<string, RegExp> = {
-  // The approved plan records the machine it was written on (§1 environment findings).
-  'docs/exec-plans/active/courseforge-v1.md': /[A-Za-z]:\\Users\\/,
-};
+const PENDING_SCRUB: Record<string, RegExp> = {};
 
 function userPathHits(text: string): string[] {
   const hits: string[] = [];

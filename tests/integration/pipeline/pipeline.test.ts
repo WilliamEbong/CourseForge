@@ -191,3 +191,18 @@ describe('pipeline with fake harness', () => {
     expect(status.nextAction).toContain('continue');
   }, 300_000);
 });
+
+describe('import stage inference fallback', () => {
+  it('@C3 an ambiguous file is classified by the agent classifier (closed enum) and logged', async () => {
+    useFakeEnv();
+    const { mkdtempSync, writeFileSync } = await import('node:fs');
+    const { tmpdir } = await import('node:os');
+    const f = join(mkdtempSync(join(tmpdir(), 'cf-amb-')), 'export.json');
+    writeFileSync(f, JSON.stringify({ items: [1, 2, 3], owner: 'unknown' }));
+    const { courseId, report } = await api.ingest({ file: f, courseId: 'ambiguous' });
+    expect(report.inferred).toMatchObject({ method: 'agent' });
+    expect(report.acceptedStage).toBe('CONCEPT');
+    const decisions = readJsonl<{ kind: string; rule: string }>(join(courseDir(courseId), 'logs/routing-decisions.jsonl'));
+    expect(decisions.some((d) => d.kind === 'classification' && d.rule === 'CLS-IMPORT-STAGE-001')).toBe(true);
+  }, 120_000);
+});

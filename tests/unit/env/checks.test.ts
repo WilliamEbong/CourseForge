@@ -63,7 +63,7 @@ describe('doctor checks @A1', () => {
     expect(pk.message).toContain('mermaid');
   });
 
-  it('chromium missing → repairable; system Edge → warn with channel fallback', async () => {
+  it('@A3 chromium missing → repairable; system Edge → warn with channel fallback', async () => {
     expect(await runCheck('pw.chromium', { chromium: null })).toMatchObject({ status: 'fail', classification: 'repairable' });
     const edge = join('/', 'pf', 'Microsoft', 'Edge', 'Application', 'msedge.exe');
     const out = await runCheck('pw.chromium', {

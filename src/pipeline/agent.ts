@@ -5,16 +5,17 @@
  */
 import { isAbsolute, join, resolve } from 'node:path';
 import type { z } from 'zod';
-import { STAGE_CODES } from '../core/enums.js';
+import { type HarnessFailure, STAGE_CODES } from '../core/enums.js';
 import { CfError } from '../core/errors.js';
 import { diffTrees, exists, hashTree, writeJson } from '../core/fsx.js';
 import { COURSE_FILES, localStateDir, matchesPattern } from '../core/paths.js';
 import { isSchemaName, SCHEMAS, type TaskSpec } from '../core/schemas/index.js';
 import { toWireSchema } from '../core/wire-schema.js';
+import { createHarness } from '../harness/factory.js';
 import { assemblePrompt } from '../harness/prompt.js';
 import { type AgentTaskResult, RETRYABLE_FAILURES } from '../harness/types.js';
 import { abs, type RunContext } from './context.js';
-import { logEvent } from './store.js';
+import { logDecisions, logEvent } from './store.js';
 
 export interface TaskRunOptions {
   subject: string | null;
@@ -200,6 +201,7 @@ export async function runAgentTask<T>(ctx: RunContext, spec: TaskSpec, o: TaskRu
       durationMs,
       detail: { message: failure.message.slice(0, 500) },
     });
+    if (switchBackend(ctx, failure.class, failure.message)) continue;
     if (RETRYABLE_FAILURES.has(failure.class) && attempt < maxAttempts) {
       const wait = (procCfg.backoffMs[attempt - 1] ?? procCfg.backoffMs.at(-1) ?? 2000) * backoffScale();
       if (wait > 0) await sleep(wait);
@@ -212,6 +214,41 @@ export async function runAgentTask<T>(ctx: RunContext, spec: TaskSpec, o: TaskRu
   }
   throw new CfError('AGENT_FAILED', `${spec.role} exhausted retries`, { kind: last?.failure?.class ?? 'unknown' });
 }
+
+/**
+ * Explicit, logged backend fallback (spec 07): only for configured trigger classes (unavailable CLI,
+ * authentication/billing failure…), only when both fallbacks.json and course.yaml allow it, and at most once
+ * per run. Never because an answer was poor.
+ */
+function switchBackend(ctx: RunContext, failure: HarnessFailure, message: string): boolean {
+  const cfg = ctx.registries.fallbacks.backend;
+  if (!cfg.enabled || !ctx.manifest.pipeline.backend_fallback || ctx.harnessName === 'fake' || fallbackUsed.has(ctx.runId)) return false;
+  if (!cfg.triggers.includes(failure)) return false;
+  const next = cfg.order.find((b) => b !== ctx.harnessName && ctx.probes[b]?.available && ctx.probes[b]?.authenticated !== false);
+  if (!next) return false;
+  fallbackUsed.add(ctx.runId);
+  logDecisions(ctx.dir, [
+    {
+      ts: ctx.now(),
+      runId: ctx.runId,
+      planId: null,
+      stage: ctx.stage,
+      kind: 'backend',
+      subject: 'task-failure',
+      input: `${ctx.harnessName}:${failure}`,
+      selected: next,
+      rule: 'BACKEND-FALLBACK-002',
+      fallback: true,
+      reason: message.slice(0, 200),
+    },
+  ]);
+  ctx.progress(`backend ${ctx.harnessName} failed (${failure}); falling back to ${next} as configured`);
+  ctx.harness = createHarness(next);
+  ctx.harnessName = next;
+  return true;
+}
+
+const fallbackUsed = new Set<string>();
 
 /** Task ID helper so plan TaskSpecs and logs line up. */
 export function stageTaskPrefix(runId: string, stage: keyof typeof STAGE_CODES): string {

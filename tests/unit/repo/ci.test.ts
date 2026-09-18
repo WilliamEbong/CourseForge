@@ -7,7 +7,7 @@ import { repoRoot } from '../../../src/core/paths.js';
 const root = repoRoot();
 
 describe('continuous integration', () => {
-  it('@L5 ci.yml runs typecheck, lint, schema and fixture drift checks, tests and e2e', () => {
+  it('@L5 @A2 ci.yml installs from the lockfile (npm ci) and runs typecheck, lint, schema and fixture drift checks, tests and e2e', () => {
     const p = join(root, '.github', 'workflows', 'ci.yml');
     expect(existsSync(p)).toBe(true);
     const ci = readFileSync(p, 'utf8');

@@ -4,7 +4,10 @@ const H = '[--backend auto|claude|codex] [--harness claude|codex|fake]';
 
 export const COMMAND_HELP: Record<string, { usage: string; summary: string }> = {
   setup: { usage: 'setup [--no-smoke]', summary: 'Repair the environment (doctor --repair), then run the smoke fixture' },
-  doctor: { usage: 'doctor [--repair] [--only <id,...>]', summary: 'Check prerequisites; --repair fixes repo-local problems' },
+  doctor: {
+    usage: 'doctor [--repair] [--only <id,...>] [--live]',
+    summary: 'Check prerequisites; --repair fixes repo-local problems; --live runs one tiny isolated task per backend',
+  },
   'validate-config': { usage: 'validate-config', summary: 'Validate config/*.json registries' },
   new: {
     usage: `new <title> [--id <id>] [--notes <file>] [--audience <text>] [--duration <minutes>] [--jurisdiction <text>] [--language <code>] [--to <stage>] [--gate auto|hybrid|human] ${H}`,
