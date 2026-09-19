@@ -27,6 +27,7 @@ export function formatStatus(s: StatusReport): string {
     `current ${s.currentStage} → target ${s.targetStage}${s.activeRunId ? `, run ${s.activeRunId}` : ''}`,
     ...table(rows),
     `Next: ${s.nextAction}`,
+    ...(s.notices ?? []).map((n) => `Note: ${n}`),
   ].join('\n');
 }
 

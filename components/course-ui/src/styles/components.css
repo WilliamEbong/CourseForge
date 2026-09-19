@@ -1286,6 +1286,52 @@
   .cf-results-actions {
     margin-top: var(--cf-space-4);
   }
+
+  /* ------------------------------------------------- record result (tracking) */
+  .cf-record {
+    margin-top: var(--cf-space-6);
+    padding: var(--cf-space-6);
+    border: 1px solid var(--cf-border);
+    border-radius: var(--cf-radius-lg);
+    background: var(--cf-surface);
+    box-shadow: var(--cf-shadow-2);
+  }
+  .cf-record > * + * {
+    margin-top: var(--cf-space-4);
+  }
+  .cf-record-intro {
+    color: var(--cf-fg-muted);
+  }
+  .cf-record-fields {
+    display: grid;
+    gap: var(--cf-space-4);
+    max-width: 32rem;
+  }
+  .cf-record-field .cf-label {
+    display: block;
+    margin-bottom: var(--cf-space-1);
+    font-weight: 600;
+    font-size: var(--cf-text-sm);
+  }
+  .cf-record-field .cf-input {
+    padding-left: var(--cf-space-3);
+    font-size: var(--cf-text-base);
+  }
+  .cf-record-field .cf-input[aria-invalid="true"] {
+    border-color: var(--cf-danger);
+  }
+  .cf-record-status:empty {
+    display: none;
+  }
+  .cf-record-status {
+    font-weight: 600;
+  }
+  .cf-record[data-cf-record-state="sent"] .cf-record-status {
+    color: var(--cf-success);
+  }
+  .cf-record[data-cf-record-state="error"] .cf-record-status {
+    color: var(--cf-danger);
+  }
   .cf-review-list {
     list-style: none;
     padding: 0;

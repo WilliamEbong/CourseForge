@@ -200,6 +200,59 @@ export const ReviewPolicySchema = Strict({
 });
 export type ReviewPolicy = z.infer<typeof ReviewPolicySchema>;
 
+/* ---------------------------------------------------------------- guidance.json */
+
+export const GUIDANCE_MESSAGES = [
+  'welcome',
+  'reconfigure',
+  'invalidChoice',
+  'invalidUrl',
+  'invalidText',
+  'testSending',
+  'testOk',
+  'testFailed',
+  'done',
+  'guides',
+  'unfinished',
+  'unconfigured',
+  'skipped',
+  'landing',
+  'rebuild',
+] as const;
+
+/** One setup-wizard choice: `value` is a closed code, `label`/`blurb` are plain language for non-specialists. */
+export const GuidanceOptionSchema = Strict({ value: z.string().min(1), label: z.string().min(1), blurb: z.string() });
+export const GuidanceQuestionSchema = Strict({
+  prompt: z.string().min(1),
+  /** One or two sentences shown under the prompt, in plain language. */
+  help: z.string(),
+  /** Empty for free-text questions. */
+  options: z.array(GuidanceOptionSchema),
+});
+export type GuidanceQuestion = z.infer<typeof GuidanceQuestionSchema>;
+
+export const GuidanceConfigSchema = Strict({
+  $schema: z.string().optional(),
+  version: z.literal(1),
+  /** Plain-language description of every stage: what it is, and what happens next. */
+  stages: z.record(StageSchema, Strict({ name: z.string().min(1), blurb: z.string().min(1), next: z.string().min(1) })),
+  questions: Strict({
+    language: GuidanceQuestionSchema,
+    audience: GuidanceQuestionSchema,
+    review: GuidanceQuestionSchema,
+    tracking: GuidanceQuestionSchema,
+    identity: GuidanceQuestionSchema,
+    idLabel: GuidanceQuestionSchema,
+    sheetUrl: GuidanceQuestionSchema,
+    trackerUrl: GuidanceQuestionSchema,
+  }),
+  /** Fixed wizard/CLI wording; `{name}` placeholders are filled by code. */
+  messages: Strict(
+    Object.fromEntries(GUIDANCE_MESSAGES.map((k) => [k, z.string().min(1)])) as Record<(typeof GUIDANCE_MESSAGES)[number], z.ZodString>,
+  ),
+});
+export type GuidanceConfig = z.infer<typeof GuidanceConfigSchema>;
+
 /* ----------------------------------------------------- execution plan + decisions */
 
 export const TaskSpecSchema = z.object({

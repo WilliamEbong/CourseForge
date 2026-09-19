@@ -2,7 +2,15 @@
 import { describe, expect, it } from 'vitest';
 import { main } from '../../../src/cli/main.js';
 import { CfError } from '../../../src/core/errors.js';
-import type { PipelineApi, RunOutcome } from '../../../src/pipeline/api.js';
+import type { PipelineApi, RunOutcome, SetupAnswers } from '../../../src/pipeline/api.js';
+import { loadRegistries } from '../../../src/routing/registries.js';
+
+const defaultAnswers = (): SetupAnswers => ({
+  language: 'en',
+  audience: null,
+  review: 'recommended',
+  tracking: { destination: 'none', endpoint: null, identity: 'name', id_label: null },
+});
 
 const outcome = (over: Partial<RunOutcome> = {}): RunOutcome => ({
   courseId: 'x',
@@ -15,7 +23,7 @@ const outcome = (over: Partial<RunOutcome> = {}): RunOutcome => ({
   ...over,
 });
 
-function fakeApi(next: Partial<RunOutcome> = {}) {
+function fakeApi(next: Partial<RunOutcome> = {}, courseExists = false) {
   const calls: { op: string; args: unknown }[] = [];
   const rec =
     <T>(op: string, result: T) =>
@@ -24,7 +32,27 @@ function fakeApi(next: Partial<RunOutcome> = {}) {
       return result;
     };
   const api: PipelineApi = {
-    newCourse: rec('newCourse', { courseId: 'x', courseDir: '/c/x', outcome: null }),
+    newCourse: rec('newCourse', { courseId: 'x', courseDir: '/c/x', outcome: null, guides: [] }),
+    ingestTarget: rec('ingestTarget', { courseId: 'x', title: 'X', isNew: true }),
+    setupInfo: async (args) => {
+      calls.push({ op: 'setupInfo', args });
+      return {
+        courseId: 'x',
+        title: 'X',
+        exists: courseExists,
+        configured: courseExists,
+        answers: defaultAnswers(),
+        guidance: loadRegistries().guidance,
+      };
+    },
+    configure: rec('configure', {
+      courseId: 'x',
+      manifestPath: '/c/x/course.yaml',
+      guides: [],
+      trackingChanged: false,
+      invalidated: [],
+      unfinished: false,
+    }),
     ingest: async (args) => {
       calls.push({ op: 'ingest', args });
       throw new CfError('COURSE_LOCKED', 'locked by pid 1', { exitCode: 5 });
@@ -42,6 +70,7 @@ function fakeApi(next: Partial<RunOutcome> = {}) {
       activeRunId: null,
       stages: [],
       nextAction: 'run',
+      notices: [],
     }),
     gate: rec('gate', null),
     findings: rec('findings', []),
@@ -148,5 +177,47 @@ describe('cli dispatch', () => {
     const bad = capture();
     expect(await main(['setup'], bad.io, { api, doctor })).toBe(3);
     expect(bad.out.stdout).not.toMatch(/^READY$/m);
+  });
+
+  it('the setup wizard never runs without a terminal, with --json or with --defaults', async () => {
+    const { api, calls } = fakeApi();
+    // capture() has no stdin, like redirected input.
+    expect(await main(['new', 'Plain'], capture().io, { api })).toBe(0);
+    const asked: string[] = [];
+    const ask = async (q: string) => {
+      asked.push(q);
+      return '';
+    };
+    expect(await main(['new', 'Json', '--json'], capture().io, { api, ask })).toBe(0);
+    expect(await main(['new', 'Quiet', '--defaults'], capture().io, { api, ask })).toBe(0);
+    expect(asked).toEqual([]);
+    expect(calls.map((c) => c.op)).toEqual(['newCourse', 'newCourse', 'newCourse']);
+    expect(calls.every((c) => (c.args as { setup?: unknown }).setup === undefined)).toBe(true);
+  });
+
+  it('new asks the setup questions first and passes the answers to newCourse', async () => {
+    const { api, calls } = fakeApi();
+    const replies = ['fr', 'new warehouse staff', '2'];
+    const ask = async () => replies.shift() ?? '';
+    const { io, out } = capture();
+    expect(await main(['new', 'Forklift safety', '--id', 'forklift'], io, { api, ask })).toBe(0);
+    expect(calls.map((c) => c.op)).toEqual(['setupInfo', 'newCourse']);
+    expect(calls[0]?.args).toEqual({ courseId: 'forklift', title: 'Forklift safety' });
+    expect(calls[1]?.args).toMatchObject({
+      setup: { language: 'fr', audience: 'new warehouse staff', review: 'every_step', tracking: { destination: 'none' } },
+    });
+    expect(out.stdout).toContain('This takes about a minute');
+  });
+
+  it('configure needs a terminal, then saves the wizard answers', async () => {
+    const { api, calls } = fakeApi({}, true);
+    const plain = capture();
+    expect(await main(['configure', '--course', 'x'], plain.io, { api })).toBe(2);
+    expect(plain.out.stderr).toContain('interactive terminal');
+    const { io, out } = capture();
+    expect(await main(['reconfigure', '--course', 'x'], io, { api, ask: async () => '' })).toBe(0);
+    expect(calls.map((c) => c.op)).toEqual(['setupInfo', 'setupInfo', 'configure']);
+    expect(calls[2]?.args).toEqual({ courseId: 'x', answers: defaultAnswers() });
+    expect(out.stdout).toContain('Settings saved in /c/x/course.yaml');
   });
 });

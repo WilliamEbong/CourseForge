@@ -39,7 +39,7 @@ import { loadStageFindings, saveCycle, saveReviewerOutput, saveStageFindings } f
 import { applyReplacements, targetObjects } from './repair-target.js';
 import { needsStructuralRebuild } from './stages/delivery.js';
 import { canonicalStoryboard, HANDLERS, has, lockedIds, type Produced, type StageHandler } from './stages/index.js';
-import { logDecisions, logEvent, patchStage, saveState, transitionStage } from './store.js';
+import { invalidateStages, logDecisions, logEvent, patchStage, saveState, transitionStage } from './store.js';
 import { IN_FLIGHT } from './transitions.js';
 
 export type StageResult = 'locked' | 'waiting' | 'failed' | 'blocked';
@@ -220,29 +220,7 @@ function lockStage(ctx: RunContext, stage: Stage, byHuman: boolean): StageResult
 
 /** After a stage produces new canonical content, previously locked downstream stages are no longer current. */
 function invalidateDownstream(ctx: RunContext, stage: Stage): void {
-  for (const s of STAGES.slice(stageIndex(stage) + 1)) {
-    const st = ctx.state.stages[s];
-    if (st.status !== 'LOCKED') continue;
-    const humanApproved = st.gate?.status === 'approved' && !!st.gate.decidedBy;
-    if (humanApproved) {
-      transitionStage(ctx.dir, ctx.state, s, 'upstream-changed-human', ctx.now(), ctx.runId);
-      st.gate = {
-        mode: 'human',
-        status: 'pending',
-        reason: 'upstream_changed',
-        openedAt: ctx.now(),
-        decidedAt: null,
-        decidedBy: null,
-        reportPath: null,
-        instructions: null,
-        comments: st.gate?.comments ?? [],
-        findingDecisions: {},
-      };
-    } else {
-      transitionStage(ctx.dir, ctx.state, s, 'upstream-changed', ctx.now(), ctx.runId);
-      st.stale = { because: stage, at: ctx.now() };
-    }
-  }
+  invalidateStages(ctx.dir, ctx.state, STAGES.slice(stageIndex(stage) + 1), stage, ctx.now(), ctx.runId);
   save(ctx);
 }
 

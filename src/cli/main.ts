@@ -2,16 +2,36 @@
  * CourseForge CLI: parses argv, dispatches to the PipelineApi (or the local doctor/setup commands) and maps
  * results/errors to exit codes. Returns the exit code instead of exiting so tests can call it in-process.
  */
-import { join } from 'node:path';
-import { BackendPreferenceSchema, EXIT, GateModeInputSchema, HarnessNameSchema, IntakeModeSchema, type Stage } from '../core/enums.js';
+import type { AddressInfo } from 'node:net';
+import { join, resolve } from 'node:path';
+import {
+  BackendPreferenceSchema,
+  EXIT,
+  GateModeInputSchema,
+  HarnessNameSchema,
+  IntakeModeSchema,
+  STAGES,
+  type Stage,
+} from '../core/enums.js';
 import { CfError, usageError } from '../core/errors.js';
 import { readJson } from '../core/fsx.js';
-import { repoRoot } from '../core/paths.js';
+import { slugify } from '../core/ids.js';
+import { localStateDir, repoRoot } from '../core/paths.js';
+import { type GuidanceConfig, trackingUnfinished } from '../core/schemas/index.js';
 import type { EnvironmentManifest } from '../core/schemas/reports.js';
 import { type DoctorOptions, runDoctor } from '../environment/doctor.js';
 import { formatDoctor, useColor } from '../environment/format.js';
 import { loadConfigValidator } from '../environment/probe.js';
-import { type GateAction, type HarnessOptions, loadPipelineApi, type PipelineApi, type RunOutcome } from '../pipeline/api.js';
+import {
+  type GateAction,
+  type HarnessOptions,
+  loadPipelineApi,
+  type PipelineApi,
+  type RunOutcome,
+  type SetupAnswers,
+  type SetupInfo,
+} from '../pipeline/api.js';
+import { fillMessage } from '../pipeline/setup.js';
 import { flag, type OptionSpec, optEnum, optInt, optList, optStage, parseCommand, required, str, type Values } from './args.js';
 import { helpText } from './help.js';
 import { formatCourseList, formatFindings, formatGate, formatIntake, formatJson, formatOutcome, formatStatus } from './output.js';
@@ -23,10 +43,16 @@ export interface OutStream {
 export interface CliIo {
   stdout: OutStream;
   stderr: OutStream;
+  /** Keyboard input for the setup wizard; the wizard runs only when this and stdout are terminals. */
+  stdin?: NodeJS.ReadableStream & { isTTY?: boolean };
 }
 export interface MainOverrides {
   api?: PipelineApi;
   doctor?: (opts: DoctorOptions) => Promise<EnvironmentManifest>;
+  /** Scripted wizard replies (tests). When set, the wizard runs as if in a terminal. */
+  ask?: (prompt: string) => Promise<string>;
+  /** Replaces the network call of the wizard's connection test (tests). */
+  testEndpoint?: (url: string) => Promise<string | null>;
 }
 
 interface Ctx {
@@ -36,6 +62,7 @@ interface Ctx {
   io: CliIo;
   api: () => Promise<PipelineApi>;
   doctor: (opts: DoctorOptions) => Promise<EnvironmentManifest>;
+  overrides: MainOverrides;
 }
 
 interface Command {
@@ -63,6 +90,85 @@ function outcome(ctx: Ctx, o: RunOutcome): number {
   return o.exitCode;
 }
 
+/** The wizard runs only for a person at a terminal: never with --json, --defaults or redirected input/output. */
+function interactive(ctx: Ctx): boolean {
+  if (ctx.json || flag(ctx.values, 'defaults')) return false;
+  return !!ctx.overrides.ask || (!!ctx.io.stdin?.isTTY && !!ctx.io.stdout.isTTY);
+}
+
+/** Runs the setup wizard with a line reader on stdin (or the scripted replies in tests). */
+async function wizard(ctx: Ctx, info: SetupInfo, reconfigure: boolean): Promise<SetupAnswers> {
+  const { runWizard } = await import('./wizard.js');
+  const write = (t: string) => void ctx.io.stdout.write(t);
+  const testEndpoint = ctx.overrides.testEndpoint ?? sendTestResult;
+  const base = { guidance: info.guidance, courseId: info.courseId, title: info.title, current: info.answers, reconfigure, testEndpoint };
+  if (ctx.overrides.ask) return runWizard({ ...base, io: { ask: ctx.overrides.ask, write } });
+  const { createInterface } = await import('node:readline/promises');
+  const rl = createInterface({ input: ctx.io.stdin as NodeJS.ReadableStream, output: ctx.io.stdout as NodeJS.WritableStream });
+  let closed = false;
+  const onClose = new Promise<string>((r) =>
+    rl.once('close', () => {
+      closed = true;
+      r('');
+    }),
+  );
+  const ask = (q: string) =>
+    closed
+      ? Promise.resolve('')
+      : Promise.race([
+          rl.question(q).then(
+            (a) => a.trim(),
+            () => '',
+          ),
+          onClose,
+        ]);
+  try {
+    return await runWizard({ ...base, io: { ask, write } });
+  } finally {
+    rl.close();
+  }
+}
+
+/** Posts the setup test result and reads the reply (Google Apps Script and the tracker both answer {"ok":true}). */
+async function sendTestResult(url: string): Promise<string | null> {
+  const event = {
+    v: 1,
+    courseId: 'courseforge-setup-test',
+    courseTitle: 'CourseForge setup test',
+    courseVersion: '0',
+    learner: { name: 'CourseForge setup test', id: null, email: null },
+    percent: null,
+    passed: null,
+    correct: 0,
+    total: 0,
+    completedAt: new Date().toISOString(),
+    attempt: 1,
+    test: true,
+  };
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(event),
+      redirect: 'follow',
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!res.ok) return `the address answered with error ${res.status}`;
+    return /"ok"\s*:\s*true/.test(await res.text()) ? null : 'the address answered, but not like a results connection';
+  } catch (err) {
+    return err instanceof Error ? err.message : String(err);
+  }
+}
+
+/** Plain-language lines printed after setup answers were saved. */
+function setupSummary(g: GuidanceConfig, courseId: string, r: { guides: string[]; unfinished?: boolean; invalidated?: Stage[] }): string[] {
+  const out: string[] = [];
+  if (r.guides.length) out.push(fillMessage(g.messages.guides, { files: `\n  ${r.guides.join('\n  ')}` }));
+  if (r.unfinished) out.push(fillMessage(g.messages.unfinished, { id: courseId }));
+  if (r.invalidated?.length) out.push(fillMessage(g.messages.rebuild, { id: courseId }));
+  return out;
+}
+
 function action<T extends string>(ctx: Ctx, allowed: readonly T[], command: string): T {
   const a = ctx.positionals[0];
   if (!a || !(allowed as readonly string[]).includes(a)) throw usageError(`${command}: expected one of ${allowed.join('|')}`);
@@ -88,6 +194,31 @@ const stageRun = (stage: Stage): Command => ({
     );
   },
 });
+
+/** `configure` / `reconfigure`: re-run the setup wizard for an existing course, current answers preselected. */
+function configureCommand(): Command {
+  return {
+    options: { ...COURSE },
+    run: async (ctx) => {
+      const courseId = required(ctx.values, 'course', 'configure');
+      const api = await ctx.api();
+      const info = await api.setupInfo({ courseId });
+      if (!info.exists) throw usageError(`Course "${courseId}" not found. Create it with \`courseforge new\` or \`courseforge ingest\`.`);
+      if (!interactive(ctx))
+        throw usageError(
+          'configure asks questions, so it needs an interactive terminal (and no --json). Settings can also be edited in course.yaml.',
+        );
+      const answers = await wizard(ctx, info, info.configured);
+      const res = await api.configure({ courseId, answers });
+      print(ctx, res, () =>
+        ['', fillMessage(info.guidance.messages.done, { file: res.manifestPath }), ...setupSummary(info.guidance, courseId, res)].join(
+          '\n',
+        ),
+      );
+      return EXIT.OK;
+    },
+  };
+}
 
 const COMMANDS: Record<string, Command> = {
   doctor: {
@@ -149,12 +280,28 @@ const COMMANDS: Record<string, Command> = {
       language: S,
       to: S,
       gate: S,
+      defaults: B,
     },
     run: async (ctx) => {
       const v = ctx.values;
       const title = ctx.positionals[0];
       if (!title) throw usageError('new: a course title is required');
-      const res = await (await ctx.api()).newCourse({
+      const api = await ctx.api();
+      let setup: SetupAnswers | undefined;
+      let guidance: GuidanceConfig | undefined;
+      if (interactive(ctx)) {
+        const info = await api.setupInfo({ courseId: str(v, 'id') ?? slugify(title), title });
+        if (info.exists) throw usageError(`Course "${info.courseId}" already exists`);
+        guidance = info.guidance;
+        info.answers = {
+          ...info.answers,
+          language: str(v, 'language') ?? info.answers.language,
+          audience: str(v, 'audience') ?? info.answers.audience,
+        };
+        setup = await wizard(ctx, info, false);
+      }
+      const res = await api.newCourse({
+        setup,
         title,
         id: str(v, 'id'),
         notesFile: str(v, 'notes'),
@@ -167,19 +314,32 @@ const COMMANDS: Record<string, Command> = {
         ...harnessOpts(v),
       });
       print(ctx, res, () =>
-        [`created ${res.courseId} at ${res.courseDir}`, res.outcome ? formatOutcome(res.outcome) : ''].filter(Boolean).join('\n'),
+        [
+          `created ${res.courseId} at ${res.courseDir}`,
+          ...(guidance && setup ? setupSummary(guidance, res.courseId, { guides: res.guides, unfinished: trackingUnfinished(setup) }) : []),
+          res.outcome ? formatOutcome(res.outcome) : '',
+        ]
+          .filter(Boolean)
+          .join('\n'),
       );
       return res.outcome?.exitCode ?? EXIT.OK;
     },
   },
   ingest: {
     positionals: 1,
-    options: { ...COURSE, ...HARNESS, title: S, stage: S, mode: S, replace: B, conservative: B },
+    options: { ...COURSE, ...HARNESS, title: S, stage: S, mode: S, replace: B, conservative: B, defaults: B },
     run: async (ctx) => {
       const v = ctx.values;
       const file = ctx.positionals[0];
       if (!file) throw usageError('ingest: a file is required');
-      const res = await (await ctx.api()).ingest({
+      const api = await ctx.api();
+      let setup: SetupAnswers | undefined;
+      if (interactive(ctx)) {
+        const target = await api.ingestTarget({ file, courseId: str(v, 'course'), title: str(v, 'title') });
+        if (target.isNew) setup = await wizard(ctx, await api.setupInfo({ courseId: target.courseId, title: target.title }), false);
+      }
+      const res = await api.ingest({
+        setup,
         file,
         courseId: str(v, 'course'),
         title: str(v, 'title'),
@@ -189,10 +349,21 @@ const COMMANDS: Record<string, Command> = {
         conservative: flag(v, 'conservative'),
         ...harnessOpts(v),
       });
-      print(ctx, res, () => formatIntake(res.courseId, res.report));
+      const guidance = ctx.json ? null : (await api.setupInfo({ courseId: res.courseId })).guidance;
+      print(ctx, res, () => {
+        if (!guidance) return formatIntake(res.courseId, res.report);
+        const stage = guidance.stages[res.report.acceptedStage];
+        return [
+          formatIntake(res.courseId, res.report),
+          fillMessage(guidance.messages.landing, { number: STAGES.indexOf(res.report.acceptedStage) + 1, ...stage }),
+          ...(setup ? setupSummary(guidance, res.courseId, { guides: res.guides, unfinished: trackingUnfinished(setup) }) : []),
+        ].join('\n');
+      });
       return EXIT.OK;
     },
   },
+  configure: configureCommand(),
+  reconfigure: configureCommand(),
   run: {
     options: { ...COURSE, ...HARNESS, from: S, to: S, gate: S, force: B },
     run: async (ctx) => {
@@ -340,13 +511,52 @@ const COMMANDS: Record<string, Command> = {
   qa: stageRun('COURSE_QA'),
   release: stageRun('RELEASE'),
   package: {
-    options: { ...COURSE, out: S },
+    options: { ...COURSE, out: S, scorm: B },
     run: async (ctx) => {
       const res = await (await ctx.api()).packageCourse({
         courseId: required(ctx.values, 'course', 'package'),
         out: str(ctx.values, 'out'),
+        scorm: flag(ctx.values, 'scorm'),
       });
       print(ctx, res, () => `packaged ${res.path} (${res.bytes} bytes)`);
+      return EXIT.OK;
+    },
+  },
+  tracker: {
+    options: { port: S, host: S, data: S },
+    run: async (ctx) => {
+      const v = ctx.values;
+      const password = process.env.COURSEFORGE_TRACKER_PASSWORD;
+      if (!password)
+        throw new CfError(
+          'TRACKER_PASSWORD',
+          'Choose a password for the results dashboard and put it in the COURSEFORGE_TRACKER_PASSWORD environment variable, then run this again.',
+          { exitCode: EXIT.ENVIRONMENT },
+        );
+      const host = str(v, 'host') ?? '127.0.0.1';
+      const dataDir = resolve(str(v, 'data') ?? join(localStateDir(), 'tracker'));
+      const { createTrackerServer } = await import('../tracker/server.js');
+      const server = createTrackerServer({ dataDir, password });
+      await new Promise<void>((ok, fail) => {
+        server.once('error', fail);
+        server.listen(optInt(v, 'port') ?? 8787, host, ok);
+      });
+      const { port } = server.address() as AddressInfo;
+      const shown = host === '0.0.0.0' || host === '::' ? 'localhost' : host;
+      const info = { dashboard: `http://${shown}:${port}/`, endpoint: `http://${shown}:${port}/api/events`, dataDir };
+      print(ctx, info, () =>
+        [
+          `Results dashboard running at ${info.dashboard} (sign in with any user name and your password)`,
+          `Courses send results to ${info.endpoint}`,
+          `Results are saved in ${join(dataDir, 'results.jsonl')}`,
+          'Press Ctrl+C to stop.',
+        ].join('\n'),
+      );
+      await new Promise<void>((done) => {
+        const stop = () => server.close(() => done());
+        process.once('SIGINT', stop);
+        process.once('SIGTERM', stop);
+      });
       return EXIT.OK;
     },
   },
@@ -400,7 +610,7 @@ function exitCodeOf(err: unknown): number {
 
 export async function main(
   argv: string[],
-  io: CliIo = { stdout: process.stdout, stderr: process.stderr },
+  io: CliIo = { stdout: process.stdout, stderr: process.stderr, stdin: process.stdin },
   overrides: MainOverrides = {},
 ): Promise<number> {
   const json = argv.includes('--json');
@@ -439,6 +649,7 @@ export async function main(
 `),
             ),
       doctor: overrides.doctor ?? runDoctor,
+      overrides,
     });
   } catch (err) {
     const exitCode = exitCodeOf(err);

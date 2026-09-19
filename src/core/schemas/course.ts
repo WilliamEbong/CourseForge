@@ -31,6 +31,30 @@ function normaliseStageKeys(v: unknown): unknown {
   return out;
 }
 
+export const TRACKING_DESTINATIONS = ['none', 'lms', 'sheet', 'tracker'] as const;
+export const TrackingDestinationSchema = z.enum(TRACKING_DESTINATIONS);
+export type TrackingDestination = z.infer<typeof TrackingDestinationSchema>;
+export const LEARNER_IDENTITIES = ['name', 'name_and_id', 'name_and_email'] as const;
+export const LearnerIdentitySchema = z.enum(LEARNER_IDENTITIES);
+export type LearnerIdentity = z.infer<typeof LearnerIdentitySchema>;
+
+export const TrackingSchema = z.object({
+  destination: TrackingDestinationSchema.default('none'),
+  /** Web address results are sent to (`sheet`, `tracker`); must be https except for a localhost tracker. */
+  endpoint: z
+    .string()
+    .refine((u) => /^https:\/\/[^\s/]+\/\S*$/.test(u) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/\S*$/.test(u), {
+      message: 'endpoint must be an https:// address (or http://localhost for testing)',
+    })
+    .nullable()
+    .default(null),
+  /** What learners type to identify themselves on the results screen (not used for `lms`). */
+  identity: LearnerIdentitySchema.default('name'),
+  /** Label for the staff ID box, e.g. "Employee number"; null uses the default wording. */
+  id_label: z.string().min(1).max(40).nullable().default(null),
+});
+export type Tracking = z.infer<typeof TrackingSchema>;
+
 export const CourseManifestSchema = z.object({
   course: z.object({
     id: z.string().regex(/^[a-z0-9][a-z0-9-]{1,62}$/, 'course id must be kebab-case (a-z, 0-9, -)'),
@@ -67,8 +91,41 @@ export const CourseManifestSchema = z.object({
       default_import_mode: IntakeModeSchema.default('improve'),
     })
     .default({ preserve_human_edits: true, default_import_mode: 'improve' }),
+  /** Optional learner completion/score tracking (deployment settings; never part of the course model). */
+  tracking: TrackingSchema.default({ destination: 'none', endpoint: null, identity: 'name', id_label: null }),
+  /** When the setup wizard (or `configure`) last ran; null means the course was never configured. */
+  setup: z.object({ configured_at: IsoDate.nullable().default(null) }).default({ configured_at: null }),
 });
 export type CourseManifest = z.infer<typeof CourseManifestSchema>;
+
+/**
+ * The tracking settings a build should use, or null when the course is untracked. A web destination without an
+ * endpoint yet ("setup unfinished") builds as untracked.
+ */
+export function effectiveTracking(manifest: Pick<CourseManifest, 'tracking'>): Tracking | null {
+  const t = manifest.tracking;
+  if (t.destination === 'none') return null;
+  if (t.destination !== 'lms' && !t.endpoint) return null;
+  return t;
+}
+
+/** Google Apps Script web apps answer from a second host (the Content service redirects to googleusercontent). */
+const APPS_SCRIPT_REPLY_ORIGIN = 'https://script.googleusercontent.com';
+
+/**
+ * The only origins a tracked course may contact (its CSP `connect-src`); empty means fully offline. Used by the
+ * renderer, the single-file check and QA, so all three agree.
+ */
+export function trackingOrigins(tracking: Tracking | null): string[] {
+  if (!tracking?.endpoint || (tracking.destination !== 'sheet' && tracking.destination !== 'tracker')) return [];
+  const origin = new URL(tracking.endpoint).origin;
+  return tracking.destination === 'sheet' && origin !== APPS_SCRIPT_REPLY_ORIGIN ? [origin, APPS_SCRIPT_REPLY_ORIGIN] : [origin];
+}
+
+/** True when a web destination was chosen but its address has not been supplied yet. */
+export function trackingUnfinished(manifest: Pick<CourseManifest, 'tracking'>): boolean {
+  return (manifest.tracking.destination === 'sheet' || manifest.tracking.destination === 'tracker') && !manifest.tracking.endpoint;
+}
 
 export const GateStateSchema = z.object({
   mode: GateModeSchema,

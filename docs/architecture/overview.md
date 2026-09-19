@@ -60,6 +60,7 @@ pipeline API and the environment module.
 | `src/release` | Pure release gate; QA report, source report, release manifest | `gate.ts`, `reports.ts` |
 | `src/pipeline` | Run context, state transitions, generic stage loop, stage handlers, write audit, public API | `api.ts`, `impl.ts`, `runner.ts`, `run-stage.ts`, `agent.ts`, `stages/*` |
 | `src/environment` | Doctor check catalogue, repair actions, formatting | `checks.ts`, `doctor.ts` |
+| `src/tracker` | Optional self-hosted results server and dashboard (`courseforge tracker`) | `server.ts`, `store.ts`, `dashboard.ts` |
 | `src/cli` | Argument parsing (`node:util` `parseArgs`), dispatch, exit codes, output formatting | `main.ts`, `help.ts`, `args.ts`, `output.ts` |
 
 ## Provider-neutral core
@@ -116,4 +117,4 @@ Windows/antivirus/sync locks. Repository-level machine state lives in `.coursefo
 
 - [State machine](state-machine.md) · [Routing](routing.md) · [Review and repair](review-and-repair.md)
 - [Harness](harness.md) · [Traceability](traceability.md) · [Graphics](graphics.md)
-- [Course runtime](course-runtime.md) · [QA](qa.md) · [ADRs](../adr/README.md)
+- [Course runtime](course-runtime.md) · [QA](qa.md) · [Setup and tracking](tracking.md) · [ADRs](../adr/README.md)

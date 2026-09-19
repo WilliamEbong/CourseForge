@@ -1,0 +1,173 @@
+{
+  "$schema": "../schemas/guidance-config.schema.json",
+  "version": 1,
+  "stages": {
+    "CONCEPT": {
+      "name": "Course idea",
+      "blurb": "Your idea for the course is turned into a short, clear summary: who the course is for, what they should be able to do afterwards, and what is out of scope.",
+      "next": "CourseForge plans the research the course needs."
+    },
+    "RESEARCH_BRIEF": {
+      "name": "Research plan",
+      "blurb": "A plan for the research: the questions the course must answer, which kinds of sources count as trustworthy, and how the findings will be organised.",
+      "next": "CourseForge carries out the research and records every source it uses."
+    },
+    "RESEARCH_DOSSIER": {
+      "name": "Research findings",
+      "blurb": "The research itself: facts, rules and evidence, each linked to the source it came from so it can be checked later.",
+      "next": "CourseForge designs the course structure from these findings."
+    },
+    "INSTRUCTIONAL_DESIGN": {
+      "name": "Course plan",
+      "blurb": "The shape of the course: what learners will be able to do by the end, the order of the sections, and how their understanding will be checked.",
+      "next": "CourseForge writes every screen of the course."
+    },
+    "STORYBOARD": {
+      "name": "Screen-by-screen draft",
+      "blurb": "The full written course, screen by screen: the text learners read, the questions they answer and a description of every picture or diagram.",
+      "next": "CourseForge proofreads and tightens the wording."
+    },
+    "EDITORIAL": {
+      "name": "Proofreading",
+      "blurb": "A careful edit of the wording: clearer sentences, consistent terms and no accidental changes to the meaning.",
+      "next": "CourseForge chooses the look of the course."
+    },
+    "VISUAL_DIRECTION": {
+      "name": "Look and feel",
+      "blurb": "The visual style of the course: colours, fonts and how diagrams are drawn, chosen to suit the subject.",
+      "next": "CourseForge puts all the pieces together into one course file."
+    },
+    "COURSE_MODEL": {
+      "name": "Assembling",
+      "blurb": "Everything written and designed so far is combined into one complete description of the course. This step is automatic and makes no creative choices.",
+      "next": "CourseForge builds the course that learners will open."
+    },
+    "COURSE_BUILD": {
+      "name": "Building",
+      "blurb": "The course is built as a single web page file that works in any modern browser, with no installation. Diagrams are drawn and results tracking is added if you chose it.",
+      "next": "CourseForge tests the built course like a learner would."
+    },
+    "COURSE_QA": {
+      "name": "Testing",
+      "blurb": "The built course is opened in a real browser and clicked through: every screen, every question, keyboard-only use and accessibility for people with disabilities.",
+      "next": "CourseForge decides whether the course is ready to release."
+    },
+    "RELEASE": {
+      "name": "Release",
+      "blurb": "A final check that nothing serious is still open. If everything passes, the finished course and its reports are saved in the course's release folder.",
+      "next": "Nothing more: the course is ready to share with learners."
+    }
+  },
+  "questions": {
+    "language": {
+      "prompt": "What language is the course in?",
+      "help": "Type a short language code, for example en for English, fr for French or es for Spanish.",
+      "options": []
+    },
+    "audience": {
+      "prompt": "Who is the course for?",
+      "help": "Describe the learners in a few words, for example \"new warehouse staff\" or \"nurses on the night shift\". Press Enter to skip; CourseForge will work it out from your notes.",
+      "options": []
+    },
+    "review": {
+      "prompt": "How much do you want to check CourseForge's work yourself?",
+      "help": "CourseForge always checks its own work. You can also ask it to pause so you can read and approve each step before it carries on.",
+      "options": [
+        {
+          "value": "recommended",
+          "label": "Only where it matters (recommended)",
+          "blurb": "CourseForge pauses for you at the key points, and at more of them when the subject is high-risk, such as health, safety or law."
+        },
+        {
+          "value": "every_step",
+          "label": "Let me approve every step",
+          "blurb": "CourseForge pauses after each of the 11 steps and waits for you to approve it. Slower, but you see everything."
+        },
+        {
+          "value": "custom",
+          "label": "Keep my current custom settings",
+          "blurb": "Someone has already set this up by hand in course.yaml. Leave it as it is."
+        }
+      ]
+    },
+    "tracking": {
+      "prompt": "Do you want to keep a record of who completes the course and their scores?",
+      "help": "CourseForge can record each learner's name, score, pass or fail, and the date they finished. You can change this later.",
+      "options": [
+        {
+          "value": "none",
+          "label": "No, don't keep records",
+          "blurb": "Learners take the course and see their own score, but nothing is sent anywhere."
+        },
+        {
+          "value": "lms",
+          "label": "Yes, my organisation has a training system (LMS)",
+          "blurb": "Choose this if your organisation already uses a system like Moodle, Cornerstone or TalentLMS to assign training. CourseForge makes a file you upload to it, and that system records completions and scores. Learners are not asked for their name."
+        },
+        {
+          "value": "sheet",
+          "label": "Yes, send results to a Google Sheet",
+          "blurb": "Each finished course adds a row to a Google Sheet that you own: name, score, pass or fail, and date. Needs a free Google account and about five minutes of setup. CourseForge gives you step-by-step instructions."
+        },
+        {
+          "value": "tracker",
+          "label": "Yes, on our own results dashboard",
+          "blurb": "Results go to a small results server that CourseForge runs on a computer your organisation controls, with a password-protected web page and a spreadsheet download. You can try it on this computer in ten minutes; for real use it needs someone from IT for about an hour."
+        }
+      ]
+    },
+    "identity": {
+      "prompt": "What should learners type in so you know who they are?",
+      "help": "They type this on the results screen when they finish, just before their result is recorded.",
+      "options": [
+        {
+          "value": "name",
+          "label": "Their name",
+          "blurb": "Simplest. Two people with the same name will look the same in your records."
+        },
+        {
+          "value": "name_and_id",
+          "label": "Their name and a staff number",
+          "blurb": "Best for organisations: the staff number tells people with the same name apart."
+        },
+        {
+          "value": "name_and_email",
+          "label": "Their name and email address",
+          "blurb": "Useful when staff do not have staff numbers."
+        }
+      ]
+    },
+    "idLabel": {
+      "prompt": "What do you call the staff number at your organisation?",
+      "help": "This is the label learners see next to the box, for example \"Employee number\" or \"Payroll ID\".",
+      "options": []
+    },
+    "sheetUrl": {
+      "prompt": "Paste the web address of your Google Sheet connection.",
+      "help": "If you have already done the Google steps, paste the address now: it starts with https://script.google.com/macros/s/ and ends with /exec. If not, press Enter. CourseForge will write step-by-step instructions for you, and you can paste the address later.",
+      "options": []
+    },
+    "trackerUrl": {
+      "prompt": "Paste the web address of your results dashboard.",
+      "help": "If your dashboard is already running, paste its address now: it ends with /api/events. If not, press Enter. CourseForge will write step-by-step instructions for you and your IT person, and you can paste the address later.",
+      "options": []
+    }
+  },
+  "messages": {
+    "welcome": "Let's set up \"{title}\". This takes about a minute.\nPress Enter to accept the suggested answer shown in [brackets].",
+    "reconfigure": "Changing the settings for \"{title}\".\nYour current answers are shown in [brackets]; press Enter to keep them.",
+    "invalidChoice": "Please type a number from 1 to {max}, or press Enter to accept the suggestion.",
+    "invalidUrl": "That doesn't look like the right kind of address. Check the description above and try again, or press Enter to finish this later.",
+    "testSending": "Sending a test result to check the connection...",
+    "testOk": "It worked: a test result named \"CourseForge setup test\" was recorded.",
+    "testFailed": "The test result did not arrive ({detail}). The address is saved anyway. Check the steps in the course's tracking folder, then run: courseforge configure --course {id}",
+    "done": "Settings saved in {file}.",
+    "guides": "There is a part only you can do. Step-by-step instructions are in: {files}",
+    "unfinished": "Results tracking is not finished yet: the web address that results are sent to is still missing, so the course is built without tracking for now. Finish it with: courseforge configure --course {id}",
+    "unconfigured": "This course has not been set up yet. Run: courseforge configure --course {id}",
+    "skipped": "Setup questions were skipped because this is not an interactive terminal; default settings were used. Change them any time with: courseforge configure --course {id}",
+    "landing": "This course starts at step {number} of 11, \"{name}\": {blurb}\nNext: {next}",
+    "rebuild": "The results tracking settings changed, so the finished course must be rebuilt. Run: courseforge run --course {id} --from build",
+    "invalidText": "That doesn't look right. Check the description above and try again, or press Enter to accept the suggestion."
+  }
+}

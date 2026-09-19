@@ -205,6 +205,76 @@
           ]
         }
       }
+    },
+    "tracking": {
+      "default": {
+        "destination": "none",
+        "endpoint": null,
+        "identity": "name",
+        "id_label": null
+      },
+      "type": "object",
+      "properties": {
+        "destination": {
+          "default": "none",
+          "type": "string",
+          "enum": [
+            "none",
+            "lms",
+            "sheet",
+            "tracker"
+          ]
+        },
+        "endpoint": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identity": {
+          "default": "name",
+          "type": "string",
+          "enum": [
+            "name",
+            "name_and_id",
+            "name_and_email"
+          ]
+        },
+        "id_label": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "setup": {
+      "default": {
+        "configured_at": null
+      },
+      "type": "object",
+      "properties": {
+        "configured_at": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 10
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
     }
   },
   "required": [

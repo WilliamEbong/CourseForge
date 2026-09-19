@@ -1,6 +1,7 @@
 /**
  * One headless Chromium per QA run. Every page gets: reduced motion, offline routing (only file:/data:/about:/blob:
- * allowed; everything else aborted and recorded), console/page-error capture, and auto-accepted dialogs.
+ * allowed; everything else aborted and recorded), console/page-error capture, and auto-accepted dialogs. A tracked
+ * course's declared result origins (ADR 0013) are answered by a local stub and recorded instead of blocked.
  */
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -20,6 +21,8 @@ export interface QaSession {
   readonly pageErrors: string[];
   /** `type: message` of every window.alert/confirm/prompt (all accepted). */
   readonly dialogs: string[];
+  /** Requests to the tracking stub origins (never leave the machine). */
+  readonly tracked: { url: string; method: string; body: string }[];
   /** Opens a fresh context + page at the given viewport width. Closed with the session. */
   newPage(width: number): Promise<Page>;
 }
@@ -31,6 +34,14 @@ export function fileUrl(path: string): string {
 function schemeOf(url: string): string {
   const m = /^([a-z][a-z0-9+.-]*:)/i.exec(url);
   return m?.[1]?.toLowerCase() ?? '';
+}
+
+function originOf(url: string): string {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return '';
+  }
 }
 
 export type ScreenshotItem = ScreenshotManifest['items'][number];
@@ -52,7 +63,8 @@ export async function captureScreenshot(page: Page, outDir: string, screenId: st
   return { screenId, viewport, path: rel, sha256: sha256(buf), bytes: buf.byteLength };
 }
 
-export async function withBrowser<T>(fn: (session: QaSession) => Promise<T>): Promise<T> {
+export async function withBrowser<T>(fn: (session: QaSession) => Promise<T>, opts: { stubOrigins?: readonly string[] } = {}): Promise<T> {
+  const stub = new Set(opts.stubOrigins ?? []);
   const browser = await chromium.launch({ headless: true });
   const contexts: BrowserContext[] = [];
   const session: QaSession = {
@@ -61,6 +73,7 @@ export async function withBrowser<T>(fn: (session: QaSession) => Promise<T>): Pr
     consoleErrors: [],
     pageErrors: [],
     dialogs: [],
+    tracked: [],
     async newPage(width: number) {
       const context = await browser.newContext({
         viewport: { width, height: VIEWPORT_HEIGHT[width] ?? 900 },
@@ -73,6 +86,11 @@ export async function withBrowser<T>(fn: (session: QaSession) => Promise<T>): Pr
       await context.route('**/*', (route) => {
         const url = route.request().url();
         if (ALLOWED_SCHEMES.has(schemeOf(url))) return route.continue();
+        if (stub.size && stub.has(originOf(url))) {
+          const req = route.request();
+          session.tracked.push({ url, method: req.method(), body: req.postData() ?? '' });
+          return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+        }
         session.blocked.push(url);
         return route.abort('blockedbyclient');
       });

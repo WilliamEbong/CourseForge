@@ -32,6 +32,12 @@ A `Content-Security-Policy` meta tag is computed at build time from the exact in
 fetches, never injects authored HTML (it hydrates pre-rendered DOM), and source links are ordinary learner-
 initiated `<a>` elements. QA verifies that no request leaves `file:`/`data:`.
 
+**Tracked courses** ([ADR 0013](../adr/0013-optional-tracking.md)). When `course.yaml` sets `tracking` to a Google
+Sheet or a results dashboard (and gives its address), `connect-src` lists exactly that destination's origins
+(`trackingOrigins()` in `src/core/schemas/course.ts`, shared by the renderer, `checkSingleFile` and QA). The only
+request the course can make is one POST, sent when the learner presses **Record my result**. `lms` changes
+nothing in the CSP: it talks to the LMS's SCORM 1.2 `API` object in a parent frame, without making requests.
+
 ## DOM contract
 
 Rendered markup carries `data-cf-*` attributes so QA, traceability and tests can address it without CSS
@@ -83,6 +89,17 @@ interface CfApi {
   (`components/course-ui/src/runtime/grade.ts`), shared with QA.
 - Native `<dialog>` for glossary, references, citations and the mobile navigation; focus is returned to the
   opener on close.
+- Result tracking (`runtime/track.ts`, tracked builds only; `cf-data` then carries `tracking`). The course is
+  complete when every graded question is answered, or, if there are none, when every required screen has been
+  visited. On the record screen (the results screen, or else the last screen), a pre-rendered panel
+  (`[data-cf-record]`, shell component `RecordPanel`) asks for the identity fields the author chose and posts
+  one `TrackingEvent` (`src/core/schemas/tracking.ts`) with `fetch(..., { mode: 'no-cors' })` as `text/plain`, a
+  simple request that needs no CORS preflight. A failed send is kept in `localStorage` and retried when the
+  course is next opened. Once a result is recorded, the panel shows that and does not send again until the
+  learner resets or retakes. For `lms`, the runtime finds `API` through `window.parent`/`opener`, sets
+  `cmi.core.lesson_status` (`incomplete` → `passed`/`failed`, or `completed` when ungraded) and
+  `cmi.core.score.raw/min/max`, commits, and calls `LMSFinish` on `pagehide`. No API means a status message
+  instead of an error.
 
 ## Accessibility architecture
 

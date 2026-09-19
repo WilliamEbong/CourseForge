@@ -6,6 +6,7 @@ import { closeAll, closeDialog, confirmDialog, openDialog, wireDialogs } from '.
 import { summarize } from './grade.js';
 import { hydrateQuestion, type QuestionController } from './question.js';
 import { createStore } from './store.js';
+import { createTracker } from './track.js';
 import type { CfData } from './types.js';
 
 export interface CfApi {
@@ -126,8 +127,15 @@ export function boot(doc: Document = document, opts: { signal?: AbortSignal } = 
   };
 
   /* ---------------------------------------------------------------- results */
+  const tracker = createTracker({ doc, win: window, data, prefs: store.prefs, announce });
   const renderResults = () => {
     const summary = summarize(gradedIds, store.state.answers, data.passingPercent);
+    // Complete = every graded question answered, or (no graded questions) every required screen visited.
+    tracker?.update({
+      complete: gradedIds.length ? summary.percent !== null : progressPercent() === 100,
+      summary,
+      currentId: ids[current] ?? '',
+    });
     for (const el of $$<HTMLElement>('[data-cf-results]')) {
       const done = summary.percent !== null;
       if (done) {
@@ -289,6 +297,7 @@ export function boot(doc: Document = document, opts: { signal?: AbortSignal } = 
   const confirmEl = $<HTMLDialogElement>('#cf-confirm');
   const doReset = () => {
     store.reset();
+    tracker?.reset();
     for (const c of controllers) c.reset();
     current = -1;
     for (const s of screens) s.hidden = true;
@@ -297,6 +306,7 @@ export function boot(doc: Document = document, opts: { signal?: AbortSignal } = 
   const doResetAssessment = () => {
     for (const id of gradedIds) delete store.state.answers[id];
     store.save();
+    tracker?.reset();
     for (const c of controllers) if (c.graded) c.reset();
     renderResults();
   };

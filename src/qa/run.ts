@@ -6,6 +6,7 @@ import { dirname } from 'node:path';
 import type { Page } from 'playwright';
 import { relPath } from '../core/fsx.js';
 import { hashFile } from '../core/hash.js';
+import { type Tracking, trackingOrigins } from '../core/schemas/course.js';
 import {
   type AccessibilityReport,
   AccessibilityReportSchema,
@@ -30,6 +31,8 @@ export interface RunQaOptions {
   courseId: string;
   /** Override the crawl time budget (ms) for the primary viewport. */
   maxMs?: number;
+  /** Tracking settings the course was built with: its result origins are stubbed and the send is checked. */
+  tracking?: Tracking | null;
 }
 
 export interface QaRunResult {
@@ -186,73 +189,77 @@ export async function runQa(o: RunQaOptions): Promise<QaRunResult> {
   const url = fileUrl(o.htmlPath);
   const target = relPath(dirname(o.outDir), o.htmlPath);
   const targetHash = hashFile(o.htmlPath);
-  return withBrowser(async (session) => {
-    const page = await openAt(session, url, 1440);
-    const isContract = o.model !== null && (await waitForCf(page, 2500));
-    const c = isContract && o.model ? await contractRun(session, page, url, o.model, o) : await crawlRun(session, page, url, o);
+  const stubOrigins = trackingOrigins(o.tracking ?? null);
+  return withBrowser(
+    async (session) => {
+      const page = await openAt(session, url, 1440);
+      const isContract = o.model !== null && (await waitForCf(page, 2500));
+      const c = isContract && o.model ? await contractRun(session, page, url, o.model, o) : await crawlRun(session, page, url, o);
 
-    const noBehaviour = {
-      interactions: [] as FunctionalReport['interactions'],
-      scoring: { checked: false, expectedPercent: null, actualPercent: null, ok: true },
-      navigation: { ok: false, detail: 'not checked' },
-      resources: { glossary: null, references: null, ok: true, detail: 'not checked' },
-      progress: { persisted: null, resetOk: null },
-      keyboard: { ok: null, focusVisible: null, detail: 'not checked' },
-    };
-    const crawl = c.mode === 'crawl' ? (c.primary as CrawlResult) : null;
-    const b =
-      c.mode === 'contract'
-        ? ((c.primary as ContractResult['behaviour']) ?? noBehaviour)
-        : {
-            ...noBehaviour,
-            navigation: crawl?.navigation ?? noBehaviour.navigation,
-            resources: crawl?.resources ?? noBehaviour.resources,
-            keyboard: crawl?.keyboard ?? noBehaviour.keyboard,
-          };
+      const noBehaviour = {
+        interactions: [] as FunctionalReport['interactions'],
+        scoring: { checked: false, expectedPercent: null, actualPercent: null, ok: true },
+        navigation: { ok: false, detail: 'not checked' },
+        resources: { glossary: null, references: null, ok: true, detail: 'not checked' },
+        progress: { persisted: null, resetOk: null },
+        keyboard: { ok: null, focusVisible: null, detail: 'not checked' },
+      };
+      const crawl = c.mode === 'crawl' ? (c.primary as CrawlResult) : null;
+      const b =
+        c.mode === 'contract'
+          ? ((c.primary as ContractResult['behaviour']) ?? noBehaviour)
+          : {
+              ...noBehaviour,
+              navigation: crawl?.navigation ?? noBehaviour.navigation,
+              resources: crawl?.resources ?? noBehaviour.resources,
+              keyboard: crawl?.keyboard ?? noBehaviour.keyboard,
+            };
 
-    const consoleErrors = uniq([...session.consoleErrors, ...session.pageErrors.map((e) => `pageerror: ${e}`)]).slice(0, 100);
-    const blocked = uniq(session.blocked);
-    const failures = [
-      ...c.screens
-        .filter((s) => !s.ok)
-        .map(
-          (s) =>
-            `screen ${s.id}@${s.viewport}: ${[...s.missingIds.map((m) => `missing ${m}`), ...s.overflow, ...s.errors.filter((e) => !e.startsWith('advisory:'))].slice(0, 3).join('; ')}`,
-        ),
-      ...b.interactions
-        .filter((i) => i.correctPath === 'fail' || i.incorrectPath === 'fail')
-        .map((i) => `interaction ${i.id} (${i.mode}): ${i.detail}`),
-      ...c.failures,
-      ...(b.navigation.ok ? [] : [`navigation: ${b.navigation.detail}`]),
-      ...(b.resources.ok ? [] : [`resources: ${b.resources.detail}`]),
-      ...(b.keyboard.ok === false ? [`keyboard: ${b.keyboard.detail}`] : []),
-      ...(b.keyboard.focusVisible === false ? ['focus: no visible focus indicator on some controls'] : []),
-      ...(blocked.length ? [`offline: ${blocked.length} blocked network request(s)`] : []),
-      ...(consoleErrors.length ? [`console: ${consoleErrors.length} console/page error(s)`] : []),
-    ];
+      const consoleErrors = uniq([...session.consoleErrors, ...session.pageErrors.map((e) => `pageerror: ${e}`)]).slice(0, 100);
+      const blocked = uniq(session.blocked);
+      const failures = [
+        ...c.screens
+          .filter((s) => !s.ok)
+          .map(
+            (s) =>
+              `screen ${s.id}@${s.viewport}: ${[...s.missingIds.map((m) => `missing ${m}`), ...s.overflow, ...s.errors.filter((e) => !e.startsWith('advisory:'))].slice(0, 3).join('; ')}`,
+          ),
+        ...b.interactions
+          .filter((i) => i.correctPath === 'fail' || i.incorrectPath === 'fail')
+          .map((i) => `interaction ${i.id} (${i.mode}): ${i.detail}`),
+        ...c.failures,
+        ...(b.navigation.ok ? [] : [`navigation: ${b.navigation.detail}`]),
+        ...(b.resources.ok ? [] : [`resources: ${b.resources.detail}`]),
+        ...(b.keyboard.ok === false ? [`keyboard: ${b.keyboard.detail}`] : []),
+        ...(b.keyboard.focusVisible === false ? ['focus: no visible focus indicator on some controls'] : []),
+        ...(blocked.length ? [`offline: ${blocked.length} blocked network request(s)`] : []),
+        ...(consoleErrors.length ? [`console: ${consoleErrors.length} console/page error(s)`] : []),
+      ];
 
-    const functional = FunctionalReportSchema.parse({
-      schemaVersion: 1,
-      courseId: o.courseId,
-      mode: c.mode,
-      target,
-      targetHash,
-      profile: o.profile,
-      viewports: c.viewports,
-      durationMs: Date.now() - started,
-      screens: c.screens,
-      interactions: b.interactions,
-      scoring: b.scoring,
-      navigation: b.navigation,
-      resources: b.resources,
-      progress: b.progress,
-      keyboard: b.keyboard,
-      offline: { blockedRequests: blocked },
-      consoleErrors,
-      crawl: crawl?.crawl ?? null,
-      summary: { pass: failures.length === 0, failures: uniq(failures) },
-    });
-    const accessibility = AccessibilityReportSchema.parse(buildAccessibilityReport(o.courseId, target, c.axe));
-    return { functional, accessibility, screenshots: { schemaVersion: 1, items: c.shots } };
-  });
+      const functional = FunctionalReportSchema.parse({
+        schemaVersion: 1,
+        courseId: o.courseId,
+        mode: c.mode,
+        target,
+        targetHash,
+        profile: o.profile,
+        viewports: c.viewports,
+        durationMs: Date.now() - started,
+        screens: c.screens,
+        interactions: b.interactions,
+        scoring: b.scoring,
+        navigation: b.navigation,
+        resources: b.resources,
+        progress: b.progress,
+        keyboard: b.keyboard,
+        offline: { blockedRequests: blocked },
+        consoleErrors,
+        crawl: crawl?.crawl ?? null,
+        summary: { pass: failures.length === 0, failures: uniq(failures) },
+      });
+      const accessibility = AccessibilityReportSchema.parse(buildAccessibilityReport(o.courseId, target, c.axe));
+      return { functional, accessibility, screenshots: { schemaVersion: 1, items: c.shots } };
+    },
+    { stubOrigins },
+  );
 }

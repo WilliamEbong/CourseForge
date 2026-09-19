@@ -97,6 +97,8 @@ export const COURSE_FILES = {
   runEvents: 'logs/run-events.jsonl',
   tasks: 'logs/tasks',
   releaseHtml: 'release/course.html',
+  /** SCORM 1.2 package, written by RELEASE when the course reports to an LMS. */
+  releaseScorm: 'release/course-scorm.zip',
   qaReport: 'release/qa-report.md',
   sourceReport: 'release/source-report.md',
   releaseManifest: 'release/release-manifest.json',

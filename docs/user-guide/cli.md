@@ -40,13 +40,24 @@ design, storyboard, editorial, visual, model, build, qa, release`.
 
 | Command | Usage |
 |---|---|
-| `new` | `new <title> [--id <id>] [--notes <file>] [--audience <text>] [--duration <minutes>] [--jurisdiction <text>] [--language <code>] [--to <stage>] [--gate auto\|hybrid\|human] [--backend …] [--harness …]` |
-| `ingest` | `ingest <file> [--course <id>] [--title <text>] [--stage <stage>] [--mode preserve\|review-only\|improve\|rebuild] [--replace] [--conservative] [--backend …] [--harness …]` |
+| `new` | `new <title> [--id <id>] [--notes <file>] [--audience <text>] [--duration <minutes>] [--jurisdiction <text>] [--language <code>] [--to <stage>] [--gate auto\|hybrid\|human] [--defaults] [--backend …] [--harness …]` |
+| `ingest` | `ingest <file> [--course <id>] [--title <text>] [--stage <stage>] [--mode preserve\|review-only\|improve\|rebuild] [--replace] [--conservative] [--defaults] [--backend …] [--harness …]` |
+| `configure` | `configure --course <id>` — answer the setup questions again; current answers are the defaults |
+| `reconfigure` | `reconfigure --course <id>` — same as `configure` |
 
 `new` derives the course ID from the title unless `--id` is given and, with `--to`, immediately runs from
 CONCEPT to that stage. `ingest` creates the course if it does not exist (ID from the file name unless
 `--course`). `--replace` records the file as a human edit replacing the stage's canonical artifact.
 `--conservative` uses `review-only` instead of stopping when stage inference is uncertain.
+
+**Setup questions.** When `new` or `ingest` creates a course in an interactive terminal, CourseForge first asks
+a few plain-language questions: the course language, who it is for, how much you want to approve yourself, and
+whether to record learners' results (see [Tracking learner results](tracking.md)). Every question has a
+suggested answer, so you can press Enter to accept it. It takes about a minute. The questions are skipped with
+`--defaults` or `--json`, or when input or output is redirected. In that case defaults apply and `status`
+reminds you to run `configure`. `configure` (or `reconfigure`) asks the same questions later, for a course at
+any stage. If the tracking choice changes, it marks the build, testing and release steps as out of date so the
+next `run` rebuilds them. `ingest` also explains, in plain words, the step the imported file starts at.
 
 ### Running
 
@@ -87,7 +98,8 @@ See [human-review.md](human-review.md) for gate and findings semantics.
 
 | Command | Usage |
 |---|---|
-| `package` | `package --course <id> [--out <file>]` — zip the course folder (excludes `.lock` and `logs/tasks`); default `.courseforge/packages/<id>.zip` |
+| `package` | `package --course <id> [--out <file>] [--scorm]` — zip the course folder (excludes `.lock` and `logs/tasks`); default `.courseforge/packages/<id>.zip`. With `--scorm`, the SCORM 1.2 package (`imsmanifest.xml` + `index.html`) of the released (else built) course for upload to a training system; the course must have been built with results tracking set to the training system option |
+| `tracker` | `tracker [--port 8787] [--host 127.0.0.1] [--data <dir>]` — run your own results dashboard (see [tracking.md](tracking.md)); needs `COURSEFORGE_TRACKER_PASSWORD`; exit 3 without it; stops with Ctrl+C |
 | `clean` | `clean [--course <id>] [--build] [--cache] [--dry-run]` — removes only generated paths: `logs/tasks/` and `.cache/` per course, `build/` with `--build`, and `.courseforge/{wire-schemas,smoke,packages}` with `--cache` or when no course is given. Never sources, originals, versions or approved artifacts |
 
 ## Exit codes
@@ -115,4 +127,5 @@ See [human-review.md](human-review.md) for gate and findings semantics.
 | `COURSEFORGE_COURSES_DIR` | Alternative courses directory (tests use temporary directories) |
 | `COURSEFORGE_ROOT` | Override repository root detection |
 | `COURSEFORGE_DEBUG` | `1` prints stack traces |
+| `COURSEFORGE_TRACKER_PASSWORD` | Password for the results dashboard started by `courseforge tracker` |
 | `COURSEFORGE_LIVE` | `1` enables live-backend tests |

@@ -13,7 +13,10 @@ import { configDir, repoRoot } from '../core/paths.js';
 import {
   type FallbacksConfig,
   FallbacksConfigSchema,
+  type GuidanceConfig,
+  GuidanceConfigSchema,
   isSchemaName,
+  LEARNER_IDENTITIES,
   type ReviewersConfig,
   ReviewersConfigSchema,
   type ReviewPolicy,
@@ -26,6 +29,7 @@ import {
   StagesConfigSchema,
   type ToolsConfig,
   ToolsConfigSchema,
+  TRACKING_DESTINATIONS,
 } from '../core/schemas/index.js';
 
 export interface Registries {
@@ -36,6 +40,7 @@ export interface Registries {
   routing: RoutingConfig;
   fallbacks: FallbacksConfig;
   policy: ReviewPolicy;
+  guidance: GuidanceConfig;
   /** file name → sha256 of the file as loaded (recorded in every execution plan). */
   hashes: Record<string, string>;
 }
@@ -48,6 +53,7 @@ const FILES = {
   routing: ['routing.json', RoutingConfigSchema],
   fallbacks: ['fallbacks.json', FallbacksConfigSchema],
   policy: ['review-policy.json', ReviewPolicySchema],
+  guidance: ['guidance.json', GuidanceConfigSchema],
 } as const satisfies Record<string, readonly [string, z.ZodType]>;
 
 export const lucideIconsDir = () => join(repoRoot(), 'node_modules', 'lucide-static', 'icons');
@@ -124,6 +130,18 @@ export function crossCheck(r: Omit<Registries, 'hashes'>, iconsDir: string = luc
     if (!comps.has(c)) errs.push(`routing.json components.${k}: unknown component type "${c}"`);
   }
   for (const k of BLOCK_KINDS) if (!r.routing.components[k]) errs.push(`routing.json components: no component for block kind "${k}"`);
+
+  // Setup-wizard choices must be codes the code understands (review codes are fixed in src/pipeline/setup.ts).
+  const choiceSets: Record<string, readonly string[]> = {
+    review: ['recommended', 'every_step', 'custom'],
+    tracking: TRACKING_DESTINATIONS,
+    identity: LEARNER_IDENTITIES,
+  };
+  for (const [q, allowed] of Object.entries(choiceSets)) {
+    const opts = r.guidance.questions[q as keyof GuidanceConfig['questions']].options;
+    if (!opts.length) errs.push(`guidance.json questions.${q}: needs at least one option`);
+    for (const o of opts) if (!allowed.includes(o.value)) errs.push(`guidance.json questions.${q}: unknown option "${o.value}"`);
+  }
 
   if (!existsSync(iconsDir)) errs.push(`routing.json icons: lucide-static icons directory not found (${iconsDir})`);
   else {

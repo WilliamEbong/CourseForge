@@ -23,6 +23,17 @@ export interface CfScreenInfo {
   kind: string;
 }
 
+/** Learner result tracking (present only in tracked builds; see docs/user-guide/tracking.md). */
+export interface CfTracking {
+  destination: 'lms' | 'sheet' | 'tracker';
+  /** Where `sheet`/`tracker` results are posted; null for `lms`. */
+  endpoint: string | null;
+  identity: 'name' | 'name_and_id' | 'name_and_email';
+  courseTitle: string;
+  /** The screen where the result is recorded once the course is complete (results screen, else the last one). */
+  recordScreen: string;
+}
+
 export interface CfData {
   courseId: string;
   version: string;
@@ -30,6 +41,7 @@ export interface CfData {
   passingPercent: number;
   screens: CfScreenInfo[];
   items: Record<string, CfItem>;
+  tracking?: CfTracking;
 }
 
 /** A learner response, normalised per mode. */

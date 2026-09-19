@@ -5,7 +5,7 @@
  * Implementations live in the pipeline modules; this file is the stable surface.
  */
 import type { BackendPreference, GateMode, HarnessName, IntakeMode, Stage, StageStatus } from '../core/enums.js';
-import type { Finding, GateState, IntakeReport } from '../core/schemas/index.js';
+import type { Finding, GateState, GuidanceConfig, IntakeReport, Tracking } from '../core/schemas/index.js';
 
 export interface HarnessOptions {
   /** Backend preference for this invocation (overrides course.yaml). */
@@ -25,6 +25,42 @@ export interface RunOutcome {
   exitCode: number;
 }
 
+/** How much the author wants to approve personally (maps onto `course.yaml` `human_review`). */
+export type ReviewChoice = 'recommended' | 'every_step' | 'custom';
+
+/** Everything the setup wizard asks. Applied to `course.yaml` by `newCourse`/`ingest` (new courses) or `configure`. */
+export interface SetupAnswers {
+  language: string;
+  audience: string | null;
+  review: ReviewChoice;
+  tracking: Tracking;
+}
+
+export interface SetupInfo {
+  courseId: string;
+  title: string;
+  /** False when the course does not exist yet (answers are the defaults). */
+  exists: boolean;
+  /** True once the wizard or `configure` has run for this course. */
+  configured: boolean;
+  answers: SetupAnswers;
+  guidance: GuidanceConfig;
+}
+
+export interface ConfigureResult {
+  courseId: string;
+  /** Absolute path of course.yaml. */
+  manifestPath: string;
+  /** Absolute paths of step-by-step instruction files written for the author. */
+  guides: string[];
+  /** True when the tracking a build would use changed. */
+  trackingChanged: boolean;
+  /** Stages that must be re-run because of the change. */
+  invalidated: Stage[];
+  /** A web destination was chosen but its address is still missing. */
+  unfinished: boolean;
+}
+
 export interface NewCourseOptions extends HarnessOptions {
   title: string;
   id?: string;
@@ -36,6 +72,8 @@ export interface NewCourseOptions extends HarnessOptions {
   /** When set, immediately run from CONCEPT to this stage. */
   runTo?: Stage;
   gate?: GateMode;
+  /** Setup wizard answers; when absent the defaults apply and the course counts as not yet configured. */
+  setup?: SetupAnswers;
 }
 
 export interface IngestOptions extends HarnessOptions {
@@ -48,6 +86,8 @@ export interface IngestOptions extends HarnessOptions {
   replace?: boolean;
   /** Use review-only when stage inference confidence is low instead of pausing. */
   conservative?: boolean;
+  /** Setup wizard answers, applied only when the import creates a new course. */
+  setup?: SetupAnswers;
 }
 
 export interface RunOptions extends HarnessOptions {
@@ -77,6 +117,8 @@ export interface StatusReport {
     failure: string | null;
   }[];
   nextAction: string;
+  /** Plain-language setup reminders (course never configured, tracking setup unfinished). */
+  notices: string[];
 }
 
 export type GateAction = 'approve' | 'reject' | 'comment' | 'lock' | 'unlock' | 'rereview';
@@ -130,8 +172,15 @@ export interface CourseSummary {
 }
 
 export interface PipelineApi {
-  newCourse(opts: NewCourseOptions): Promise<{ courseId: string; courseDir: string; outcome: RunOutcome | null }>;
-  ingest(opts: IngestOptions): Promise<{ courseId: string; report: IntakeReport }>;
+  /** `guides`: instruction files written for the author by the setup answers (absolute paths). */
+  newCourse(opts: NewCourseOptions): Promise<{ courseId: string; courseDir: string; outcome: RunOutcome | null; guides: string[] }>;
+  ingest(opts: IngestOptions): Promise<{ courseId: string; report: IntakeReport; guides: string[] }>;
+  /** Which course an `ingest` of this file would target, and whether it would create it. No side effects. */
+  ingestTarget(opts: { file: string; courseId?: string; title?: string }): Promise<{ courseId: string; title: string; isNew: boolean }>;
+  /** Current setup answers (defaults for a course that does not exist yet) plus the plain-language guidance. */
+  setupInfo(opts: { courseId: string; title?: string }): Promise<SetupInfo>;
+  /** Saves setup answers to course.yaml, writes instruction files, and invalidates the build if tracking changed. */
+  configure(opts: { courseId: string; answers: SetupAnswers }): Promise<ConfigureResult>;
   run(opts: RunOptions): Promise<RunOutcome>;
   continueRun(opts: { courseId: string } & HarnessOptions): Promise<RunOutcome>;
   review(opts: { courseId: string; stage?: Stage } & HarnessOptions): Promise<RunOutcome>;
@@ -141,7 +190,8 @@ export interface PipelineApi {
   findings(opts: FindingsOptions): Promise<Finding[]>;
   versions(opts: VersionsOptions): Promise<unknown>;
   trace(opts: TraceOptions): Promise<unknown>;
-  packageCourse(opts: { courseId: string; out?: string }): Promise<{ path: string; bytes: number }>;
+  /** Zips the course folder, or with `scorm` builds the SCORM 1.2 package of the (released, else built) course. */
+  packageCourse(opts: { courseId: string; out?: string; scorm?: boolean }): Promise<{ path: string; bytes: number }>;
   clean(opts: CleanOptions): Promise<{ removed: string[] }>;
   listCourses(): Promise<CourseSummary[]>;
   /** Setup smoke fixture: build one screen, render one diagram, drive one interaction, run axe, screenshot. */

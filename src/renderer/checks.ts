@@ -17,8 +17,11 @@ const result = (id: string, problems: string[], okDetail: string): CheckResult =
   detail: problems.length ? problems.slice(0, 10).join('; ') + (problems.length > 10 ? ` (+${problems.length - 10} more)` : '') : okDetail,
 });
 
-/** No external scripts, stylesheets, images, frames or CSS URLs; http(s) only in `<a href>`. */
-export function checkSingleFile(html: string): CheckResult {
+/**
+ * No external scripts, stylesheets, images, frames or CSS URLs; http(s) only in `<a href>`. The CSP must forbid
+ * all connections, or (for a tracked course, ADR 0013) allow exactly `allowedConnect` and nothing else.
+ */
+export function checkSingleFile(html: string, allowedConnect: readonly string[] = []): CheckResult {
   const $ = cheerio.load(html);
   const problems: string[] = [];
   $('script[src]').each((_, el) => void problems.push(`script src=${$(el).attr('src')}`));
@@ -50,9 +53,21 @@ export function checkSingleFile(html: string): CheckResult {
       if (!/^(data:|#)/i.test(m[1]!)) problems.push(`style url(${m[1]})`);
   });
   const csp = $('meta[http-equiv="Content-Security-Policy"]').attr('content') ?? '';
-  if (!csp.includes("connect-src 'none'") || !csp.includes("default-src 'none'"))
-    problems.push('missing CSP meta with default-src/connect-src none');
-  return result('single-file', problems, 'no external resources; CSP present');
+  const directives = new Map(
+    csp
+      .split(';')
+      .map((d) => d.trim().split(/\s+/))
+      .filter((d) => d[0])
+      .map((d) => [d[0]!, d.slice(1).join(' ')]),
+  );
+  const expected = allowedConnect.length ? allowedConnect.join(' ') : "'none'";
+  if (directives.get('default-src') !== "'none'" || directives.get('connect-src') !== expected)
+    problems.push(`missing CSP meta with default-src 'none' and connect-src ${expected}`);
+  return result(
+    'single-file',
+    problems,
+    allowedConnect.length ? `no external resources; CSP allows only ${expected}` : 'no external resources; CSP present',
+  );
 }
 
 /** Every screen id and interaction item id is present as a data-cf-* attribute. */
@@ -147,9 +162,9 @@ export function checkNoDragOnly(html: string): CheckResult {
   return result('no-drag-only', problems, 'all interactions keyboard operable');
 }
 
-export function runChecks(html: string, model: CourseModel, maxBytes?: number): CheckResult[] {
+export function runChecks(html: string, model: CourseModel, maxBytes?: number, allowedConnect: readonly string[] = []): CheckResult[] {
   return [
-    checkSingleFile(html),
+    checkSingleFile(html, allowedConnect),
     checkIdsRendered(html, model),
     checkNoRuntimeDeps(html),
     checkSizeBudget(html, maxBytes),

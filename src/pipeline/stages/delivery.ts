@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { buildTraceGraph, latest, listArtifacts, loadRegistry, traceIssues, traceSummary } from '../../artifacts/index.js';
 import type { Renderer } from '../../core/enums.js';
-import { ensureDir, exists, readJson, readText, writeAtomic, writeJson } from '../../core/fsx.js';
+import { ensureDir, exists, readJson, readText, writeAtomic, writeFileRaw, writeJson } from '../../core/fsx.js';
 import { hashFile } from '../../core/hash.js';
 import { COURSE_FILES, repoRoot } from '../../core/paths.js';
 import {
@@ -15,11 +15,13 @@ import {
   type CourseModel,
   CourseModelSchema,
   DesignDirectionSchema,
+  effectiveTracking,
   type Finding,
   FindingSchema,
   FunctionalReportSchema,
   IntakeReportSchema,
   type ReleaseDecision,
+  trackingOrigins,
   type VisualSpec,
 } from '../../core/schemas/index.js';
 import { GraphicsBrowser, renderAll } from '../../graphics/index.js';
@@ -40,6 +42,7 @@ import { loCoverageIssues } from '../checks/content.js';
 import { compileCourseModel, modelIntegrityProblems } from '../compile/model.js';
 import type { RunContext } from '../context.js';
 import { allStageFindings } from '../findings-store.js';
+import { scormInfo, scormPackage } from '../scorm.js';
 import { runVisualRepair } from '../visual-repair.js';
 import { editorial, ensureVisualDirection, readVisualSpecs, storyboard, storyboardValidators } from './authoring.js';
 import {
@@ -195,7 +198,7 @@ export async function buildCourseFiles(ctx: RunContext): Promise<Produced[]> {
   const visuals = new Map<string, { svg: string; renderer: string; fallbackUsed?: boolean; html?: string | null }>();
   for (const [id, rv] of rendered)
     visuals.set(id, { svg: rv.svg ?? '', renderer: rv.renderer, fallbackUsed: rv.fallbackUsed, html: rv.html });
-  const { html, report } = await renderCourse(model, { visuals, mode: 'release' });
+  const { html, report } = await renderCourse(model, { visuals, mode: 'release', tracking: effectiveTracking(ctx.manifest) });
   writeAtomic(p(ctx, F.buildHtml), html);
   const inputHashes = { [F.courseModel]: hashFile(p(ctx, F.courseModel)) };
   const buildReport = BuildReportSchema.parse({
@@ -221,8 +224,9 @@ export function buildChecks(ctx: RunContext): { id: string; pass: boolean; detai
   if (!has(ctx, F.buildHtml)) return [{ id: 'build-exists', pass: false, detail: 'build/index.html missing' }];
   const html = readText(p(ctx, F.buildHtml));
   const model = has(ctx, F.courseModel) ? read(ctx, F.courseModel, CourseModelSchema) : null;
+  const connect = isCourseForgeBuild(html) ? trackingOrigins(effectiveTracking(ctx.manifest)) : [];
   const checks = [
-    checkSingleFile(html),
+    checkSingleFile(html, connect),
     checkNoRuntimeDeps(html),
     checkSizeBudget(html),
     checkTextEquivalents(html),
@@ -289,6 +293,7 @@ async function runQaFiles(ctx: RunContext): Promise<Produced[]> {
   const html = p(ctx, F.buildHtml);
   const model = has(ctx, F.courseModel) && isCourseForgeBuild(readText(html)) ? read(ctx, F.courseModel, CourseModelSchema) : null;
   const { functional, accessibility, screenshots } = await runQa({
+    tracking: effectiveTracking(ctx.manifest),
     htmlPath: html,
     model,
     outDir: p(ctx, F.qaDir),
@@ -398,6 +403,11 @@ export const release: StageHandler = {
     if (decision.decision !== 'pass') return [];
     copyFileSync(p(ctx, F.buildHtml), p(ctx, F.releaseHtml));
     copyLicenses(ctx);
+    if (effectiveTracking(ctx.manifest)?.destination === 'lms')
+      writeFileRaw(
+        p(ctx, F.releaseScorm),
+        scormPackage({ htmlPath: p(ctx, F.releaseHtml), now: new Date(ctx.now()), ...scormInfo(ctx.dir, ctx.manifest) }),
+      );
     const model: CourseModel | null = has(ctx, F.courseModel) ? read(ctx, F.courseModel, CourseModelSchema) : null;
     const functional = read(ctx, F.functional, FunctionalReportSchema);
     const accessibility = read(ctx, F.accessibility, AccessibilityReportSchema);

@@ -29,6 +29,13 @@ human_review:                         # per-stage gate: auto | hybrid | human (o
 improvement:
   preserve_human_edits: true
   default_import_mode: improve        # preserve | review-only | improve | rebuild
+tracking:                             # learner results (see tracking.md); set by the setup questions
+  destination: none                   # none | lms | sheet | tracker
+  endpoint: null                      # https address results are sent to (sheet, tracker)
+  identity: name                      # name | name_and_id | name_and_email
+  id_label: null                      # label for the staff-number box
+setup:
+  configured_at: null                 # when the setup questions were last answered
 ```
 
 | Field | Notes |
@@ -53,6 +60,7 @@ These define the pipeline for every course. They are validated at startup and by
 | `tools.json` | Register a tool or renderer and its harness tool names |
 | `routing.json` | Change archetype → renderer routes, icon names, block kind → component |
 | `fallbacks.json` | Renderer repair budget, schema/process retries and backoff, backend fallback, concurrency |
+| `guidance.json` | The plain-language wording of the setup questions, their choices and messages, and the description of every stage |
 | `review-policy.json` | Repair cycle cap, repair and release-blocking severities, axe blocking impacts, `onCapReached` (`human` or fail), gate defaults, risk floors, intake-mode behaviour |
 
 The architecture behind these files is described in [routing.md](../architecture/routing.md) and

@@ -288,7 +288,7 @@ More in [docs/user-guide/troubleshooting.md](docs/user-guide/troubleshooting.md)
 - Automated accessibility checks (axe, keyboard and focus checks) are not a formal WCAG conformance audit.
 - Live generation of a full course takes a long time and costs model tokens; tests and the demo use fixtures.
 - PPTX import is not supported (DOCX and PDF are, via text extraction).
-- SCORM / xAPI packaging is not in v1; the output is a standalone HTML file.
+- Result tracking is optional ([docs/user-guide/tracking.md](docs/user-guide/tracking.md)): SCORM 1.2 for a training system (LMS), a Google Sheet, or CourseForge's own results dashboard. xAPI is not supported. Scores are computed in the learner's browser, so they suit training records, not high-stakes exams.
 - AI-generated imagery is not included; figures are structured diagrams, charts and icons.
 - Codex isolation is partial: the user-global `AGENTS.md` cannot be switched off.
 - No pixel-baseline visual regression in v1; screenshots are evidence for reviewers, not golden images.

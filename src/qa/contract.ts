@@ -6,6 +6,7 @@ import type { Locator, Page } from 'playwright';
 import type { Interaction } from '../core/schemas/content.js';
 import type { Screen } from '../core/schemas/model.js';
 import type { FunctionalReport } from '../core/schemas/reports.js';
+import { TrackingEventSchema } from '../core/schemas/tracking.js';
 import { type AxeScreen, runAxe } from './axe.js';
 import { captureScreenshot, type QaSession, type ScreenshotItem } from './browser.js';
 import { detectIssues, type FocusStep, tabThrough } from './detectors.js';
@@ -647,6 +648,110 @@ async function checkProgress(page: Page, model: QaModel): Promise<{ progress: Fu
   return { progress: { persisted, resetOk }, problems };
 }
 
+/* ------------------------------------------------------------------- tracking */
+
+interface TrackingData {
+  destination: 'lms' | 'sheet' | 'tracker';
+  identity: 'name' | 'name_and_id' | 'name_and_email';
+  recordScreen: string;
+}
+
+/** Completes the course as a learner would: every graded question answered correctly, every screen visited. */
+async function completeCourse(page: Page, model: QaModel): Promise<string[]> {
+  const problems: string[] = [];
+  for (const s of model.screens) {
+    if (s.graded && s.interaction) {
+      const r = await answerItem(page, s, true, false);
+      if (r.status === 'fail') problems.push(`could not answer ${s.id}: ${r.detail}`);
+    } else await goTo(page, s.id);
+  }
+  return problems;
+}
+
+/** A stand-in for an LMS's SCORM 1.2 `API` object that records every call. */
+const FAKE_SCORM_API = `(() => {
+  const calls = [];
+  let status = 'not attempted';
+  window.__scormCalls = calls;
+  const log = (...c) => { calls.push(c); return 'true'; };
+  window.API = {
+    LMSInitialize: (a) => log('LMSInitialize', a),
+    LMSFinish: (a) => log('LMSFinish', a),
+    LMSGetValue: (n) => { calls.push(['LMSGetValue', n]); return n === 'cmi.core.lesson_status' ? status : ''; },
+    LMSSetValue: (n, v) => { if (n === 'cmi.core.lesson_status') status = v; return log('LMSSetValue', n, v); },
+    LMSCommit: (a) => log('LMSCommit', a),
+    LMSGetLastError: () => '0',
+  };
+})();`;
+
+async function checkLmsTracking(page: Page, model: QaModel, session: QaSession, t: TrackingData, graded: boolean): Promise<string[]> {
+  const lms = await session.newPage(1440);
+  try {
+    await lms.addInitScript(FAKE_SCORM_API);
+    await lms.goto(page.url().replace(/#.*$/, ''), { waitUntil: 'load' });
+    if (!(await waitForCf(lms))) return ['runtime missing on the SCORM test page'];
+    await lms.evaluate(() => (window as unknown as CfWindow).__cf.resetAssessment());
+    const problems = await completeCourse(lms, model);
+    await goTo(lms, t.recordScreen);
+    const calls = await lms.evaluate(() => (window as unknown as { __scormCalls: string[][] }).__scormCalls);
+    const last = (name: string) => calls.filter((c) => c[0] === 'LMSSetValue' && c[1] === name).at(-1)?.[2] ?? 'never set';
+    const want = graded ? 'passed' : 'completed';
+    if (!calls.some((c) => c[0] === 'LMSInitialize')) problems.push('LMSInitialize was not called');
+    if (last('cmi.core.lesson_status') !== want) problems.push(`lesson_status ${last('cmi.core.lesson_status')}, expected ${want}`);
+    if (graded && last('cmi.core.score.raw') !== '100') problems.push(`score.raw ${last('cmi.core.score.raw')}, expected 100`);
+    if (!calls.some((c) => c[0] === 'LMSCommit')) problems.push('LMSCommit was not called');
+    return problems;
+  } finally {
+    await lms.context().close();
+  }
+}
+
+function parseJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Tracked builds only (ADR 0013). Web destinations: completing the course and pressing "Record my result" sends
+ * exactly one well-formed result to the stubbed origin. LMS: a fake SCORM 1.2 API receives status and score.
+ */
+async function checkTracking(page: Page, model: QaModel, session: QaSession): Promise<string[]> {
+  const t = (await page
+    .evaluate(() => (JSON.parse(document.getElementById('cf-data')?.textContent ?? '{}') as { tracking?: unknown }).tracking ?? null)
+    .catch(() => null)) as TrackingData | null;
+  if (!t) return [];
+  const graded = model.screens.some((s) => s.graded && s.interaction);
+  if (t.destination === 'lms') return checkLmsTracking(page, model, session, t, graded);
+
+  await page.evaluate(() => (window as unknown as CfWindow).__cf.resetAssessment());
+  const problems = await completeCourse(page, model);
+  if (!(await goTo(page, t.recordScreen))) return [...problems, `record screen ${t.recordScreen} not shown`];
+  const panel = page.locator('[data-cf-record]');
+  if (!(await panel.isVisible())) return [...problems, 'record panel not shown on the record screen after completion'];
+  const before = session.tracked.length;
+  await panel.locator('[data-cf-record-field="name"]').fill('QA Learner');
+  if (t.identity === 'name_and_id') await panel.locator('[data-cf-record-field="id"]').fill('QA-001');
+  if (t.identity === 'name_and_email') await panel.locator('[data-cf-record-field="email"]').fill('qa.learner@example.com');
+  await panel.locator('[data-cf-record-send]').click();
+  const state = await poll(
+    page,
+    () => panel.getAttribute('data-cf-record-state'),
+    (s) => s === 'sent' || s === 'error',
+    5000,
+  );
+  if (state !== 'sent') problems.push(`record status ${state ?? 'none'}, expected sent`);
+  const sent = session.tracked.slice(before);
+  if (sent.length !== 1) return [...problems, `${sent.length} result request(s) sent, expected 1`];
+  if (sent[0]!.method !== 'POST') problems.push(`result sent with ${sent[0]!.method}, expected POST`);
+  const parsed = TrackingEventSchema.safeParse(parseJson(sent[0]!.body));
+  if (!parsed.success) problems.push(`result is not a valid tracking event: ${parsed.error.issues[0]?.message ?? ''}`);
+  else if (graded && parsed.data.percent !== 100) problems.push(`result percent ${parsed.data.percent}, expected 100`);
+  return problems;
+}
+
 /* ----------------------------------------------------------------------- main */
 
 /**
@@ -665,5 +770,6 @@ export async function runContractQa(page: Page, model: QaModel, opts: ContractOp
   const keyboard = await checkKeyboard(page, model);
   const { progress, problems: progressProblems } = await checkProgress(page, model);
   failures.push(...progressProblems.map((p) => `progress: ${p}`));
+  failures.push(...(await checkTracking(page, model, opts.session)).map((p) => `tracking: ${p}`));
   return { ...t, behaviour: { interactions, scoring, navigation, resources, progress, keyboard }, failures };
 }

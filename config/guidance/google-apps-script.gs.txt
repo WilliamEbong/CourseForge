@@ -1,0 +1,94 @@
+/**
+ * CourseForge results connection for Google Sheets.
+ *
+ * Paste this whole file into Extensions > Apps Script of your results spreadsheet, then deploy it as a web app
+ * (the steps are in google-sheet-setup.md next to this file). Each finished course adds one row to the
+ * "Results" tab; the "Summary" tab shows, per course, how many people finished, how many passed and the
+ * average score.
+ */
+
+const RESULTS = 'Results';
+const SUMMARY = 'Summary';
+const HEADERS = ['Received', 'Finished at', 'Course', 'Course title', 'Course version', 'Name', 'Staff number', 'Email',
+  'Score %', 'Passed', 'Correct answers', 'Questions', 'Attempt', 'Setup test'];
+
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const r = JSON.parse(e.postData.contents);
+    if (!r || r.v !== 1 || typeof r.courseId !== 'string' || !r.learner || typeof r.learner.name !== 'string') {
+      return reply({ ok: false, error: 'not a CourseForge result' });
+    }
+    sheet(RESULTS, HEADERS).appendRow([
+      new Date(), text(r.completedAt), text(r.courseId), text(r.courseTitle), text(r.courseVersion),
+      text(r.learner.name), text(r.learner.id), text(r.learner.email),
+      number(r.percent), r.passed === true ? 'Yes' : r.passed === false ? 'No' : '',
+      number(r.correct), number(r.total), number(r.attempt), r.test === true ? 'Yes' : '',
+    ]);
+    updateSummary();
+    return reply({ ok: true });
+  } catch (err) {
+    return reply({ ok: false, error: String(err) });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/** Text as typed by a learner, shortened, and never treated as a spreadsheet formula. */
+function text(v) {
+  const s = v === null || v === undefined ? '' : String(v).slice(0, 200);
+  return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+}
+
+function number(v) {
+  return typeof v === 'number' && isFinite(v) ? v : '';
+}
+
+function reply(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function sheet(name, headers) {
+  const book = SpreadsheetApp.getActiveSpreadsheet();
+  let s = book.getSheetByName(name);
+  if (!s) {
+    s = book.insertSheet(name);
+    s.appendRow(headers);
+    s.setFrozenRows(1);
+    s.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+  }
+  return s;
+}
+
+/** Per course: people who finished (latest result per person), how many passed at least once, average best score. */
+function updateSummary() {
+  const rows = sheet(RESULTS, HEADERS).getDataRange().getValues().slice(1);
+  const courses = {};
+  for (const row of rows) {
+    if (row[13] === 'Yes') continue; // setup tests
+    const course = (courses[row[2]] = courses[row[2]] || { title: row[3], people: {}, last: row[0] });
+    if (row[0] > course.last) course.last = row[0];
+    const who = [row[5], row[6], row[7]].join('|').toLowerCase();
+    const p = (course.people[who] = course.people[who] || { passed: false, best: '' });
+    if (row[9] === 'Yes') p.passed = true;
+    if (row[8] !== '' && (p.best === '' || row[8] > p.best)) p.best = row[8];
+  }
+  const out = [['Course', 'Course title', 'People finished', 'People passed', 'Pass rate %', 'Average best score %', 'Last result']];
+  for (const id of Object.keys(courses).sort()) {
+    const c = courses[id];
+    const people = Object.values(c.people);
+    const scored = people.filter((p) => p.best !== '');
+    const passed = people.filter((p) => p.passed).length;
+    out.push([
+      id, c.title, people.length, passed,
+      scored.length ? Math.round((100 * passed) / people.length) : '',
+      scored.length ? Math.round(scored.reduce((n, p) => n + p.best, 0) / scored.length) : '',
+      c.last,
+    ]);
+  }
+  const s = sheet(SUMMARY, out[0]);
+  s.clearContents();
+  s.getRange(1, 1, out.length, out[0].length).setValues(out);
+  s.getRange(1, 1, 1, out[0].length).setFontWeight('bold');
+}

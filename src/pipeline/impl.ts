@@ -24,9 +24,11 @@ import { CourseManifestSchema, type Finding, type TaskSpec } from '../core/schem
 import { ingestFile } from '../ingestion/intake.js';
 import { loadRegistries } from '../routing/registries.js';
 import { runAgentTask } from './agent.js';
-import type { HarnessOptions, PipelineApi, RunOutcome, StatusReport } from './api.js';
+import type { HarnessOptions, PipelineApi, RunOutcome, SetupAnswers, StatusReport } from './api.js';
 import { loadStageFindings, saveStageFindings } from './findings-store.js';
 import { defaultFromStage, openContext, runRange } from './runner.js';
+import { scormInfo, scormPackage } from './scorm.js';
+import { applySetup, configureCourse, setupFromManifest, setupNotices, writeGuides } from './setup.js';
 import { runSmoke } from './smoke.js';
 import {
   courseExists,
@@ -112,8 +114,8 @@ Use \`courseforge status --course ${id}\` to see where the course is and what to
 function createCourse(
   id: string,
   title: string,
-  extra: Partial<{ audience: string; duration: number; jurisdiction: string; language: string; start: Stage }> = {},
-): string {
+  extra: Partial<{ audience: string; duration: number; jurisdiction: string; language: string; start: Stage; setup: SetupAnswers }> = {},
+): { dir: string; guides: string[] } {
   const dir = courseDir(id);
   if (courseExists(id)) throw usageError(`Course "${id}" already exists`);
   ensureDir(dir);
@@ -128,11 +130,13 @@ function createCourse(
     },
     pipeline: { start_stage: extra.start ?? 'CONCEPT', target_stage: 'RELEASE' },
   });
-  saveManifest(dir, manifest);
+  const configured = extra.setup ? applySetup(manifest, extra.setup, now()) : manifest;
+  saveManifest(dir, configured);
+  const guides = writeGuides(dir, configured);
   saveState(dir, initialState(id, extra.start ?? 'CONCEPT', 'RELEASE', now()), now());
   writeAtomic(join(dir, COURSE_FILES.readme), courseReadme(title, id));
-  logEvent(dir, { ts: now(), runId: null, stage: null, event: 'course.created', detail: { id, title } });
-  return dir;
+  logEvent(dir, { ts: now(), runId: null, stage: null, event: 'course.created', detail: { id, title, configured: !!extra.setup } });
+  return { dir, guides };
 }
 
 async function run(opts: Parameters<PipelineApi['run']>[0]): Promise<RunOutcome> {
@@ -164,6 +168,14 @@ function progressSink(): (msg: string) => void {
   return (msg) => progressWriter?.(msg);
 }
 
+function ingestTarget(opts: { file: string; courseId?: string; title?: string }): { courseId: string; title: string; isNew: boolean } {
+  const file = resolve(opts.file);
+  if (!exists(file)) throw usageError(`File not found: ${opts.file}`);
+  const stem = basename(file).replace(/\.[^.]+$/, '');
+  const courseId = opts.courseId ?? slugify(stem);
+  return { courseId, title: opts.title ?? stem.replace(/[_-]+/g, ' '), isNew: !courseExists(courseId) };
+}
+
 function listFindings(courseId: string, stage?: Stage): { stage: Stage; findings: Finding[] }[] {
   const dir = requireCourse(courseId);
   const stages = stage ? [stage] : [...STAGES];
@@ -173,11 +185,12 @@ function listFindings(courseId: string, stage?: Stage): { stage: Stage; findings
 export const pipelineApi: PipelineApi = {
   async newCourse(opts) {
     const id = opts.id ?? slugify(opts.title);
-    const dir = createCourse(id, opts.title, {
+    const { dir, guides } = createCourse(id, opts.title, {
       audience: opts.audience,
       duration: opts.durationMinutes,
       jurisdiction: opts.jurisdiction,
       language: opts.language,
+      setup: opts.setup,
     });
     const notes = opts.notesFile ? readText(resolve(opts.notesFile)) : '';
     writeAtomic(
@@ -196,23 +209,46 @@ export const pipelineApi: PipelineApi = {
     const outcome = opts.runTo
       ? await run({ courseId: id, from: 'CONCEPT', to: opts.runTo, gate: opts.gate, backend: opts.backend, harness: opts.harness })
       : null;
-    return { courseId: id, courseDir: dir, outcome };
+    return { courseId: id, courseDir: dir, outcome, guides };
+  },
+
+  async ingestTarget(opts) {
+    return ingestTarget(opts);
+  },
+
+  async setupInfo(opts) {
+    const guidance = loadRegistries().guidance;
+    if (!courseExists(opts.courseId)) {
+      const defaults = CourseManifestSchema.parse({ course: { id: opts.courseId, title: opts.title ?? opts.courseId } });
+      return {
+        courseId: opts.courseId,
+        title: defaults.course.title,
+        exists: false,
+        configured: false,
+        answers: setupFromManifest(defaults),
+        guidance,
+      };
+    }
+    const manifest = loadManifest(requireCourse(opts.courseId));
+    return {
+      courseId: opts.courseId,
+      title: manifest.course.title,
+      exists: true,
+      configured: !!manifest.setup.configured_at,
+      answers: setupFromManifest(manifest),
+      guidance,
+    };
+  },
+
+  async configure(opts) {
+    return configureCourse(opts.courseId, opts.answers, now());
   },
 
   async ingest(opts) {
+    const { courseId: id, title, isNew } = ingestTarget(opts);
     const file = resolve(opts.file);
-    if (!exists(file)) throw usageError(`File not found: ${opts.file}`);
-    const id = opts.courseId ?? slugify(basename(file).replace(/\.[^.]+$/, ''));
-    const isNew = !courseExists(id);
-    const dir = isNew
-      ? createCourse(
-          id,
-          opts.title ??
-            basename(file)
-              .replace(/\.[^.]+$/, '')
-              .replace(/[_-]+/g, ' '),
-        )
-      : requireCourse(id);
+    const created = isNew ? createCourse(id, title, { setup: opts.setup }) : null;
+    const dir = created?.dir ?? requireCourse(id);
     const manifest = loadManifest(dir);
     const mode = opts.mode ?? (opts.conservative ? 'review-only' : manifest.improvement.default_import_mode);
     IntakeModeSchema.parse(mode);
@@ -307,7 +343,7 @@ export const pipelineApi: PipelineApi = {
       event: 'artifact.ingested',
       detail: { file: basename(file), mode, inferred: report.inferred.stage, confidence: report.inferred.confidence },
     });
-    return { courseId: id, report };
+    return { courseId: id, report, guides: created?.guides ?? [] };
   },
 
   run,
@@ -403,6 +439,7 @@ export const pipelineApi: PipelineApi = {
       activeRunId: state.activeRunId,
       stages,
       nextAction,
+      notices: setupNotices(manifest, loadRegistries().guidance),
     };
   },
 
@@ -554,8 +591,18 @@ export const pipelineApi: PipelineApi = {
 
   async packageCourse(opts) {
     const dir = requireCourse(opts.courseId);
-    const out = resolve(opts.out ?? join(localStateDir(), 'packages', `${opts.courseId}.zip`));
+    const out = resolve(opts.out ?? join(localStateDir(), 'packages', `${opts.courseId}${opts.scorm ? '-scorm' : ''}.zip`));
     ensureDir(dirname(out));
+    if (opts.scorm) {
+      const released = join(dir, COURSE_FILES.releaseHtml);
+      const buf = scormPackage({
+        htmlPath: exists(released) ? released : join(dir, COURSE_FILES.buildHtml),
+        now: new Date(),
+        ...scormInfo(dir, loadManifest(dir)),
+      });
+      writeFileSync(out, buf);
+      return { path: out, bytes: buf.length };
+    }
     const { zipDirectory } = await import('./zip.js');
     const buf = zipDirectory(dir, opts.courseId, ['.lock', 'logs/tasks']);
     writeFileSync(out, buf);

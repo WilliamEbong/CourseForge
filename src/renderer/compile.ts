@@ -13,6 +13,7 @@ import { compileTheme } from '../../components/course-ui/tokens/compile.js';
 import { CfError } from '../core/errors.js';
 import { sha256 } from '../core/hash.js';
 import { repoRoot } from '../core/paths.js';
+import { type Tracking, trackingOrigins } from '../core/schemas/course.js';
 import { type CourseModel, CourseModelSchema } from '../core/schemas/model.js';
 import type { BuildReport } from '../core/schemas/reports.js';
 import { type CheckResult, runChecks } from './checks.js';
@@ -31,6 +32,8 @@ export interface RenderOptions {
   icons?: (name: string) => string;
   /** Size budget for the size check (bytes). */
   maxBytes?: number;
+  /** Learner result tracking (deployment setting from course.yaml); null/absent builds a fully offline course. */
+  tracking?: Tracking | null;
 }
 
 export type RenderReport = Omit<BuildReport, 'outputPath' | 'inputHashes' | 'toolVersions' | 'visuals'> & { checks: CheckResult[] };
@@ -91,8 +94,11 @@ function inlineStyles(body: string): { elements: string[]; attributes: string[] 
   };
 }
 
-/** CSP from the exact inline blocks: every <style> element, style attributes (via 'unsafe-hashes'), the runtime script. */
-function contentSecurityPolicy(styles: string[], styleAttrs: string[], script: string): string {
+/**
+ * CSP from the exact inline blocks: every <style> element, style attributes (via 'unsafe-hashes'), the runtime
+ * script. Connections are forbidden unless the course is tracked, then only to the tracking origins (ADR 0013).
+ */
+function contentSecurityPolicy(styles: string[], styleAttrs: string[], script: string, connect: readonly string[]): string {
   const styleHashes = [...new Set(styles.map(b64sha))].sort();
   const attrHashes = [...new Set(styleAttrs.map(b64sha))].sort();
   const styleSrc = [...styleHashes, ...(attrHashes.length ? ["'unsafe-hashes'", ...attrHashes] : [])].join(' ');
@@ -101,7 +107,7 @@ function contentSecurityPolicy(styles: string[], styleAttrs: string[], script: s
     'img-src data:',
     `style-src ${styleSrc}`,
     `script-src ${b64sha(script)}`,
-    "connect-src 'none'",
+    `connect-src ${connect.length ? connect.join(' ') : "'none'"}`,
     "font-src 'none'",
     "base-uri 'none'",
     "form-action 'none'",
@@ -127,16 +133,18 @@ export async function renderCourse(input: CourseModel, opts: RenderOptions): Pro
   const visuals = new Map(
     [...opts.visuals].map(([id, v]) => [id, { ...v, svg: v.svg.replace(/<!\[CDATA\[/g, '').replace(/\]\]>/g, '') }] as const),
   );
-  const body = AppShell.render({ model, visuals });
+  const tracking = opts.tracking ?? null;
+  const connect = trackingOrigins(tracking);
+  const body = AppShell.render({ model, visuals, tracking });
   const iconNames = [...new Set([...body.matchAll(/#cf-i-([a-z0-9-]+)/g)].map((m) => m[1]!))].sort();
   const sprite = iconSprite(iconNames, opts.icons ?? lucideSvg);
-  const data = dataScript(courseData(model));
+  const data = dataScript(courseData(model, tracking));
   const css = await stylesheet(theme.css, opts.mode);
   const js = await bundleRuntime(opts.mode);
 
   const figureSvgs = [...body.matchAll(/<div class="cf-figure-media">([\s\S]*?)<\/div><figcaption/g)].map((m) => m[1]!);
   const inline = inlineStyles(`${sprite}${body}`);
-  const csp = contentSecurityPolicy([css, ...inline.elements], inline.attributes, js);
+  const csp = contentSecurityPolicy([css, ...inline.elements], inline.attributes, js, connect);
   const d = model.theme;
 
   const html = `<!doctype html>
@@ -167,7 +175,7 @@ ${data}
   const cssBytes = size(css);
   const jsBytes = size(js);
   const dataBytes = size(data);
-  const checks = runChecks(html, model, opts.maxBytes);
+  const checks = runChecks(html, model, opts.maxBytes, connect);
   const report: RenderReport = {
     schemaVersion: 1,
     courseId: model.courseId,

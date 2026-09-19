@@ -10,13 +10,18 @@ export const COMMAND_HELP: Record<string, { usage: string; summary: string }> = 
   },
   'validate-config': { usage: 'validate-config', summary: 'Validate config/*.json registries' },
   new: {
-    usage: `new <title> [--id <id>] [--notes <file>] [--audience <text>] [--duration <minutes>] [--jurisdiction <text>] [--language <code>] [--to <stage>] [--gate auto|hybrid|human] ${H}`,
-    summary: 'Create a course from a concept (optionally run it to a stage)',
+    usage: `new <title> [--id <id>] [--notes <file>] [--audience <text>] [--duration <minutes>] [--jurisdiction <text>] [--language <code>] [--to <stage>] [--gate auto|hybrid|human] [--defaults] ${H}`,
+    summary: 'Create a course from a concept (asks the setup questions first; --defaults skips them)',
   },
   ingest: {
-    usage: `ingest <file> [--course <id>] [--title <text>] [--stage <stage>] [--mode preserve|review-only|improve|rebuild] [--replace] [--conservative] ${H}`,
-    summary: 'Import an existing artifact (research, design, storyboard, HTML …)',
+    usage: `ingest <file> [--course <id>] [--title <text>] [--stage <stage>] [--mode preserve|review-only|improve|rebuild] [--replace] [--conservative] [--defaults] ${H}`,
+    summary: 'Import an existing artifact (research, design, storyboard, HTML …); a new course asks the setup questions first',
   },
+  configure: {
+    usage: 'configure --course <id>',
+    summary: 'Answer the setup questions again (language, audience, how much you review, results tracking)',
+  },
+  reconfigure: { usage: 'reconfigure --course <id>', summary: 'Same as configure' },
   run: {
     usage: `run --course <id> [--from <stage>] [--to <stage>] [--gate <mode>] [--force] ${H}`,
     summary: 'Run the pipeline over a stage range',
@@ -49,7 +54,14 @@ export const COMMAND_HELP: Record<string, { usage: string; summary: string }> = 
   build: { usage: `build --course <id> [--force] ${H}`, summary: 'Run the COURSE_BUILD stage' },
   qa: { usage: `qa --course <id> [--force] ${H}`, summary: 'Run the COURSE_QA stage' },
   release: { usage: `release --course <id> [--force] ${H}`, summary: 'Run the RELEASE stage (release gate)' },
-  package: { usage: 'package --course <id> [--out <file>]', summary: 'Zip the course folder' },
+  package: {
+    usage: 'package --course <id> [--out <file>] [--scorm]',
+    summary: 'Zip the course folder, or with --scorm make the SCORM 1.2 package to upload to a training system (LMS)',
+  },
+  tracker: {
+    usage: 'tracker [--port 8787] [--host 127.0.0.1] [--data <dir>]',
+    summary: 'Run your own results dashboard that tracked courses send results to (password in COURSEFORGE_TRACKER_PASSWORD)',
+  },
   clean: { usage: 'clean [--course <id>] [--build] [--cache] [--dry-run]', summary: 'Remove generated files (never sources or originals)' },
   smoke: { usage: 'smoke', summary: 'Run the setup smoke fixture (build, render, browser, axe, screenshot)' },
   version: { usage: 'version', summary: 'Print the CourseForge version' },

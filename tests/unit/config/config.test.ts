@@ -35,7 +35,16 @@ describe('config registries @A4', () => {
     const r = loadRegistries();
     expect(Object.keys(r.stages.stages).sort()).toEqual([...STAGES].sort());
     expect(Object.keys(r.hashes).sort()).toEqual(
-      ['fallbacks.json', 'review-policy.json', 'reviewers.json', 'routing.json', 'skills.json', 'stages.json', 'tools.json'].sort(),
+      [
+        'fallbacks.json',
+        'guidance.json',
+        'review-policy.json',
+        'reviewers.json',
+        'routing.json',
+        'skills.json',
+        'stages.json',
+        'tools.json',
+      ].sort(),
     );
     expect(validateConfig()).toEqual({ ok: true, errors: [] });
   });

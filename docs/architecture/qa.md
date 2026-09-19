@@ -13,6 +13,14 @@ reports. Everything runs in one Playwright Chromium instance with at most two pa
 | Interactions | For each item: correct path from the answer key and a mutated incorrect path; scoring all-correct / all-wrong / mixed | Reachability only, never answer correctness |
 | Also checks | Navigation and menu, glossary, references and citations dialogs, progress persistence and reset, offline (non-`file:`/`data:` requests aborted and counted), console and page errors, overflow and horizontal scroll, broken images/SVG, keyboard-only traversal with visible focus, missing block IDs | Console errors, broken media, overflow, focus visibility, axe |
 
+**Tracked builds** ([ADR 0013](../adr/0013-optional-tracking.md)). `runQa({ tracking })` passes the course's
+tracking origins to the browser session as `stubOrigins`. Requests to those origins are answered locally with
+`{"ok":true}` and recorded in `session.tracked`, never sent. Every other request is still blocked and counted as
+offline failures. The contract runner then completes the course as a learner would, presses
+**Record my result** and requires exactly one POST that validates as a `TrackingEvent`. For `lms`, it opens a
+second page with a fake SCORM 1.2 `API` injected before load, and requires `LMSInitialize`, the expected
+`lesson_status`, `score.raw` of 100 and `LMSCommit`.
+
 Both run axe-core (`@axe-core/playwright`, tags wcag2a/wcag2aa/wcag21aa) per sampled screen and capture
 screenshots, with `reducedMotion: 'reduce'`.
 

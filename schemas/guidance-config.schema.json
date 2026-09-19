@@ -1,0 +1,521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://courseforge.local/schemas/guidance-config.schema.json",
+  "title": "guidance-config",
+  "description": "config/guidance.json. Generated from src/core/schemas — do not edit.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "stages": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "CONCEPT",
+          "RESEARCH_BRIEF",
+          "RESEARCH_DOSSIER",
+          "INSTRUCTIONAL_DESIGN",
+          "STORYBOARD",
+          "EDITORIAL",
+          "VISUAL_DIRECTION",
+          "COURSE_MODEL",
+          "COURSE_BUILD",
+          "COURSE_QA",
+          "RELEASE"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blurb": {
+            "type": "string",
+            "minLength": 1
+          },
+          "next": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "blurb",
+          "next"
+        ],
+        "additionalProperties": false
+      },
+      "required": [
+        "CONCEPT",
+        "RESEARCH_BRIEF",
+        "RESEARCH_DOSSIER",
+        "INSTRUCTIONAL_DESIGN",
+        "STORYBOARD",
+        "EDITORIAL",
+        "VISUAL_DIRECTION",
+        "COURSE_MODEL",
+        "COURSE_BUILD",
+        "COURSE_QA",
+        "RELEASE"
+      ]
+    },
+    "questions": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "audience": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "review": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "tracking": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "idLabel": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "sheetUrl": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        "trackerUrl": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "help": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blurb": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "label",
+                  "blurb"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "prompt",
+            "help",
+            "options"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "language",
+        "audience",
+        "review",
+        "tracking",
+        "identity",
+        "idLabel",
+        "sheetUrl",
+        "trackerUrl"
+      ],
+      "additionalProperties": false
+    },
+    "messages": {
+      "type": "object",
+      "properties": {
+        "welcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reconfigure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidChoice": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidUrl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidText": {
+          "type": "string",
+          "minLength": 1
+        },
+        "testSending": {
+          "type": "string",
+          "minLength": 1
+        },
+        "testOk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "testFailed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "done": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guides": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unfinished": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unconfigured": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skipped": {
+          "type": "string",
+          "minLength": 1
+        },
+        "landing": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rebuild": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "welcome",
+        "reconfigure",
+        "invalidChoice",
+        "invalidUrl",
+        "invalidText",
+        "testSending",
+        "testOk",
+        "testFailed",
+        "done",
+        "guides",
+        "unfinished",
+        "unconfigured",
+        "skipped",
+        "landing",
+        "rebuild"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "stages",
+    "questions",
+    "messages"
+  ],
+  "additionalProperties": false
+}

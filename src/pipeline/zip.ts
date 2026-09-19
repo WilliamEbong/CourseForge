@@ -1,10 +1,18 @@
 /**
- * Minimal ZIP writer (deflate, no dependencies) used by `courseforge package` to archive a course folder.
+ * Minimal ZIP writer (deflate, no dependencies) used by `courseforge package` to archive a course folder and to
+ * build SCORM packages.
  */
 import { readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { crc32, deflateRawSync } from 'node:zlib';
 import { walkFiles } from '../core/fsx.js';
+
+export interface ZipEntry {
+  /** Path inside the archive, forward slashes. */
+  name: string;
+  data: Buffer;
+  mtime: Date;
+}
 
 function dosTime(d: Date): { time: number; date: number } {
   return {
@@ -13,17 +21,15 @@ function dosTime(d: Date): { time: number; date: number } {
   };
 }
 
-export function zipDirectory(root: string, prefix: string, exclude: string[] = []): Buffer {
+export function zipEntries(entries: readonly ZipEntry[]): Buffer {
   const locals: Buffer[] = [];
   const central: Buffer[] = [];
   let offset = 0;
-  for (const rel of walkFiles(root, exclude)) {
-    const abs = join(root, rel);
-    const data = readFileSync(abs);
-    const name = Buffer.from(`${prefix}/${rel}`, 'utf8');
-    const deflated = deflateRawSync(data);
-    const { time, date } = dosTime(statSync(abs).mtime);
-    const crc = crc32(data);
+  for (const e of entries) {
+    const name = Buffer.from(e.name, 'utf8');
+    const deflated = deflateRawSync(e.data);
+    const { time, date } = dosTime(e.mtime);
+    const crc = crc32(e.data);
     const local = Buffer.alloc(30);
     local.writeUInt32LE(0x04034b50, 0);
     local.writeUInt16LE(20, 4);
@@ -33,7 +39,7 @@ export function zipDirectory(root: string, prefix: string, exclude: string[] = [
     local.writeUInt16LE(date, 12);
     local.writeUInt32LE(crc, 14);
     local.writeUInt32LE(deflated.length, 18);
-    local.writeUInt32LE(data.length, 22);
+    local.writeUInt32LE(e.data.length, 22);
     local.writeUInt16LE(name.length, 26);
     local.writeUInt16LE(0, 28);
     locals.push(local, name, deflated);
@@ -47,7 +53,7 @@ export function zipDirectory(root: string, prefix: string, exclude: string[] = [
     cen.writeUInt16LE(date, 14);
     cen.writeUInt32LE(crc, 16);
     cen.writeUInt32LE(deflated.length, 20);
-    cen.writeUInt32LE(data.length, 24);
+    cen.writeUInt32LE(e.data.length, 24);
     cen.writeUInt16LE(name.length, 28);
     cen.writeUInt32LE(offset, 42);
     central.push(cen, name);
@@ -62,4 +68,13 @@ export function zipDirectory(root: string, prefix: string, exclude: string[] = [
   end.writeUInt32LE(centralBuf.length, 12);
   end.writeUInt32LE(offset, 16);
   return Buffer.concat([...locals, centralBuf, end]);
+}
+
+export function zipDirectory(root: string, prefix: string, exclude: string[] = []): Buffer {
+  return zipEntries(
+    walkFiles(root, exclude).map((rel) => {
+      const abs = join(root, rel);
+      return { name: `${prefix}/${rel}`, data: readFileSync(abs), mtime: statSync(abs).mtime };
+    }),
+  );
 }

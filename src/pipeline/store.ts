@@ -85,6 +85,45 @@ export function transitionStage(
   return to;
 }
 
+/**
+ * Locked stages among `stages` are no longer current: human-approved ones reopen for approval, the rest become
+ * SUPERSEDED and stale. Returns the stages it changed. The caller saves the state.
+ */
+export function invalidateStages(
+  dir: string,
+  state: CourseState,
+  stages: readonly Stage[],
+  because: string,
+  now: string,
+  runId: string | null,
+): Stage[] {
+  const changed: Stage[] = [];
+  for (const s of stages) {
+    const st = state.stages[s];
+    if (st.status !== 'LOCKED') continue;
+    changed.push(s);
+    if (st.gate?.status === 'approved' && st.gate.decidedBy) {
+      transitionStage(dir, state, s, 'upstream-changed-human', now, runId);
+      st.gate = {
+        mode: 'human',
+        status: 'pending',
+        reason: 'upstream_changed',
+        openedAt: now,
+        decidedAt: null,
+        decidedBy: null,
+        reportPath: null,
+        instructions: null,
+        comments: st.gate.comments,
+        findingDecisions: {},
+      };
+    } else {
+      transitionStage(dir, state, s, 'upstream-changed', now, runId);
+      st.stale = { because, at: now };
+    }
+  }
+  return changed;
+}
+
 export function patchStage(state: CourseState, stage: Stage, patch: Partial<StageState>): void {
   Object.assign(state.stages[stage], patch);
 }

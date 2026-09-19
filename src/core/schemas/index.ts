@@ -11,6 +11,7 @@ import * as model from './model.js';
 import * as registry from './registry.js';
 import * as reports from './reports.js';
 import * as review from './review.js';
+import * as tracking from './tracking.js';
 
 export * from './content.js';
 export * from './course.js';
@@ -18,6 +19,7 @@ export * from './model.js';
 export * from './registry.js';
 export * from './reports.js';
 export * from './review.js';
+export * from './tracking.js';
 
 export const ImportStageClassificationSchema = classificationSchema([...STAGES]);
 export const VisualArchetypeClassificationSchema = classificationSchema([...VISUAL_ARCHETYPES]);
@@ -82,6 +84,12 @@ export const SCHEMAS = {
   'routing-config': { schema: registry.RoutingConfigSchema, agent: false, description: 'config/routing.json' },
   'fallbacks-config': { schema: registry.FallbacksConfigSchema, agent: false, description: 'config/fallbacks.json' },
   'review-policy': { schema: registry.ReviewPolicySchema, agent: false, description: 'config/review-policy.json' },
+  'tracking-event': {
+    schema: tracking.TrackingEventSchema,
+    agent: false,
+    description: 'One learner result sent to a tracking destination',
+  },
+  'guidance-config': { schema: registry.GuidanceConfigSchema, agent: false, description: 'config/guidance.json' },
   'build-report': { schema: reports.BuildReportSchema, agent: false, description: 'build/build-report.json' },
   'functional-report': { schema: reports.FunctionalReportSchema, agent: false, description: 'review/functional-tests.json' },
   'accessibility-report': { schema: reports.AccessibilityReportSchema, agent: false, description: 'review/accessibility-review.json' },

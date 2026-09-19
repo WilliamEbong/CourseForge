@@ -2,6 +2,7 @@
  * App shell: header (title, progress on every breakpoint, menu/glossary/references/theme), navigation
  * (sticky sidebar ≥1024px, moved into a modal <dialog> below), pager, resource dialogs, confirm dialog, announcer.
  */
+import type { Tracking } from '../../../../src/core/schemas/course.js';
 import type { CourseModel, Screen } from '../../../../src/core/schemas/model.js';
 import { type CfComponent, esc, icon, md } from '../contract.js';
 import type { CfData, CfItem } from '../runtime/types.js';
@@ -150,27 +151,59 @@ export const Pager: CfComponent<{ total: number }> = {
   },
 };
 
+/**
+ * "Record my result": shown by the runtime on the record screen once the course is complete. Web destinations ask
+ * for the identity fields the author chose; an LMS already knows the learner, so only the status line is shown.
+ * Plain inputs and a button (no <form>): the CSP forbids form submission.
+ */
+export const RecordPanel: CfComponent<{ tracking: Tracking }> = {
+  name: 'record-panel',
+  render({ tracking }) {
+    const status = '<p class="cf-record-status" data-cf-record-status role="status" aria-live="polite"></p>';
+    if (tracking.destination === 'lms')
+      return `<section class="cf-record" data-cf-record hidden aria-label="Result reporting">${status}</section>`;
+    const field = (key: string, label: string, attrs: string) =>
+      `<p class="cf-record-field"><label class="cf-label" for="cf-record-${key}">${esc(label)}</label><input class="cf-input" id="cf-record-${key}" data-cf-record-field="${key}" ${attrs}></p>`;
+    const fields = [
+      field('name', 'Your full name', 'type="text" autocomplete="name" maxlength="120" required'),
+      tracking.identity === 'name_and_id'
+        ? field('id', tracking.id_label ?? 'Staff number', 'type="text" autocomplete="off" maxlength="80" required')
+        : '',
+      tracking.identity === 'name_and_email'
+        ? field('email', 'Your email address', 'type="email" autocomplete="email" maxlength="200" required')
+        : '',
+    ].join('');
+    return `<section class="cf-record" data-cf-record hidden aria-labelledby="cf-record-title"><h2 class="cf-section-title" id="cf-record-title">Record your result</h2><p class="cf-record-intro">Enter your details and press the button so your organisation has a record that you completed this course.</p><div class="cf-record-fields" data-cf-record-fields>${fields}</div><button type="button" class="cf-btn cf-btn--primary" data-cf-record-send>${icon('check')}<span>Record my result</span></button>${status}</section>`;
+  },
+};
+
 export interface ShellProps {
   model: CourseModel;
   visuals?: ReadonlyMap<string, VisualRender>;
+  tracking?: Tracking | null;
 }
 
 /** Full `<body>` content for a course (everything except the head, styles and scripts). */
 export const AppShell: CfComponent<ShellProps> = {
   name: 'app-shell',
-  render({ model, visuals }) {
+  render({ model, visuals, tracking }) {
     const ctx = createContext(model, visuals);
     const screens = model.screens.map((screen, i) => ScreenView.render({ screen, ctx, position: i, hidden: i !== 0 })).join('\n');
     return `${Header.render({ model, firstModuleTitle: model.modules[0]?.title ?? '' })}
 <div class="cf-layout"><aside class="cf-sidebar" data-cf-nav-home>${NavDrawer.render({ ctx })}</aside><main id="cf-main" class="cf-main" tabindex="-1"><div class="cf-stage">
 ${screens}
-</div>${Pager.render({ total: model.screens.length })}</main></div>
+</div>${tracking ? RecordPanel.render({ tracking }) : ''}${Pager.render({ total: model.screens.length })}</main></div>
 ${NavDialog.render({})}${GlossaryDialog.render({ model })}${ReferencesDialog.render({ model })}${SourceDialog.render({})}${ConfirmDialog.render({})}${Announcer.render({})}`;
   },
 };
 
+/** The screen where a tracked course records the result: the (last) results screen, else the final screen. */
+export function recordScreen(model: CourseModel): string {
+  return [...model.screens].reverse().find((s) => s.component === 'results')?.id ?? model.screens.at(-1)?.id ?? '';
+}
+
 /** Runtime data island (`<script type="application/json" id="cf-data">`). */
-export function courseData(model: CourseModel): CfData {
+export function courseData(model: CourseModel, tracking: Tracking | null = null): CfData {
   const items: Record<string, CfItem> = {};
   for (const s of model.screens) {
     const i = s.interaction;
@@ -200,6 +233,17 @@ export function courseData(model: CourseModel): CfData {
       kind: s.kind,
     })),
     items,
+    ...(tracking && tracking.destination !== 'none'
+      ? {
+          tracking: {
+            destination: tracking.destination,
+            endpoint: tracking.endpoint,
+            identity: tracking.identity,
+            courseTitle: model.title,
+            recordScreen: recordScreen(model),
+          },
+        }
+      : {}),
   };
 }
 
