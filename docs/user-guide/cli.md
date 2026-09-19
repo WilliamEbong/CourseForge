@@ -30,7 +30,7 @@ design, storyboard, editorial, visual, model, build, qa, release`.
 | Command | Usage | Notes |
 |---|---|---|
 | `setup` | `setup [--no-smoke]` | `doctor --repair`, then the smoke fixture; prints `READY` |
-| `doctor` | `doctor [--repair] [--only <id,...>]` | Exit 0 when ready, 3 otherwise |
+| `doctor` | `doctor [--repair] [--only <id,...>] [--live]` | Exit 0 when ready, 3 otherwise. `--live` also sends one small task to each installed, signed-in backend (one model call each) and exits 3 unless at least one succeeds |
 | `validate-config` | `validate-config` | Validates `config/*.json`; exit 2 when invalid |
 | `smoke` | `smoke` | Build, render, browser, axe, screenshot; exit 3 on failure. Accepts `--out <dir>` |
 | `version` | `version` | CourseForge and Node versions (`--version` also works) |
@@ -82,9 +82,9 @@ next `run` rebuilds them. `ingest` also explains, in plain words, the step the i
 | `continue` | `continue --course <id> [--backend …] [--harness …]` |
 | `review` | `review --course <id> [--stage <stage>] [--backend …] [--harness …]` |
 | `improve` | `improve --course <id> [--input <file>] [--to <stage>] [--backend …] [--harness …]` |
-| `build` | `build --course <id> [--force] [--backend …] [--harness …]` — COURSE_BUILD only |
-| `qa` | `qa --course <id> [--force] [--backend …] [--harness …]` — COURSE_QA only |
-| `release` | `release --course <id> [--force] [--backend …] [--harness …]` — RELEASE only |
+| `build` | `build --course <id> [--gate <mode>] [--force] [--backend …] [--harness …]` — COURSE_BUILD only |
+| `qa` | `qa --course <id> [--gate <mode>] [--force] [--backend …] [--harness …]` — COURSE_QA only |
+| `release` | `release --course <id> [--gate <mode>] [--force] [--backend …] [--harness …]` — RELEASE only |
 
 - `run` without `--from` starts at the first stage that still needs work; without `--to` it runs to the saved
   target stage (the previous run's target; initially `pipeline.target_stage`, RELEASE). `--force` re-runs the start stage even if it is `LOCKED` (new versions; locked IDs are
@@ -113,7 +113,7 @@ See [human-review.md](human-review.md) for gate and findings semantics.
 
 | Command | Usage |
 |---|---|
-| `package` | `package --course <id> [--out <file>] [--scorm]` — zip the course folder (excludes `.lock` and `logs/tasks`); default `.courseforge/packages/<id>.zip`. With `--scorm`, the SCORM 1.2 package (`imsmanifest.xml` + `index.html`) of the released (else built) course for upload to a training system; the course must have been built with results tracking set to the training system option |
+| `package` | `package --course <id> [--out <file>] [--scorm]` — zip the course folder (excludes `.lock` and `logs/tasks`); default `.courseforge/packages/<id>.zip` (`<id>-scorm.zip` with `--scorm`). With `--scorm`, the SCORM 1.2 package (`imsmanifest.xml` + `index.html`) of the released (else built) course for upload to a training system; the course must have been built with results tracking set to the training system option |
 | `tracker` | `tracker [--port 8787] [--host 127.0.0.1] [--data <dir>]` — run your own results dashboard (see [tracking.md](tracking.md)); needs `COURSEFORGE_TRACKER_PASSWORD`; exit 3 without it; stops with Ctrl+C |
 | `clean` | `clean [--course <id>] [--build] [--cache] [--dry-run]` — removes only generated paths: `logs/tasks/` and `.cache/` per course, `build/` with `--build`, and `.courseforge/{wire-schemas,smoke,packages}` with `--cache` or when no course is given. Never sources, originals, versions or approved artifacts |
 

@@ -16,7 +16,7 @@ The setup questions (and `courseforge configure`) set how much you are involved,
 | `every_step` | Let me approve every step | A `human` gate at all 11 stages: nothing is repaired without you. |
 | `strict` | Every step, with the strictest checks | Every step, and the course is treated as `high_stakes` whatever its topic (stricter research checks and floors). |
 
-Hand-written `human_review` entries appear as "keep my current custom settings" and apply with `recommended`.
+Hand-written `human_review` entries appear as "keep my current custom settings" and apply with `recommended`. Choosing any level in the setup questions replaces them (`human_review` is cleared).
 
 ## Gate modes
 

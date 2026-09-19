@@ -67,7 +67,8 @@ These define the pipeline for every course. They are validated at startup and by
 The architecture behind these files is described in [routing.md](../architecture/routing.md) and
 [review-and-repair.md](../architecture/review-and-repair.md). Developer recipes:
 [adding a reviewer](../developer-guide/adding-a-reviewer.md),
-[adding a visual archetype](../developer-guide/adding-a-visual-archetype.md).
+[adding a visual archetype](../developer-guide/adding-a-visual-archetype.md),
+[adding a component](../developer-guide/adding-a-component.md).
 
 ## Environment variables
 

@@ -47,7 +47,7 @@ courseforge tracker [--port 8787] [--host 127.0.0.1] [--data <dir>]
 This starts the results server and dashboard. Set the dashboard password in the `COURSEFORGE_TRACKER_PASSWORD`
 environment variable first. Courses send results to `http://<host>:<port>/api/events`. The dashboard is at
 `http://<host>:<port>/` (any user name, your password), and it shows, per course, how many people finished and
-passed, the pass rate and the average best score, followed by every result. Results are saved in
+passed, the pass rate (of people with a graded result) and the average best score, followed by every result. Results are saved in
 `.courseforge/tracker/results.jsonl` unless you give `--data`. How it works:
 [Setup and tracking](../architecture/tracking.md).
 

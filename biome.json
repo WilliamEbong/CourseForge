@@ -23,10 +23,10 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "style": { "noNonNullAssertion": "off", "useTemplate": "off" },
+      "preset": "recommended",
+      "style": { "noNonNullAssertion": "off", "useTemplate": "off", "noDescendingSpecificity": "off" },
       "suspicious": { "noExplicitAny": "error", "noControlCharactersInRegex": "off" },
-      "complexity": {}
+      "complexity": { "noImportantStyles": "off" }
     }
   },
   "assist": { "actions": { "source": { "organizeImports": "on" } } }

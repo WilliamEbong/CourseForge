@@ -137,6 +137,9 @@ Run the CLI without a global install: `.\courseforge <command>` (Windows), `./co
 
 ## Quick start
 
+A longer walkthrough is in [docs/user-guide/quick-start.md](docs/user-guide/quick-start.md); every command and
+flag is listed in the [CLI reference](docs/user-guide/cli.md).
+
 ### Offline demo (no agent, no network)
 
 The fake harness replays a committed, schema-valid fixture set for a micro-course, so the whole pipeline runs

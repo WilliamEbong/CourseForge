@@ -1,9 +1,5 @@
 # CourseForge v1 — Implementation Plan
 
-> Plan-mode note: the ZIP could not be extracted during planning (plan mode is read-only), so all bootstrap
-> material was read by streaming ZIP members to stdout. Extraction is **Step 0** of execution. On execution,
-> copy this file to `docs/exec-plans/active/courseforge-v1.md` (the location `MASTER_BUILD_PROMPT.md` requires).
-
 ## 0. Context
 
 `CourseForge_Bootstrap_Contents_2026-09-18.zip` (50 files, integrity OK) specifies CourseForge: a local,
