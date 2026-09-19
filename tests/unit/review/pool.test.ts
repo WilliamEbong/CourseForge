@@ -25,12 +25,19 @@ describe('runPool @E1', () => {
   });
 
   it('overlaps tasks up to the cap', async () => {
-    const start = Date.now();
+    // Every task is started before any finishes; counted rather than timed so slow runners cannot flake.
+    let started = 0;
+    const seen: number[] = [];
     const out = await runPool(
-      Array.from({ length: 5 }, (_, i) => () => sleep(100).then(() => i)),
+      Array.from({ length: 5 }, (_, i) => async () => {
+        started++;
+        await sleep(10);
+        seen.push(started);
+        return i;
+      }),
       5,
     );
-    expect(Date.now() - start).toBeLessThan(300);
+    expect(seen).toEqual([5, 5, 5, 5, 5]);
     expect(out.map((r) => (r.status === 'fulfilled' ? r.value : -1))).toEqual([0, 1, 2, 3, 4]);
   });
 
