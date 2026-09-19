@@ -202,6 +202,16 @@ export async function runAgentTask<T>(ctx: RunContext, spec: TaskSpec, o: TaskRu
       detail: { message: failure.message.slice(0, 500) },
     });
     if (switchBackend(ctx, failure.class, failure.message)) continue;
+    // The backend itself could not produce schema-valid output (e.g. Claude's structured-output retries were
+    // exhausted on a large artifact): one CourseForge-level retry with an explicit reminder.
+    if (failure.class === 'schema_invalid' && schemaRetries > 0) {
+      schemaRetries--;
+      prompt = `${assembled.prompt}
+
+## Correction required
+A previous attempt failed to produce output matching schema "${spec.outputSchema}". Return one complete, valid JSON object; keep text fields concise.`;
+      continue;
+    }
     if (RETRYABLE_FAILURES.has(failure.class) && attempt < maxAttempts) {
       const wait = (procCfg.backoffMs[attempt - 1] ?? procCfg.backoffMs.at(-1) ?? 2000) * backoffScale();
       if (wait > 0) await sleep(wait);
