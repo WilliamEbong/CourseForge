@@ -33,7 +33,8 @@ built, how it was verified, and every deviation from the plan.
 | `courseforge doctor --live` | both Claude Code and Codex return isolated, schema-valid replies |
 | Offline demo, `new … --to release --gate auto --harness fake` | concept → release in about 30 s, all 11 stages locked |
 | Reference HTML improvement (`ingest … --stage course_build --mode improve` → release) | about 2 min |
-| Live Claude run (concept → research brief) | real generation, a real reviewer finding, a real repair, stage locked |
+| Live Claude run (concept → research brief) | real generation, reviewer panels and repairs; the concept stage repaired and locked |
+| Live Claude improve-mode run on the brief | 3 repair cycles applied; major findings 3 → 5 → 1 → 1; stopped at the cycle cap and escalated to a human gate as designed |
 
 The reference HTML improvement run went through these steps:
 
@@ -66,6 +67,15 @@ The reference HTML improvement run went through these steps:
 9. **Section locks** now carry forward across artifact versions; the plan implied this, but the first
    implementation dropped them. Human approvals create `…-human-approved` milestone versions.
 10. **Release-gate review records** live under `review/release/`, so `release/` holds only shippable outputs.
+
+## Defects found by live runs and fixed
+
+- Brief repairs targeted fields and question IDs the applier could not address, so nothing was applied. Concept,
+  brief and design now accept one validated whole-document replacement, and research questions and plan sections
+  are repairable by ID.
+- `run --force` on a locked stage hit an illegal transition. LOCKED → reset is now an explicit, tested transition.
+- Claude sometimes exhausts its own structured-output retries on large artifacts. CourseForge now retries once with
+  correction feedback before failing the stage.
 
 ## Known limitations
 
