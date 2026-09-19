@@ -24,10 +24,12 @@ export type MakeInput = { kind: 'course'; file: string } | { kind: 'documents'; 
 /** Decides what the paths are: one HTML/JSON file is a course to import; anything else is source documents. */
 export function classifyInputs(paths: readonly string[]): MakeInput {
   const files: string[] = [];
+  let anyDir = false;
   for (const raw of paths) {
     const p = resolve(raw);
     if (!exists(p)) throw usageError(`Not found: ${raw}`);
     if (statSync(p).isDirectory()) {
+      anyDir = true;
       const found = walkFiles(p)
         .filter((rel) => !rel.split('/').some((part) => part.startsWith('.')) && DOCUMENT_EXT.has(extname(rel).toLowerCase()))
         .map((rel) => join(p, rel));
@@ -39,7 +41,7 @@ export function classifyInputs(paths: readonly string[]): MakeInput {
     }
   }
   if (!files.length) return { kind: 'prompt' };
-  const single = paths.length === 1 && files.length === 1 && !statSync(resolve(paths[0]!)).isDirectory() ? files[0]! : null;
+  const single = paths.length === 1 && files.length === 1 && !anyDir ? files[0]! : null;
   if (single && ['.html', '.htm', '.json'].includes(extname(single).toLowerCase())) return { kind: 'course', file: single };
   return { kind: 'documents', files: [...new Set(files)] };
 }
@@ -56,10 +58,12 @@ export async function sourceMaterial(files: readonly string[]): Promise<{ text: 
     titles.push(title);
     let body = doc.text.trim();
     if (used + body.length > MAX_SOURCE_CHARS) {
-      body = `${body.slice(0, Math.max(0, MAX_SOURCE_CHARS - used))}\n\n[The rest of this document was left out: the documents are longer than CourseForge can pass to its writers in one go.]`;
+      body = body.slice(0, Math.max(0, MAX_SOURCE_CHARS - used));
       truncated = true;
     }
     used += body.length;
+    if (truncated)
+      body += '\n\n[The rest of this document was left out: the documents are longer than CourseForge can pass to its writers in one go.]';
     parts.push(`## Document: ${title}\n\nFile: \`${basename(file)}\`\n\n${body}\n`);
     if (used >= MAX_SOURCE_CHARS) break;
   }
@@ -84,10 +88,14 @@ export function titleFrom(prompt: string, fallback: string): string {
 
 const resumeHint = (id: string) => `course "${id}" created; if this run is interrupted, resume with: courseforge continue --course ${id}`;
 
-function freeId(base: string): string {
+/** The id `make` gives a new course with this title: its slug, numbered when that course already exists. */
+export function freeId(base: string): string {
   const root = slugify(base) || 'course';
   if (!courseExists(root)) return root;
-  for (let i = 2; ; i++) if (!courseExists(`${root}-${i}`.slice(0, 63))) return `${root}-${i}`.slice(0, 63);
+  for (let i = 2; ; i++) {
+    const id = `${root}-${i}`;
+    if (!courseExists(id)) return id;
+  }
 }
 
 export async function make(api: PipelineApi, o: MakeOptions, now: () => string, progress: (msg: string) => void): Promise<MakeResult> {

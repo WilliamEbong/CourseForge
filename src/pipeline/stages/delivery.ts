@@ -1,12 +1,12 @@
 /**
  * Deterministic delivery stages: COURSE_MODEL, COURSE_BUILD, COURSE_QA (browser QA + review panel), RELEASE.
  */
-import { copyFileSync, readdirSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { buildTraceGraph, latest, listArtifacts, loadRegistry, traceIssues, traceSummary } from '../../artifacts/index.js';
 import type { Renderer } from '../../core/enums.js';
-import { ensureDir, exists, readJson, readText, writeAtomic, writeFileRaw, writeJson } from '../../core/fsx.js';
+import { copyFile, exists, readJson, readText, writeAtomic, writeFileRaw, writeJson } from '../../core/fsx.js';
 import { hashFile } from '../../core/hash.js';
 import { COURSE_FILES, repoRoot } from '../../core/paths.js';
 import {
@@ -18,7 +18,6 @@ import {
   effectiveRiskTier,
   effectiveTracking,
   type Finding,
-  FindingSchema,
   FunctionalReportSchema,
   IntakeReportSchema,
   type ReleaseDecision,
@@ -391,10 +390,8 @@ export function computeReleaseDecision(ctx: RunContext): { decision: ReleaseDeci
 }
 
 function copyLicenses(ctx: RunContext): void {
-  const dir = p(ctx, 'release/licenses');
-  ensureDir(dir);
   const lucide = join(repoRoot(), 'node_modules', 'lucide-static', 'LICENSE');
-  if (exists(lucide)) copyFileSync(lucide, join(dir, 'lucide-ISC.txt'));
+  if (exists(lucide)) copyFile(lucide, p(ctx, 'release/licenses/lucide-ISC.txt'));
 }
 
 export const release: StageHandler = {
@@ -402,7 +399,7 @@ export const release: StageHandler = {
     const { decision, findings } = computeReleaseDecision(ctx);
     writeJson(p(ctx, 'release/release-decision.json'), decision);
     if (decision.decision !== 'pass') return [];
-    copyFileSync(p(ctx, F.buildHtml), p(ctx, F.releaseHtml));
+    copyFile(p(ctx, F.buildHtml), p(ctx, F.releaseHtml));
     copyLicenses(ctx);
     if (effectiveTracking(ctx.manifest)?.destination === 'lms')
       writeFileRaw(
@@ -522,5 +519,3 @@ export function screenshotFiles(ctx: RunContext): string[] {
   const dir = p(ctx, F.screenshots);
   return exists(dir) ? readdirSync(dir).filter((f) => f.endsWith('.png')) : [];
 }
-
-export { FindingSchema };

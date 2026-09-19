@@ -56,9 +56,9 @@ export const COMMAND_HELP: Record<string, { usage: string; summary: string }> = 
     usage: 'trace --course <id> [--id <id>] [--direction up|down] [--depth <n>] [--impact a,b]',
     summary: 'Traceability: source → claim → objective → screen',
   },
-  build: { usage: `build --course <id> [--force] ${H}`, summary: 'Run the COURSE_BUILD stage' },
-  qa: { usage: `qa --course <id> [--force] ${H}`, summary: 'Run the COURSE_QA stage' },
-  release: { usage: `release --course <id> [--force] ${H}`, summary: 'Run the RELEASE stage (release gate)' },
+  build: { usage: `build --course <id> [--gate <mode>] [--force] ${H}`, summary: 'Run the COURSE_BUILD stage' },
+  qa: { usage: `qa --course <id> [--gate <mode>] [--force] ${H}`, summary: 'Run the COURSE_QA stage' },
+  release: { usage: `release --course <id> [--gate <mode>] [--force] ${H}`, summary: 'Run the RELEASE stage (release gate)' },
   package: {
     usage: 'package --course <id> [--out <file>] [--scorm]',
     summary: 'Zip the course folder, or with --scorm make the SCORM 1.2 package to upload to a training system (LMS)',

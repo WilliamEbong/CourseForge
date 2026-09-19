@@ -14,8 +14,8 @@ const HEADERS = ['Received', 'Finished at', 'Course', 'Course title', 'Course ve
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
-  lock.waitLock(20000);
   try {
+    lock.waitLock(20000);
     const r = JSON.parse(e.postData.contents);
     if (!r || r.v !== 1 || typeof r.courseId !== 'string' || !r.learner || typeof r.learner.name !== 'string') {
       return reply({ ok: false, error: 'not a CourseForge result' });
@@ -31,7 +31,7 @@ function doPost(e) {
   } catch (err) {
     return reply({ ok: false, error: String(err) });
   } finally {
-    lock.releaseLock();
+    if (lock.hasLock()) lock.releaseLock();
   }
 }
 
@@ -82,7 +82,7 @@ function updateSummary() {
     const passed = people.filter((p) => p.passed).length;
     out.push([
       id, c.title, people.length, passed,
-      scored.length ? Math.round((100 * passed) / people.length) : '',
+      scored.length ? Math.round((100 * passed) / scored.length) : '', // of people with a graded result
       scored.length ? Math.round(scored.reduce((n, p) => n + p.best, 0) / scored.length) : '',
       c.last,
     ]);

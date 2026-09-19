@@ -478,10 +478,6 @@
           "type": "string",
           "minLength": 1
         },
-        "skipped": {
-          "type": "string",
-          "minLength": 1
-        },
         "landing": {
           "type": "string",
           "minLength": 1
@@ -512,7 +508,6 @@
         "guides",
         "unfinished",
         "unconfigured",
-        "skipped",
         "landing",
         "rebuild",
         "signoff",

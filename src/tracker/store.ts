@@ -2,9 +2,9 @@
  * Results store for the self-hosted tracker: one JSON line per received result (append-only), plus the pure
  * summaries and CSV export the dashboard shows.
  */
-import { appendFileSync, existsSync, readFileSync } from 'node:fs';
+import { appendFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { ensureDir } from '../core/fsx.js';
+import { ensureDir, exists, readText } from '../core/fsx.js';
 import { type TrackingEvent, TrackingEventSchema } from '../core/schemas/tracking.js';
 
 export interface StoredResult extends TrackingEvent {
@@ -23,9 +23,9 @@ export function appendResult(dataDir: string, event: TrackingEvent, receivedAt: 
 /** Every stored result, oldest first. Damaged lines (e.g. a torn final write) are skipped. */
 export function readResults(dataDir: string): StoredResult[] {
   const file = eventsFile(dataDir);
-  if (!existsSync(file)) return [];
+  if (!exists(file)) return [];
   const out: StoredResult[] = [];
-  for (const line of readFileSync(file, 'utf8').split('\n')) {
+  for (const line of readText(file).split('\n')) {
     if (!line.trim()) continue;
     try {
       const { receivedAt, ...event } = JSON.parse(line) as { receivedAt?: unknown };
@@ -45,7 +45,7 @@ export interface CourseSummary {
   people: number;
   /** People who passed at least once. */
   passed: number;
-  /** Percentage of people who passed; null when the course has no graded questions. */
+  /** Percentage of people with a graded result who passed; null when the course has no graded questions. */
   passRate: number | null;
   /** Average of each person's best score; null when the course has no graded questions. */
   averageBest: number | null;
@@ -76,7 +76,7 @@ export function summarizeResults(results: readonly StoredResult[]): CourseSummar
         courseTitle: rs.at(-1)!.courseTitle,
         people: all.length,
         passed,
-        passRate: scored.length ? Math.round((100 * passed) / all.length) : null,
+        passRate: scored.length ? Math.round((100 * passed) / scored.length) : null,
         averageBest: scored.length ? Math.round(scored.reduce((n, p) => n + (p.best ?? 0), 0) / scored.length) : null,
         lastResult: rs
           .map((r) => r.receivedAt)

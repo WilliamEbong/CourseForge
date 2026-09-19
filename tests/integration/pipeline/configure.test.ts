@@ -107,6 +107,10 @@ describe('course setup and configure', () => {
     expect(effectiveRiskTier(loadManifest(dir))).toBe('standard');
     const { saveManifest } = await import('../../../src/pipeline/store.js');
     saveManifest(dir, { ...loadManifest(dir), human_review: { STORYBOARD: 'human' } });
+    // A level other than recommended ignores hand-written gates, so accepting the suggested answers keeps it.
+    expect((await api.setupInfo({ courseId })).answers.review).toBe('one_shot');
+    const m = loadManifest(dir);
+    saveManifest(dir, { ...m, pipeline: { ...m.pipeline, review_level: 'recommended' } });
     expect((await api.setupInfo({ courseId })).answers.review).toBe('custom');
     await api.configure({ courseId, answers: answers({ review: 'custom' }) });
     expect(loadManifest(dir).human_review).toEqual({ STORYBOARD: 'human' });

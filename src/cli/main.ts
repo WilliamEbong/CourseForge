@@ -5,7 +5,7 @@
 
 import { existsSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
-import { basename, join, resolve } from 'node:path';
+import { basename, extname, join, resolve } from 'node:path';
 import {
   BackendPreferenceSchema,
   EXIT,
@@ -156,7 +156,11 @@ async function sendTestResult(url: string): Promise<string | null> {
       signal: AbortSignal.timeout(20_000),
     });
     if (!res.ok) return `the address answered with error ${res.status}`;
-    return /"ok"\s*:\s*true/.test(await res.text()) ? null : 'the address answered, but not like a results connection';
+    let parsed: { ok?: unknown } | null = null;
+    try {
+      parsed = JSON.parse(await res.text());
+    } catch {}
+    return parsed?.ok === true ? null : 'the address answered, but not like a results connection';
   } catch (err) {
     return err instanceof Error ? err.message : String(err);
   }
@@ -198,29 +202,25 @@ const stageRun = (stage: Stage): Command => ({
 });
 
 /** `configure` / `reconfigure`: re-run the setup wizard for an existing course, current answers preselected. */
-function configureCommand(): Command {
-  return {
-    options: { ...COURSE },
-    run: async (ctx) => {
-      const courseId = required(ctx.values, 'course', 'configure');
-      const api = await ctx.api();
-      const info = await api.setupInfo({ courseId });
-      if (!info.exists) throw usageError(`Course "${courseId}" not found. Create it with \`courseforge new\` or \`courseforge ingest\`.`);
-      if (!interactive(ctx))
-        throw usageError(
-          'configure asks questions, so it needs an interactive terminal (and no --json). Settings can also be edited in course.yaml.',
-        );
-      const answers = await wizard(ctx, info, info.configured);
-      const res = await api.configure({ courseId, answers });
-      print(ctx, res, () =>
-        ['', fillMessage(info.guidance.messages.done, { file: res.manifestPath }), ...setupSummary(info.guidance, courseId, res)].join(
-          '\n',
-        ),
+const configureCommand: Command = {
+  options: { ...COURSE },
+  run: async (ctx) => {
+    const courseId = required(ctx.values, 'course', 'configure');
+    const api = await ctx.api();
+    const info = await api.setupInfo({ courseId });
+    if (!info.exists) throw usageError(`Course "${courseId}" not found. Create it with \`courseforge new\` or \`courseforge ingest\`.`);
+    if (!interactive(ctx))
+      throw usageError(
+        'configure asks questions, so it needs an interactive terminal (and no --json). Settings can also be edited in course.yaml.',
       );
-      return EXIT.OK;
-    },
-  };
-}
+    const answers = await wizard(ctx, info, info.configured);
+    const res = await api.configure({ courseId, answers });
+    print(ctx, res, () =>
+      ['', fillMessage(info.guidance.messages.done, { file: res.manifestPath }), ...setupSummary(info.guidance, courseId, res)].join('\n'),
+    );
+    return EXIT.OK;
+  },
+};
 
 const REVIEW_FLAG: Record<string, ReviewLevel> = {
   'one-shot': 'one_shot',
@@ -246,11 +246,21 @@ const makeCommand: Command = {
     const review = reviewFlag === undefined ? undefined : REVIEW_FLAG[reviewFlag];
     if (reviewFlag !== undefined && !review) throw usageError('make: --review must be one-shot, recommended, every-step or strict');
     const courseId = str(v, 'course');
+    if (courseId && review)
+      throw usageError(`make: --review only applies when creating a course; to change it, run: courseforge configure --course ${courseId}`);
     const api = await ctx.api();
     let setup: SetupAnswers | undefined;
-    const { titleFrom } = await import('../pipeline/make.js');
-    const title = str(v, 'title') ?? titleFrom(prompt, paths[0] ? basename(paths[0]) : '');
-    const info = await api.setupInfo({ title });
+    const { freeId, titleFrom } = await import('../pipeline/make.js');
+    const title = str(v, 'title') ?? titleFrom(prompt, paths[0] ? basename(paths[0], extname(paths[0])) : '');
+    // The id the wizard mentions is the id `make` creates. A course file keeps its import id, so an existing
+    // course is reported rather than duplicated.
+    const courseFile = paths.length === 1 && /\.(html?|json)$/i.test(paths[0]!) ? paths[0] : undefined;
+    const id = courseId
+      ? undefined
+      : courseFile
+        ? (await api.ingestTarget({ file: courseFile, courseId: str(v, 'id'), title: str(v, 'title') })).courseId
+        : (str(v, 'id') ?? freeId(title));
+    const info = await api.setupInfo({ courseId: id, title });
     if (!courseId) {
       if (review) info.answers = { ...info.answers, review };
       if (interactive(ctx)) setup = await wizard(ctx, info, false);
@@ -262,7 +272,7 @@ const makeCommand: Command = {
         ? `${paths.length} file(s) or folder(s)${prompt ? ' and your description' : ''}`
         : 'your description';
     if (!ctx.json) ctx.io.stderr.write(`${fillMessage(info.guidance.messages.makeStart, { title: courseId ?? title, what })}\n`);
-    const res = await api.make({ prompt, paths, title: str(v, 'title'), id: str(v, 'id'), courseId, setup, ...harnessOpts(v) });
+    const res = await api.make({ prompt, paths, title: str(v, 'title'), id, courseId, setup, ...harnessOpts(v) });
     const o = res.outcome;
     print(ctx, res, () => {
       const lines = [formatOutcome(o)];
@@ -422,8 +432,8 @@ const COMMANDS: Record<string, Command> = {
     },
   },
   make: makeCommand,
-  configure: configureCommand(),
-  reconfigure: configureCommand(),
+  configure: configureCommand,
+  reconfigure: configureCommand,
   run: {
     options: { ...COURSE, ...HARNESS, from: S, to: S, gate: S, force: B },
     run: async (ctx) => {
@@ -594,13 +604,24 @@ const COMMANDS: Record<string, Command> = {
           { exitCode: EXIT.ENVIRONMENT },
         );
       const host = str(v, 'host') ?? '127.0.0.1';
+      // 0 lets the system pick a free port; the address actually used is printed below.
+      const wanted = optInt(v, 'port') ?? 8787;
+      if (wanted > 65535) throw usageError('tracker: --port must be between 0 and 65535');
       const dataDir = resolve(str(v, 'data') ?? join(localStateDir(), 'tracker'));
       const { createTrackerServer } = await import('../tracker/server.js');
       const server = createTrackerServer({ dataDir, password });
-      await new Promise<void>((ok, fail) => {
-        server.once('error', fail);
-        server.listen(optInt(v, 'port') ?? 8787, host, ok);
-      });
+      try {
+        await new Promise<void>((ok, fail) => {
+          server.once('error', fail);
+          server.listen(wanted, host, ok);
+        });
+      } catch (err) {
+        throw new CfError(
+          'TRACKER_LISTEN',
+          `The results dashboard could not start on ${host}:${wanted} (${err instanceof Error ? err.message : String(err)}). The port may be in use by another program, or the host address may not belong to this computer. Try another --port or --host.`,
+          { exitCode: EXIT.ENVIRONMENT, cause: err },
+        );
+      }
       const { port } = server.address() as AddressInfo;
       const shown = host === '0.0.0.0' || host === '::' ? 'localhost' : host;
       const info = { dashboard: `http://${shown}:${port}/`, endpoint: `http://${shown}:${port}/api/events`, dataDir };

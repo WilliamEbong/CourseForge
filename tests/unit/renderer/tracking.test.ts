@@ -1,7 +1,7 @@
 /** Learner result tracking: CSP origins, the single-file check's allowed list, event shape and field validation. */
 import { describe, expect, it } from 'vitest';
 import { summarize } from '../../../components/course-ui/src/runtime/grade.js';
-import { buildEvent, findScormApi, learnerProblem } from '../../../components/course-ui/src/runtime/track.js';
+import { buildEvent, createTracker, findScormApi, learnerProblem } from '../../../components/course-ui/src/runtime/track.js';
 import type { CfData, CfTracking } from '../../../components/course-ui/src/runtime/types.js';
 import { effectiveTracking, type Tracking, TrackingEventSchema, trackingOrigins } from '../../../src/core/schemas/index.js';
 import { checkSingleFile } from '../../../src/renderer/checks.js';
@@ -50,6 +50,14 @@ describe('tracking origins and the single-file check', () => {
     expect(TrackingSchema.safeParse({ destination: 'tracker', endpoint: 'http://results.example.org/api/events' }).success).toBe(false);
     expect(TrackingSchema.safeParse({ destination: 'tracker', endpoint: 'http://localhost:8787/api/events' }).success).toBe(true);
     expect(TrackingSchema.safeParse({ destination: 'sheet', endpoint: SHEET }).success).toBe(true);
+    const ok = (endpoint: string) => TrackingSchema.safeParse({ destination: 'tracker', endpoint }).success;
+    // userinfo would make `trackingOrigins` allow the host after the @, not the one the author sees
+    expect(ok('https://script.google.com@evil.example/exec')).toBe(false);
+    expect(ok('https://user:pw@results.example.com/')).toBe(false);
+    expect(ok('https://results.example.com')).toBe(true);
+    expect(ok('http://localhost:8787/')).toBe(true);
+    expect(ok('http://example.com')).toBe(false);
+    expect(ok('https://results.example.com/a b')).toBe(false);
   });
 });
 
@@ -76,6 +84,12 @@ describe('runtime result event', () => {
       total: 0,
       learner: { id: null, email: null },
     });
+  });
+
+  it('a web destination without an address tracks nothing (never posts to the page itself)', () => {
+    const send = () => Promise.reject(new Error('must not send'));
+    const deps = { doc: {} as Document, win: {} as Window, prefs: { get: () => null, set() {}, remove() {} }, announce() {}, send };
+    expect(createTracker({ ...deps, data: { ...data, tracking: { ...t, endpoint: null } } })).toBeNull();
   });
 
   it('learner details are checked per identity choice', () => {

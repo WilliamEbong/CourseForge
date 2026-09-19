@@ -70,6 +70,15 @@ describe('results server', () => {
     expect(codes).toEqual([200, 200, 429]);
   });
 
+  it('password attempts are rate-limited separately from results', async () => {
+    const { base } = await start({ perMinute: 2 });
+    const codes = [];
+    for (let i = 0; i < 3; i++) codes.push((await fetch(`${base}/`, { headers: auth('wrong') })).status);
+    expect(codes).toEqual([401, 401, 429]);
+    expect((await fetch(`${base}/`, { headers: auth() })).status).toBe(429);
+    expect((await post(base, JSON.stringify(event()))).status).toBe(200);
+  });
+
   it('the dashboard, JSON and CSV need the password', async () => {
     const { base } = await start();
     await post(base, JSON.stringify(event()));
@@ -121,6 +130,17 @@ describe('results store', () => {
         lastResult: '2026-09-18T09:40:00Z',
       },
     ]);
+  });
+
+  it('the pass rate counts only people with a graded result', () => {
+    const at = (over: Partial<TrackingEvent>) => ({ ...event(over), receivedAt: '2026-09-18T09:00:00Z' });
+    const [s] = summarizeResults([
+      at({ percent: 90, passed: true }),
+      at({ learner: { name: 'Failed', id: 'S-002', email: null }, percent: 40, passed: false }),
+      // e.g. finished an earlier, ungraded version of the course
+      at({ learner: { name: 'Ungraded', id: 'S-003', email: null }, percent: null, passed: null, correct: 0, total: 0 }),
+    ]);
+    expect(s).toMatchObject({ people: 3, passed: 1, passRate: 50 });
   });
 
   it('CSV cells are quoted and never start a spreadsheet formula', () => {

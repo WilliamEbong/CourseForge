@@ -49,12 +49,24 @@ export const LEARNER_IDENTITIES = ['name', 'name_and_id', 'name_and_email'] as c
 export const LearnerIdentitySchema = z.enum(LEARNER_IDENTITIES);
 export type LearnerIdentity = z.infer<typeof LearnerIdentitySchema>;
 
+/** https, or http to a localhost tracker; no user:password@ part (it would disguise the real host). */
+function validEndpoint(u: string): boolean {
+  if (/\s/.test(u)) return false;
+  try {
+    const url = new URL(u);
+    if (url.username !== '' || url.password !== '') return false;
+    return url.protocol === 'https:' || (url.protocol === 'http:' && (url.hostname === 'localhost' || url.hostname === '127.0.0.1'));
+  } catch {
+    return false;
+  }
+}
+
 export const TrackingSchema = z.object({
   destination: TrackingDestinationSchema.default('none'),
   /** Web address results are sent to (`sheet`, `tracker`); must be https except for a localhost tracker. */
   endpoint: z
     .string()
-    .refine((u) => /^https:\/\/[^\s/]+\/\S*$/.test(u) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/\S*$/.test(u), {
+    .refine(validEndpoint, {
       message: 'endpoint must be an https:// address (or http://localhost for testing)',
     })
     .nullable()

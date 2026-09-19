@@ -33,7 +33,8 @@ export function reviewChoice(manifest: CourseManifest): ReviewChoice {
   if (entries.length === 0) return manifest.pipeline.review_level;
   // Courses configured before review levels existed stored "every step" as a human gate on all stages.
   if (entries.length === STAGES.length && entries.every((m) => m === 'human')) return 'every_step';
-  return 'custom';
+  // Hand-written entries only take effect with `recommended`; other levels ignore them.
+  return manifest.pipeline.review_level === 'recommended' ? 'custom' : manifest.pipeline.review_level;
 }
 
 export function setupFromManifest(manifest: CourseManifest): SetupAnswers {
@@ -81,12 +82,9 @@ export function writeGuides(dir: string, manifest: CourseManifest): string[] {
   const vars = {
     courseId: manifest.course.id,
     title: manifest.course.title,
-    courseDir: dir,
-    trackingDir: out,
     scriptFile: join(out, 'google-apps-script.gs.txt'),
     releaseFile: join(dir, COURSE_FILES.releaseHtml),
     scormFile: join(dir, COURSE_FILES.releaseScorm),
-    identity: manifest.tracking.identity,
   };
   return wanted.map((name) => {
     const path = join(out, name);

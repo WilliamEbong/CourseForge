@@ -127,7 +127,7 @@ export function boot(doc: Document = document, opts: { signal?: AbortSignal } = 
   };
 
   /* ---------------------------------------------------------------- results */
-  const tracker = createTracker({ doc, win: window, data, prefs: store.prefs, announce });
+  const tracker = createTracker({ doc, win: doc.defaultView ?? window, data, prefs: store.prefs, announce });
   const renderResults = () => {
     const summary = summarize(gradedIds, store.state.answers, data.passingPercent);
     // Complete = every graded question answered, or (no graded questions) every required screen visited.

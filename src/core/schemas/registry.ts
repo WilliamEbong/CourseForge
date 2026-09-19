@@ -215,7 +215,6 @@ export const GUIDANCE_MESSAGES = [
   'guides',
   'unfinished',
   'unconfigured',
-  'skipped',
   'landing',
   'rebuild',
   'signoff',

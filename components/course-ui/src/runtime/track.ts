@@ -129,7 +129,10 @@ function panel(doc: Document) {
   return { root, setStatus };
 }
 
-function webTracker(deps: TrackerDeps, t: CfTracking): Tracker {
+function webTracker(deps: TrackerDeps, t: CfTracking): Tracker | null {
+  // No address means untracked: never post to the course's own URL.
+  const endpoint = t.endpoint;
+  if (!endpoint) return null;
   const { doc, data, prefs } = deps;
   const { root, setStatus } = panel(doc);
   const key = `cf:track:${data.courseId}:${data.version}`;
@@ -172,7 +175,7 @@ function webTracker(deps: TrackerDeps, t: CfTracking): Tracker {
     if (fromUser) setStatus('sending', 'Sending your result…');
     try {
       // An opaque (no-cors) response means the request left the browser; there is nothing more to read.
-      await send(t.endpoint ?? '', body);
+      await send(endpoint, body);
       prefs.remove(`${key}:pending`);
       prefs.set(`${key}:sent`, '1');
       showRecorded();

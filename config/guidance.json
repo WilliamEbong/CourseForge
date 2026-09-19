@@ -71,7 +71,7 @@
     },
     "review": {
       "prompt": "How much do you want to check CourseForge's work yourself?",
-      "help": "CourseForge always checks its own work with a panel of reviewers and fixes what they find. You can also ask it to stop so you can read and approve its work. You can change this later.",
+      "help": "CourseForge always checks its own work with a panel of reviewers and fixes what they find. You can also ask it to stop so you can read and approve its work. Choosing a level replaces any per-step review settings someone wrote by hand in course.yaml. You can change this later.",
       "options": [
         {
           "value": "one_shot",
@@ -175,7 +175,6 @@
     "guides": "There is a part only you can do. Step-by-step instructions are in: {files}",
     "unfinished": "Results tracking is not finished yet: the web address that results are sent to is still missing, so the course is built without tracking for now. Finish it with: courseforge configure --course {id}",
     "unconfigured": "This course has not been set up yet. Run: courseforge configure --course {id}",
-    "skipped": "Setup questions were skipped because this is not an interactive terminal; default settings were used. Change them any time with: courseforge configure --course {id}",
     "landing": "This course starts at step {number} of 11, \"{name}\": {blurb}\nNext: {next}",
     "rebuild": "The results tracking settings changed, so the finished course must be rebuilt. Run: courseforge run --course {id} --from build",
     "invalidText": "That doesn't look right. Check the description above and try again, or press Enter to accept the suggestion.",

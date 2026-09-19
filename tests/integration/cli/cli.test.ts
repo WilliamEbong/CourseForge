@@ -1,5 +1,9 @@
 /** CLI → PipelineApi dispatch with an injected fake API (argument mapping, output, exit-code propagation). */
-import { describe, expect, it } from 'vitest';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { type AddressInfo, createServer } from 'node:net';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { describe, expect, it, vi } from 'vitest';
 import { main } from '../../../src/cli/main.js';
 import { CfError } from '../../../src/core/errors.js';
 import type { PipelineApi, RunOutcome, SetupAnswers } from '../../../src/pipeline/api.js';
@@ -253,5 +257,55 @@ describe('cli dispatch', () => {
     await main(['make', 'Ladder safety'], capture().io, { api: quiet.api });
     expect(made(quiet.calls)).toBeDefined();
     expect(made(quiet.calls)?.setup).toBeUndefined();
+  });
+
+  it('make tells the wizard the id it will create, and refuses --review for an existing course', async () => {
+    const { api, calls } = fakeApi();
+    await main(['make', 'Ladder safety for night shifts'], capture().io, { api, ask: async () => '' });
+    expect(calls.find((c) => c.op === 'setupInfo')?.args).toMatchObject({ courseId: 'ladder-safety-for-night-shifts' });
+    expect(calls.find((c) => c.op === 'make')?.args).toMatchObject({ id: 'ladder-safety-for-night-shifts' });
+    // A course file keeps its import id (not a numbered free id), so make can report an existing course.
+    const file = fakeApi();
+    const html = join(mkdtempSync(join(tmpdir(), 'cf-make-')), 'draft.html');
+    writeFileSync(html, '<html></html>');
+    await main(['make', html], capture().io, { api: file.api });
+    expect(file.calls.map((c) => c.op)).toEqual(['ingestTarget', 'setupInfo', 'make']);
+    expect(file.calls.find((c) => c.op === 'make')?.args).toMatchObject({ id: 'x' });
+    const { io, out } = capture();
+    expect(await main(['make', '--course', 'x', '--review', 'one-shot'], io, { api })).toBe(2);
+    expect(out.stderr).toContain('courseforge configure --course x');
+  });
+
+  it('the connection test accepts only a JSON {"ok":true} reply', async () => {
+    const replies = (url: string) => ['', '', '', '4', '', url];
+    const probe = async (body: string) => {
+      vi.stubGlobal('fetch', async () => new Response(body));
+      const r = replies('https://results.example/api/events');
+      const { io, out } = capture();
+      await main(['new', 'Probe', '--id', 'probe'], io, { api: fakeApi().api, ask: async () => r.shift() ?? '' });
+      vi.unstubAllGlobals();
+      return out.stdout;
+    };
+    expect(await probe('{"ok":true}')).toContain('It worked');
+    expect(await probe('<p>"ok": true</p>')).toContain('not like a results connection');
+  });
+
+  it('tracker: a bad port is a usage error; a port in use is an environment error', async () => {
+    vi.stubEnv('COURSEFORGE_TRACKER_PASSWORD', 'test-password');
+    const data = mkdtempSync(join(tmpdir(), 'cf-tracker-'));
+    try {
+      expect(await main(['tracker', '--port', '70000', '--data', data], capture().io)).toBe(2);
+      const busy = createServer();
+      await new Promise<void>((ok) => busy.listen(0, '127.0.0.1', ok));
+      const { port } = busy.address() as AddressInfo;
+      const { io, out } = capture();
+      expect(await main(['tracker', '--port', String(port), '--data', data], io)).toBe(3);
+      expect(out.stderr).toContain('could not start');
+      expect(out.stderr).not.toContain('internal error');
+      await new Promise((done) => busy.close(done));
+    } finally {
+      vi.unstubAllEnvs();
+      rmSync(data, { recursive: true, force: true });
+    }
   });
 });

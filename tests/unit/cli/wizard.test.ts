@@ -139,6 +139,8 @@ describe('setup wizard', () => {
     const current: SetupAnswers = { ...base, tracking: { destination: 'sheet', endpoint: SHEET, identity: 'name_and_id', id_label: 'X' } };
     const off = script(['', '', '', '1'], { current, guidance: guidanceWithAllDestinations() });
     expect((await off.run()).tracking).toEqual(base.tracking);
+    const toLms = script(['', '', '', '2'], { current, guidance: guidanceWithAllDestinations() });
+    expect((await toLms.run()).tracking).toEqual({ ...base.tracking, destination: 'lms' });
   });
 
   it('a closed input stream cannot loop forever', async () => {

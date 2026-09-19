@@ -80,25 +80,25 @@ export async function runWizard(o: WizardOptions): Promise<SetupAnswers> {
   const review = await choose<ReviewChoice>(g.questions.review, cur.review, (v) => v !== 'custom' || cur.review === 'custom');
   const destination = await choose<TrackingDestination>(g.questions.tracking, cur.tracking.destination);
 
-  let tracking = { destination, endpoint: null as string | null, identity: cur.tracking.identity, id_label: cur.tracking.id_label };
-  if (destination === 'sheet' || destination === 'tracker') {
-    tracking.identity = await choose<LearnerIdentity>(g.questions.identity, cur.tracking.identity);
-    if (tracking.identity === 'name_and_id')
-      tracking.id_label = (await text(g.questions.idLabel, cur.tracking.id_label ?? '', (v) => v.length <= 40, m.invalidText)) || null;
+  // Learner identity and the endpoint apply only to web destinations; `lms` and `none` get the schema defaults.
+  const web = destination === 'sheet' || destination === 'tracker';
+  const identity: LearnerIdentity = web ? await choose<LearnerIdentity>(g.questions.identity, cur.tracking.identity) : 'name';
+  const id_label = !web
+    ? null
+    : identity === 'name_and_id'
+      ? (await text(g.questions.idLabel, cur.tracking.id_label ?? '', (v) => v.length <= 40, m.invalidText)) || null
+      : cur.tracking.id_label;
+  let endpoint: string | null = null;
+  if (web) {
     const keep = cur.tracking.destination === destination ? (cur.tracking.endpoint ?? '') : '';
     const valid =
-      destination === 'sheet'
-        ? (v: string) => SHEET_URL.test(v)
-        : (v: string) => TrackingSchema.shape.endpoint.safeParse(v).success && v !== '';
-    const url = await text(destination === 'sheet' ? g.questions.sheetUrl : g.questions.trackerUrl, keep, valid, m.invalidUrl);
-    tracking.endpoint = url || null;
-    if (tracking.endpoint && tracking.endpoint !== cur.tracking.endpoint && o.testEndpoint) {
+      destination === 'sheet' ? (v: string) => SHEET_URL.test(v) : (v: string) => TrackingSchema.shape.endpoint.safeParse(v).success;
+    endpoint = (await text(destination === 'sheet' ? g.questions.sheetUrl : g.questions.trackerUrl, keep, valid, m.invalidUrl)) || null;
+    if (endpoint && endpoint !== cur.tracking.endpoint && o.testEndpoint) {
       io.write(`${m.testSending}\n`);
-      const problem = await o.testEndpoint(tracking.endpoint);
+      const problem = await o.testEndpoint(endpoint);
       io.write(`${problem ? fillMessage(m.testFailed, { detail: problem, id: o.courseId }) : m.testOk}\n`);
     }
-  } else if (destination === 'none') {
-    tracking = { destination, endpoint: null, identity: 'name', id_label: null };
   }
-  return { language, audience, review, tracking };
+  return { language, audience, review, tracking: { destination, endpoint, identity, id_label } };
 }

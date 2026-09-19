@@ -3,7 +3,7 @@
  *
  * - `POST /api/events`: tracked courses send one result here (no login; validated, size- and rate-limited).
  * - `GET /`, `GET /api/events`, `GET /api/events.csv`: the dashboard, JSON and CSV, behind a password (HTTP Basic,
- *   from COURSEFORGE_TRACKER_PASSWORD).
+ *   from COURSEFORGE_TRACKER_PASSWORD; rate-limited like results, in a separate count).
  *
  * Plain HTTP only: to use it over the internet, put it behind an HTTPS reverse proxy (docs/user-guide/tracking.md).
  */
@@ -57,7 +57,9 @@ export function createTrackerServer(o: TrackerOptions): Server {
   const now = o.now ?? (() => new Date());
   const perMinute = o.perMinute ?? 60;
   const expected = digest(o.password);
+  // Results and dashboard requests are counted apart, so learners posting from an office network never lock staff out.
   const hits = new Map<string, { windowStart: number; count: number }>();
+  const dashboardHits = new Map<string, { windowStart: number; count: number }>();
 
   const authorised = (req: IncomingMessage) => {
     const m = /^Basic\s+(.+)$/i.exec(req.headers.authorization ?? '');
@@ -66,13 +68,13 @@ export function createTrackerServer(o: TrackerOptions): Server {
     const password = decoded.slice(decoded.indexOf(':') + 1);
     return timingSafeEqual(digest(password), expected);
   };
-  const limited = (req: IncomingMessage) => {
+  const limited = (req: IncomingMessage, counts = hits) => {
     const key = req.socket.remoteAddress ?? '';
     const t = now().getTime();
-    const h = hits.get(key);
+    const h = counts.get(key);
     if (!h || t - h.windowStart >= 60_000) {
-      if (hits.size > 10_000) hits.clear(); // ponytail: crude cap; a real deployment sits behind a proxy that rate-limits
-      hits.set(key, { windowStart: t, count: 1 });
+      if (counts.size > 10_000) counts.clear(); // ponytail: crude cap; a real deployment sits behind a proxy that rate-limits
+      counts.set(key, { windowStart: t, count: 1 });
       return false;
     }
     h.count++;
@@ -103,6 +105,8 @@ export function createTrackerServer(o: TrackerOptions): Server {
       }
       if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { ok: false, error: 'method not allowed' });
       if (!['/', '/api/events', '/api/events.csv'].includes(url.pathname)) return json(res, 404, { ok: false, error: 'not found' });
+      // Checked before the password, so it cannot be guessed at full speed.
+      if (limited(req, dashboardHits)) return json(res, 429, { ok: false, error: 'too many requests; try again in a minute' });
       if (!authorised(req))
         return send(res, 401, 'Password required', {
           'WWW-Authenticate': 'Basic realm="CourseForge results", charset="UTF-8"',
