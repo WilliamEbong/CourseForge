@@ -40,8 +40,8 @@ describe('course setup and configure', () => {
     const m = loadManifest(courseDir(courseId));
     expect(m.course.language).toBe('fr');
     expect(m.course.audience).toBe('warehouse staff');
-    expect(Object.keys(m.human_review)).toHaveLength(11);
-    expect(Object.values(m.human_review).every((g) => g === 'human')).toBe(true);
+    expect(m.pipeline.review_level).toBe('every_step');
+    expect(m.human_review).toEqual({});
     expect(m.setup.configured_at).not.toBeNull();
     expect((await api.setupInfo({ courseId })).answers.review).toBe('every_step');
     expect((await api.status({ courseId })).notices).toEqual([]);
@@ -94,6 +94,22 @@ describe('course setup and configure', () => {
     expect(res.unfinished).toBe(true);
     expect(res.trackingChanged).toBe(false);
     expect((await api.status({ courseId })).notices.join('\n')).toContain('not finished yet');
+  });
+
+  it('review levels round-trip; hand-written gates show as custom and survive "keep custom"', async () => {
+    const { courseId } = await api.newCourse({ title: 'Levels course', setup: answers({ review: 'strict' }) });
+    const dir = courseDir(courseId);
+    expect((await api.setupInfo({ courseId })).answers.review).toBe('strict');
+    const { effectiveRiskTier } = await import('../../../src/core/schemas/index.js');
+    expect(effectiveRiskTier(loadManifest(dir))).toBe('high_stakes');
+    await api.configure({ courseId, answers: answers({ review: 'one_shot' }) });
+    expect(loadManifest(dir).pipeline.review_level).toBe('one_shot');
+    expect(effectiveRiskTier(loadManifest(dir))).toBe('standard');
+    const { saveManifest } = await import('../../../src/pipeline/store.js');
+    saveManifest(dir, { ...loadManifest(dir), human_review: { STORYBOARD: 'human' } });
+    expect((await api.setupInfo({ courseId })).answers.review).toBe('custom');
+    await api.configure({ courseId, answers: answers({ review: 'custom' }) });
+    expect(loadManifest(dir).human_review).toEqual({ STORYBOARD: 'human' });
   });
 
   it('configure refuses a course that does not exist', async () => {

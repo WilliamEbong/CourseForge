@@ -59,11 +59,16 @@ describe('setup wizard', () => {
   });
 
   it('re-asks on invalid input and accepts a valid answer', async () => {
-    const w = script(['english!', 'de', '', '9', 'x', '2']);
+    const w = script(['english!', 'de', '', '9', 'x', '3']);
     const a = await w.run();
     expect(a.language).toBe('de');
     expect(a.review).toBe('every_step');
-    expect(w.out()).toContain('Please type a number from 1 to 2');
+    expect(w.out()).toContain('Please type a number from 1 to 4');
+  });
+
+  it('offers one-shot, recommended, every step and strict review', async () => {
+    const picks = await Promise.all(['1', '2', '3', '4'].map((n) => script(['', '', n]).run()));
+    expect(picks.map((a) => a.review)).toEqual(['one_shot', 'recommended', 'every_step', 'strict']);
   });
 
   it('offers "keep custom settings" only when the current review settings are custom', async () => {

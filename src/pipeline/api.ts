@@ -5,7 +5,7 @@
  * Implementations live in the pipeline modules; this file is the stable surface.
  */
 import type { BackendPreference, GateMode, HarnessName, IntakeMode, Stage, StageStatus } from '../core/enums.js';
-import type { Finding, GateState, GuidanceConfig, IntakeReport, Tracking } from '../core/schemas/index.js';
+import type { Finding, GateState, GuidanceConfig, IntakeReport, ReviewLevel, Tracking } from '../core/schemas/index.js';
 
 export interface HarnessOptions {
   /** Backend preference for this invocation (overrides course.yaml). */
@@ -25,8 +25,11 @@ export interface RunOutcome {
   exitCode: number;
 }
 
-/** How much the author wants to approve personally (maps onto `course.yaml` `human_review`). */
-export type ReviewChoice = 'recommended' | 'every_step' | 'custom';
+/**
+ * How much the author wants to approve personally: a review level (`course.yaml` `pipeline.review_level`), or
+ * `custom` to keep hand-written `human_review` gates.
+ */
+export type ReviewChoice = ReviewLevel | 'custom';
 
 /** Everything the setup wizard asks. Applied to `course.yaml` by `newCourse`/`ingest` (new courses) or `configure`. */
 export interface SetupAnswers {
@@ -74,6 +77,31 @@ export interface NewCourseOptions extends HarnessOptions {
   gate?: GateMode;
   /** Setup wizard answers; when absent the defaults apply and the course counts as not yet configured. */
   setup?: SetupAnswers;
+  /** The request in the author's own words (replaces the audience/duration/notes summary). */
+  request?: string;
+}
+
+export interface MakeOptions extends HarnessOptions {
+  /** What the course should be about, in the author's words (may be empty when documents are given). */
+  prompt?: string;
+  /** Documents, folders of documents, or one HTML/JSON course file to finish. */
+  paths: string[];
+  title?: string;
+  id?: string;
+  /** Continue an existing course to release instead of creating one. */
+  courseId?: string;
+  setup?: SetupAnswers;
+}
+
+export interface MakeResult {
+  courseId: string;
+  /** What `make` was given. */
+  input: 'prompt' | 'documents' | 'course' | 'existing';
+  created: boolean;
+  outcome: RunOutcome;
+  guides: string[];
+  /** The documents were longer than the source-material limit and were shortened. */
+  truncated?: boolean;
 }
 
 export interface IngestOptions extends HarnessOptions {
@@ -177,10 +205,12 @@ export interface PipelineApi {
   ingest(opts: IngestOptions): Promise<{ courseId: string; report: IntakeReport; guides: string[] }>;
   /** Which course an `ingest` of this file would target, and whether it would create it. No side effects. */
   ingestTarget(opts: { file: string; courseId?: string; title?: string }): Promise<{ courseId: string; title: string; isNew: boolean }>;
-  /** Current setup answers (defaults for a course that does not exist yet) plus the plain-language guidance. */
-  setupInfo(opts: { courseId: string; title?: string }): Promise<SetupInfo>;
+  /** Current setup answers (defaults for a course that does not exist yet, or when no ID is given) plus the guidance. */
+  setupInfo(opts: { courseId?: string; title?: string }): Promise<SetupInfo>;
   /** Saves setup answers to course.yaml, writes instruction files, and invalidates the build if tracking changed. */
   configure(opts: { courseId: string; answers: SetupAnswers }): Promise<ConfigureResult>;
+  /** Makes a course from a prompt, documents or a half-finished course and runs it towards release. */
+  make(opts: MakeOptions): Promise<MakeResult>;
   run(opts: RunOptions): Promise<RunOutcome>;
   continueRun(opts: { courseId: string } & HarnessOptions): Promise<RunOutcome>;
   review(opts: { courseId: string; stage?: Stage } & HarnessOptions): Promise<RunOutcome>;

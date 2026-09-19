@@ -160,7 +160,11 @@ under `courses/spotting-phishing-emails/storyboard/`, then:
 ./courseforge continue --course spotting-phishing-emails
 ```
 
-Pass `--gate auto` to `new` to run without pausing (standard-risk courses only). If QA finds blocking issues,
+For one command from whatever you have (a description, documents, or a half-finished course) to a finished
+course, use `courseforge make "<what the course is about>" [files or folders] --review one-shot`. It runs
+unattended and stops once, before release, for your approval (see
+[docs/user-guide/human-review.md](docs/user-guide/human-review.md)). Pass `--gate auto` to `new` to run without
+pausing (standard-risk courses only). If QA finds blocking issues,
 the run pauses at COURSE_QA with a consolidated review in `review/consolidated-review.md`.
 
 ### Real run

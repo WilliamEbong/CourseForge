@@ -54,7 +54,7 @@
     },
     "RELEASE": {
       "name": "Release",
-      "blurb": "A final check that nothing serious is still open. If everything passes, the finished course and its reports are saved in the course's release folder.",
+      "blurb": "A final check that nothing serious is still open. If everything passes, the finished course and its reports are saved in the course's release folder. If you chose \"ask me once at the end\", this is where CourseForge stops for your approval.",
       "next": "Nothing more: the course is ready to share with learners."
     }
   },
@@ -71,17 +71,27 @@
     },
     "review": {
       "prompt": "How much do you want to check CourseForge's work yourself?",
-      "help": "CourseForge always checks its own work. You can also ask it to pause so you can read and approve each step before it carries on.",
+      "help": "CourseForge always checks its own work with a panel of reviewers and fixes what they find. You can also ask it to stop so you can read and approve its work. You can change this later.",
       "options": [
+        {
+          "value": "one_shot",
+          "label": "Do it all, then ask me once at the end",
+          "blurb": "CourseForge makes the whole course on its own and stops only once, when the course is finished and tested, so you can check it before it is released. Anything it could not fix is listed for you there. Best when you want to give it your material and come back later."
+        },
         {
           "value": "recommended",
           "label": "Only where it matters (recommended)",
-          "blurb": "CourseForge pauses for you at the key points, and at more of them when the subject is high-risk, such as health, safety or law."
+          "blurb": "CourseForge stops for you at a few key points: after it drafts the screens, and at more points when the subject is high-risk, such as health, safety or law."
         },
         {
           "value": "every_step",
           "label": "Let me approve every step",
-          "blurb": "CourseForge pauses after each of the 11 steps and waits for you to approve it. Slower, but you see everything."
+          "blurb": "CourseForge stops after each of the 11 steps and waits for you to approve it. Slower, but you see everything. It does not change its own work without you: you decide what gets fixed."
+        },
+        {
+          "value": "strict",
+          "label": "Every step, with the strictest checks",
+          "blurb": "Like approving every step, and every course is also treated as high-risk: stricter research rules (official and current sources, the right country or region) and extra checks, whatever the subject. For regulated or safety-critical training."
         },
         {
           "value": "custom",
@@ -168,6 +178,8 @@
     "skipped": "Setup questions were skipped because this is not an interactive terminal; default settings were used. Change them any time with: courseforge configure --course {id}",
     "landing": "This course starts at step {number} of 11, \"{name}\": {blurb}\nNext: {next}",
     "rebuild": "The results tracking settings changed, so the finished course must be rebuilt. Run: courseforge run --course {id} --from build",
-    "invalidText": "That doesn't look right. Check the description above and try again, or press Enter to accept the suggestion."
+    "invalidText": "That doesn't look right. Check the description above and try again, or press Enter to accept the suggestion.",
+    "signoff": "The course is finished and waiting for your approval.\n  Look at it: {file}\n  See what was checked and anything still open: courseforge findings list --course {id}\n  If you are happy, release it with:\n    courseforge gate approve --course {id} --stage release\n    courseforge continue --course {id}\n  If something needs changing, say what, and CourseForge will fix it and ask again:\n    courseforge gate reject --course {id} --stage release --instructions \"what to change\"",
+    "makeStart": "Making \"{title}\" from {what}. This can take a long time; progress is shown below. You can stop at any time with Ctrl+C."
   }
 }

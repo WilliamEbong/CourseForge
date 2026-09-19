@@ -9,7 +9,7 @@ import { type HarnessFailure, STAGE_CODES } from '../core/enums.js';
 import { CfError } from '../core/errors.js';
 import { diffTrees, exists, hashTree, writeJson } from '../core/fsx.js';
 import { COURSE_FILES, localStateDir, matchesPattern } from '../core/paths.js';
-import { isSchemaName, SCHEMAS, type TaskSpec } from '../core/schemas/index.js';
+import { effectiveRiskTier, isSchemaName, SCHEMAS, type TaskSpec } from '../core/schemas/index.js';
 import { toWireSchema } from '../core/wire-schema.js';
 import { createHarness } from '../harness/factory.js';
 import { assemblePrompt } from '../harness/prompt.js';
@@ -70,7 +70,7 @@ function templateVars(ctx: RunContext, spec: TaskSpec, o: TaskRunOptions): Recor
     subjectTitle: o.subjectTitle ?? '',
     audience: c.audience ?? 'Not specified',
     language: c.language,
-    riskTier: c.risk_tier,
+    riskTier: effectiveRiskTier(ctx.manifest),
     jurisdiction: c.jurisdiction ?? 'Not specified',
     durationMinutes: String(c.target_duration_minutes ?? 'Not specified'),
     cycle: String(o.cycle),

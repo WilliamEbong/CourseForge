@@ -20,12 +20,13 @@ import { CfError, usageError } from '../core/errors.js';
 import { ensureDir, exists, readText, removePath, writeAtomic, writeJson } from '../core/fsx.js';
 import { slugify } from '../core/ids.js';
 import { COURSE_FILES, courseDir, coursesDir, localStateDir, repoRoot } from '../core/paths.js';
-import { CourseManifestSchema, type Finding, type TaskSpec } from '../core/schemas/index.js';
+import { CourseManifestSchema, effectiveRiskTier, type Finding, type TaskSpec } from '../core/schemas/index.js';
 import { ingestFile } from '../ingestion/intake.js';
 import { loadRegistries } from '../routing/registries.js';
 import { runAgentTask } from './agent.js';
 import type { HarnessOptions, PipelineApi, RunOutcome, SetupAnswers, StatusReport } from './api.js';
 import { loadStageFindings, saveStageFindings } from './findings-store.js';
+import { make } from './make.js';
 import { defaultFromStage, openContext, runRange } from './runner.js';
 import { scormInfo, scormPackage } from './scorm.js';
 import { applySetup, configureCourse, setupFromManifest, setupNotices, writeGuides } from './setup.js';
@@ -195,7 +196,9 @@ export const pipelineApi: PipelineApi = {
     const notes = opts.notesFile ? readText(resolve(opts.notesFile)) : '';
     writeAtomic(
       join(dir, 'input/concept-request.md'),
-      `# ${opts.title}\n\n${opts.audience ? `Audience: ${opts.audience}\n\n` : ''}${opts.durationMinutes ? `Target duration: ${opts.durationMinutes} minutes\n\n` : ''}${opts.jurisdiction ? `Jurisdiction: ${opts.jurisdiction}\n\n` : ''}${notes}\n`,
+      opts.request !== undefined
+        ? `# ${opts.title}\n\n${opts.request}\n`
+        : `# ${opts.title}\n\n${opts.audience ? `Audience: ${opts.audience}\n\n` : ''}${opts.durationMinutes ? `Target duration: ${opts.durationMinutes} minutes\n\n` : ''}${opts.jurisdiction ? `Jurisdiction: ${opts.jurisdiction}\n\n` : ''}${notes}\n`,
     );
     registerArtifact(dir, {
       stage: 'CONCEPT',
@@ -218,10 +221,11 @@ export const pipelineApi: PipelineApi = {
 
   async setupInfo(opts) {
     const guidance = loadRegistries().guidance;
-    if (!courseExists(opts.courseId)) {
-      const defaults = CourseManifestSchema.parse({ course: { id: opts.courseId, title: opts.title ?? opts.courseId } });
+    if (!opts.courseId || !courseExists(opts.courseId)) {
+      const courseId = opts.courseId ?? 'new-course';
+      const defaults = CourseManifestSchema.parse({ course: { id: courseId, title: opts.title ?? courseId } });
       return {
-        courseId: opts.courseId,
+        courseId,
         title: defaults.course.title,
         exists: false,
         configured: false,
@@ -348,6 +352,10 @@ export const pipelineApi: PipelineApi = {
 
   run,
 
+  async make(opts) {
+    return make(pipelineApi, opts, now, progressSink());
+  },
+
   async continueRun(opts) {
     return run({ courseId: opts.courseId, backend: opts.backend, harness: opts.harness });
   },
@@ -433,7 +441,7 @@ export const pipelineApi: PipelineApi = {
     return {
       courseId: opts.courseId,
       title: manifest.course.title,
-      riskTier: manifest.course.risk_tier,
+      riskTier: effectiveRiskTier(manifest),
       currentStage: state.currentStage,
       targetStage: state.targetStage,
       activeRunId: state.activeRunId,

@@ -238,3 +238,15 @@ Decisions taken during the unattended build, one line each.
   `xsi:schemaLocation` are not bundled; common LMSs and SCORM Cloud accept packages without them. This goes on the
   manual live-check list.
 - `zipDirectory` now delegates to a new `zipEntries`; the byte layout is unchanged.
+
+### Follow-up: review levels and `make` (ADR 0014)
+
+- One-shot pauses once before release for every course (the author's answer: "pause only at the end" for all),
+  not only high-stakes ones; the run itself needs no attention.
+- `strict` = every step + effective risk tier `high_stakes` (computed, not written to `course.yaml`, so leaving
+  strict restores the course's own tier).
+- `make` treats exactly one `.html`/`.json` file as a half-finished course; any other file set (including a
+  half-finished storyboard `.docx`) is source material for a new course. Source material is one Markdown file
+  (optional stage input) rather than per-document artifacts, because stage inputs are single paths.
+- Lock conflicts and stage failures still stop a one-shot run: the first involves content the author locked,
+  the second cannot be carried.

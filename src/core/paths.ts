@@ -96,6 +96,8 @@ export const COURSE_FILES = {
   routingDecisions: 'logs/routing-decisions.jsonl',
   runEvents: 'logs/run-events.jsonl',
   tasks: 'logs/tasks',
+  /** Text of the author's own documents given to `make`, one section per document (read by CONCEPT and research). */
+  sourceMaterial: 'input/source-material.md',
   releaseHtml: 'release/course.html',
   /** SCORM 1.2 package, written by RELEASE when the course reports to an LMS. */
   releaseScorm: 'release/course-scorm.zip',

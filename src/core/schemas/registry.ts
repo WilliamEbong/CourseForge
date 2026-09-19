@@ -218,6 +218,8 @@ export const GUIDANCE_MESSAGES = [
   'skipped',
   'landing',
   'rebuild',
+  'signoff',
+  'makeStart',
 ] as const;
 
 /** One setup-wizard choice: `value` is a closed code, `label`/`blurb` are plain language for non-specialists. */
@@ -331,7 +333,7 @@ export const ExecutionPlanSchema = z.object({
     }),
   ),
   fallbacks: FallbacksConfigSchema,
-  humanGate: z.object({ mode: GateModeSchema, source: z.enum(['policy', 'stage-default', 'course', 'risk-floor', 'cli']) }),
+  humanGate: z.object({ mode: GateModeSchema, source: z.enum(['policy', 'stage-default', 'course', 'risk-floor', 'cli', 'review-level']) }),
   maxRepairCycles: z.number().int().min(0),
   onCapReached: z.enum(['human', 'fail']),
   repairSeverities: z.array(SeveritySchema),

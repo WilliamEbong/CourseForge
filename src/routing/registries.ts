@@ -17,6 +17,7 @@ import {
   GuidanceConfigSchema,
   isSchemaName,
   LEARNER_IDENTITIES,
+  REVIEW_LEVELS,
   type ReviewersConfig,
   ReviewersConfigSchema,
   type ReviewPolicy,
@@ -133,7 +134,7 @@ export function crossCheck(r: Omit<Registries, 'hashes'>, iconsDir: string = luc
 
   // Setup-wizard choices must be codes the code understands (review codes are fixed in src/pipeline/setup.ts).
   const choiceSets: Record<string, readonly string[]> = {
-    review: ['recommended', 'every_step', 'custom'],
+    review: [...REVIEW_LEVELS, 'custom'],
     tracking: TRACKING_DESTINATIONS,
     identity: LEARNER_IDENTITIES,
   };

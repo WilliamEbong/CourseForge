@@ -489,6 +489,14 @@
         "rebuild": {
           "type": "string",
           "minLength": 1
+        },
+        "signoff": {
+          "type": "string",
+          "minLength": 1
+        },
+        "makeStart": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -506,7 +514,9 @@
         "unconfigured",
         "skipped",
         "landing",
-        "rebuild"
+        "rebuild",
+        "signoff",
+        "makeStart"
       ],
       "additionalProperties": false
     }

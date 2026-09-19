@@ -19,6 +19,10 @@ The planned section, its research questions and the brief's notes for it:
 4. Open and read every source you cite. A search snippet is not a reading.
 5. Write the section, then build the source and claim ledger from what you wrote.
 
+## The author's own documents
+
+If `input/source-material.md` is listed under Inputs, it holds documents the author supplied (their policies, procedures, notes or reference material), one section per document. Read the parts relevant to this section before searching the web, and use them as sources of type `internal`: title = the document name as given in its heading, no URL, locator = the heading or page. They are authoritative for how the author's organisation works; for legal requirements, statistics and scientific facts, still cite the external authoritative source, and when the author's document conflicts with one, report both.
+
 ## Hard rules
 
 - Never fabricate a source, URL, DOI, section number, date, quotation or statistic. If you cannot confirm something, leave it out or state the uncertainty. A gap is acceptable; an invented citation is a blocker.

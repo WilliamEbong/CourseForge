@@ -67,7 +67,17 @@ Stop at a stage, read the output, then continue:
 Add background material with `--notes <file>` on `new`. Research stages use the agent's web tools. A full course
 takes many agent calls; start with a narrow topic.
 
-## 3. Start from something you already have
+## 3. One command: give it what you have, come back when it is done
+
+```sh
+./courseforge make "Chemical safety data sheets for new warehouse staff" ./our-policies/ --review one-shot
+```
+
+`make` accepts a description, documents or folders, or a half-finished course (one `.html` or `.json` file). In a
+terminal it asks the setup questions first; choose **Do it all, then ask me once at the end**. It then works
+unattended and stops once, when the course is finished and tested, telling you where to look and how to approve.
+
+## 4. Start from something you already have
 
 ```sh
 ./courseforge ingest path/to/storyboard.md --course my-course --stage storyboard --mode improve

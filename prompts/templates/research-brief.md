@@ -11,6 +11,10 @@ The brief is the contract for the research dossier. Researchers will work one pl
 
 Read the concept brief first. Carry its audience, scope, exclusions, jurisdiction and high-stakes assumptions forward. Do not quietly widen or narrow them; if you must, say so in `purpose`.
 
+## The author's own documents
+
+If `input/source-material.md` is listed under Inputs, it holds documents the author supplied (their policies, procedures, notes or reference material), one section per document. Plan the research around them: the author's documents describe how their organisation does things, so the course must reflect them. List `internal` in `sourceHierarchy` with a rationale that says what the author's documents may be relied on for (local procedures, roles, responsibilities) and what still needs an external authoritative source (legal requirements, scientific facts).
+
 ## Field guidance
 
 - `purpose`: why the research is needed and which course decisions it must support.

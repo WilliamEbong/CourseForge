@@ -7,7 +7,7 @@
       "description": "Normalise the concept request into a scoped concept brief",
       "inputs": {
         "required": ["input/concept-request.md"],
-        "optional": []
+        "optional": ["input/source-material.md"]
       },
       "outputs": ["input/concept.json", "input/concept.md"],
       "artifacts": {
@@ -51,7 +51,7 @@
       "description": "Plan the research: questions, source hierarchy, dossier sections",
       "inputs": {
         "required": ["input/concept.json"],
-        "optional": []
+        "optional": ["input/source-material.md"]
       },
       "outputs": ["research/research-brief.json", "research/research-brief.md"],
       "artifacts": {
@@ -97,7 +97,7 @@
       "description": "Research each planned section into a cited dossier with sources and claims",
       "inputs": {
         "required": ["research/research-brief.json"],
-        "optional": []
+        "optional": ["input/source-material.md"]
       },
       "outputs": ["research/research-dossier.json", "research/research-dossier.md", "research/sources.jsonl", "research/claims.jsonl"],
       "artifacts": {

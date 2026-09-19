@@ -18,5 +18,6 @@ decision, and its consequences. Status of all records below: **accepted** (2026-
 | [0011](0011-storybook-dev-only.md) | Storybook is a development-only tool |
 | [0012](0012-phased-scope.md) | Phased scope: PPTX, AI imagery, SCORM/xAPI, remaining native archetypes |
 | [0013](0013-optional-tracking.md) | Optional learner tracking; the offline invariant is relaxed per course to one declared origin |
+| [0014](0014-review-levels-and-one-shot.md) | Review levels (one-shot, recommended, every step, strict) and `make` |
 
 New ADRs: copy the structure of an existing one, number sequentially, and link it here.

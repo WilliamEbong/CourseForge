@@ -23,6 +23,7 @@ pipeline:
   backend_fallback: false             # allow switching backend when the chosen one is unavailable
   max_repair_cycles: null             # 0–10; null = config/review-policy.json
   visual_family: null                 # preferred family for VISUAL_DIRECTION (see below)
+  review_level: recommended           # one_shot | recommended | every_step | strict (see human-review.md)
 human_review:                         # per-stage gate: auto | hybrid | human (optional/required accepted)
   RESEARCH_DOSSIER: hybrid
   STORYBOARD: human

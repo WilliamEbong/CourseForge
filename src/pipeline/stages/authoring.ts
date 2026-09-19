@@ -18,6 +18,7 @@ import {
   DesignDirectionSchema,
   type DossierSectionAgent,
   type EditorialResult,
+  effectiveRiskTier,
   GlossaryEntrySchema,
   type InstructionalDesign,
   InstructionalDesignSchema,
@@ -217,7 +218,7 @@ export const researchBrief: StageHandler = {
   async validate(ctx, ids) {
     const out = wants(ids, 'schema') ? schemaIssues(ctx, [{ rel: F.researchBriefJson, schema: ResearchBriefSchema }]) : [];
     const b = tryRead(ctx, F.researchBriefJson, ResearchBriefSchema);
-    if (b && wants(ids, 'brief-sections')) out.push(...briefIssues(b, ctx.manifest.course.risk_tier === 'high_stakes'));
+    if (b && wants(ids, 'brief-sections')) out.push(...briefIssues(b, effectiveRiskTier(ctx.manifest) === 'high_stakes'));
     return out;
   },
   repair: () => ({
@@ -569,7 +570,7 @@ export const visualDirection: StageHandler = {
       subject: {
         title: sb.title,
         audience: ctx.manifest.course.audience,
-        riskTier: ctx.manifest.course.risk_tier,
+        riskTier: effectiveRiskTier(ctx.manifest),
         preferredFamily: ctx.manifest.pipeline.visual_family,
       },
       modules: sb.modules.map((m) => ({ id: m.id, title: m.title })),

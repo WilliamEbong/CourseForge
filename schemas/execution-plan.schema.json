@@ -931,7 +931,8 @@
             "stage-default",
             "course",
             "risk-floor",
-            "cli"
+            "cli",
+            "review-level"
           ]
         }
       },

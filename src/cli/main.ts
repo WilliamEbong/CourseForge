@@ -2,8 +2,10 @@
  * CourseForge CLI: parses argv, dispatches to the PipelineApi (or the local doctor/setup commands) and maps
  * results/errors to exit codes. Returns the exit code instead of exiting so tests can call it in-process.
  */
+
+import { existsSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
-import { join, resolve } from 'node:path';
+import { basename, join, resolve } from 'node:path';
 import {
   BackendPreferenceSchema,
   EXIT,
@@ -16,8 +18,8 @@ import {
 import { CfError, usageError } from '../core/errors.js';
 import { readJson } from '../core/fsx.js';
 import { slugify } from '../core/ids.js';
-import { localStateDir, repoRoot } from '../core/paths.js';
-import { type GuidanceConfig, trackingUnfinished } from '../core/schemas/index.js';
+import { COURSE_FILES, courseDir, localStateDir, repoRoot } from '../core/paths.js';
+import { type GuidanceConfig, type ReviewLevel, trackingUnfinished } from '../core/schemas/index.js';
 import type { EnvironmentManifest } from '../core/schemas/reports.js';
 import { type DoctorOptions, runDoctor } from '../environment/doctor.js';
 import { formatDoctor, useColor } from '../environment/format.js';
@@ -220,6 +222,63 @@ function configureCommand(): Command {
   };
 }
 
+const REVIEW_FLAG: Record<string, ReviewLevel> = {
+  'one-shot': 'one_shot',
+  one_shot: 'one_shot',
+  recommended: 'recommended',
+  'every-step': 'every_step',
+  every_step: 'every_step',
+  strict: 'strict',
+};
+
+/**
+ * `make`: everything the author has in, a finished course out. Arguments that are existing files or folders are
+ * material; everything else is the prompt. A new course gets the setup questions first (or `--review` without them).
+ */
+const makeCommand: Command = {
+  positionals: 100,
+  options: { ...COURSE, ...HARNESS, title: S, id: S, review: S, defaults: B },
+  run: async (ctx) => {
+    const v = ctx.values;
+    const paths = ctx.positionals.filter((a) => existsSync(a));
+    const prompt = ctx.positionals.filter((a) => !existsSync(a)).join(' ');
+    const reviewFlag = str(v, 'review');
+    const review = reviewFlag === undefined ? undefined : REVIEW_FLAG[reviewFlag];
+    if (reviewFlag !== undefined && !review) throw usageError('make: --review must be one-shot, recommended, every-step or strict');
+    const courseId = str(v, 'course');
+    const api = await ctx.api();
+    let setup: SetupAnswers | undefined;
+    const { titleFrom } = await import('../pipeline/make.js');
+    const title = str(v, 'title') ?? titleFrom(prompt, paths[0] ? basename(paths[0]) : '');
+    const info = await api.setupInfo({ title });
+    if (!courseId) {
+      if (review) info.answers = { ...info.answers, review };
+      if (interactive(ctx)) setup = await wizard(ctx, info, false);
+      else if (review) setup = info.answers;
+    }
+    const what = courseId
+      ? `course ${courseId}`
+      : paths.length
+        ? `${paths.length} file(s) or folder(s)${prompt ? ' and your description' : ''}`
+        : 'your description';
+    if (!ctx.json) ctx.io.stderr.write(`${fillMessage(info.guidance.messages.makeStart, { title: courseId ?? title, what })}\n`);
+    const res = await api.make({ prompt, paths, title: str(v, 'title'), id: str(v, 'id'), courseId, setup, ...harnessOpts(v) });
+    const o = res.outcome;
+    print(ctx, res, () => {
+      const lines = [formatOutcome(o)];
+      if (res.truncated) lines.push('Note: your documents were very long, so only the first part of them was used.');
+      if (setup) lines.push(...setupSummary(info.guidance, res.courseId, { guides: res.guides, unfinished: trackingUnfinished(setup) }));
+      if (o.status === 'waiting' && o.stoppedAt === 'RELEASE')
+        lines.push(
+          '',
+          fillMessage(info.guidance.messages.signoff, { id: res.courseId, file: join(courseDir(res.courseId), COURSE_FILES.buildHtml) }),
+        );
+      return lines.join('\n');
+    });
+    return o.exitCode;
+  },
+};
+
 const COMMANDS: Record<string, Command> = {
   doctor: {
     options: { repair: B, only: S, live: B },
@@ -362,6 +421,7 @@ const COMMANDS: Record<string, Command> = {
       return EXIT.OK;
     },
   },
+  make: makeCommand,
   configure: configureCommand(),
   reconfigure: configureCommand(),
   run: {

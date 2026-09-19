@@ -9,6 +9,7 @@ import {
   GateModeSchema,
   IntakeModeSchema,
   ProducerKindSchema,
+  type RiskTier,
   RiskTierSchema,
   STAGES,
   type Stage,
@@ -30,6 +31,16 @@ function normaliseStageKeys(v: unknown): unknown {
   }
   return out;
 }
+
+/**
+ * How much a person checks the work. `one_shot`: no pauses until one sign-off before release (risk floors do not
+ * apply; findings that cannot be fixed are carried to the release gate). `recommended`: stage and policy defaults
+ * plus risk floors. `every_step`: a human gate at every stage. `strict`: every step, and the course is treated as
+ * high-stakes whatever its topic.
+ */
+export const REVIEW_LEVELS = ['one_shot', 'recommended', 'every_step', 'strict'] as const;
+export const ReviewLevelSchema = z.enum(REVIEW_LEVELS);
+export type ReviewLevel = z.infer<typeof ReviewLevelSchema>;
 
 export const TRACKING_DESTINATIONS = ['none', 'lms', 'sheet', 'tracker'] as const;
 export const TrackingDestinationSchema = z.enum(TRACKING_DESTINATIONS);
@@ -75,6 +86,7 @@ export const CourseManifestSchema = z.object({
       backend_fallback: z.boolean().default(false),
       max_repair_cycles: z.number().int().min(0).max(10).nullable().default(null),
       visual_family: z.string().nullable().default(null),
+      review_level: ReviewLevelSchema.default('recommended'),
     })
     .default({
       start_stage: 'CONCEPT',
@@ -83,6 +95,7 @@ export const CourseManifestSchema = z.object({
       backend_fallback: false,
       max_repair_cycles: null,
       visual_family: null,
+      review_level: 'recommended',
     }),
   human_review: z.preprocess(normaliseStageKeys, z.partialRecord(StageSchema, GateModeInputSchema)).default({}),
   improvement: z
@@ -107,6 +120,11 @@ export function effectiveTracking(manifest: Pick<CourseManifest, 'tracking'>): T
   if (t.destination === 'none') return null;
   if (t.destination !== 'lms' && !t.endpoint) return null;
   return t;
+}
+
+/** The risk tier the pipeline applies: `strict` review treats every course as high-stakes. */
+export function effectiveRiskTier(manifest: Pick<CourseManifest, 'course' | 'pipeline'>): RiskTier {
+  return manifest.pipeline.review_level === 'strict' ? 'high_stakes' : manifest.course.risk_tier;
 }
 
 /** Google Apps Script web apps answer from a second host (the Content service redirects to googleusercontent). */

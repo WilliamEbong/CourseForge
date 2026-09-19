@@ -83,7 +83,8 @@
         "agent_backend": "auto",
         "backend_fallback": false,
         "max_repair_cycles": null,
-        "visual_family": null
+        "visual_family": null,
+        "review_level": "recommended"
       },
       "type": "object",
       "properties": {
@@ -152,6 +153,16 @@
           "type": [
             "string",
             "null"
+          ]
+        },
+        "review_level": {
+          "default": "recommended",
+          "type": "string",
+          "enum": [
+            "one_shot",
+            "recommended",
+            "every_step",
+            "strict"
           ]
         }
       }

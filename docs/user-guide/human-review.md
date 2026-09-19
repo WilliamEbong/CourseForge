@@ -4,6 +4,20 @@ You can be as involved as you like: fully automatic, approve-after-AI-review at 
 everything yourself. Human decisions are authoritative; CourseForge never silently overwrites approved or locked
 content.
 
+## Review levels
+
+The setup questions (and `courseforge configure`) set how much you are involved, as `pipeline.review_level` in
+`course.yaml` ([ADR 0014](../adr/0014-review-levels-and-one-shot.md)):
+
+| Level | In the setup questions | What happens |
+|---|---|---|
+| `one_shot` | Do it all, then ask me once at the end | Every step runs and fixes its own findings without stopping. The run pauses once, before release, for your approval, whatever the subject's risk. Findings it could not fix are kept open and shown to you there; release stays blocked while any is critical. |
+| `recommended` | Only where it matters | The gates described below: stage defaults, policy, `human_review` and risk floors. |
+| `every_step` | Let me approve every step | A `human` gate at all 11 stages: nothing is repaired without you. |
+| `strict` | Every step, with the strictest checks | Every step, and the course is treated as `high_stakes` whatever its topic (stricter research checks and floors). |
+
+Hand-written `human_review` entries appear as "keep my current custom settings" and apply with `recommended`.
+
 ## Gate modes
 
 | Mode | AI review | AI repair loop | Then |

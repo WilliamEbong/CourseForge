@@ -34,6 +34,13 @@ function fakeApi(next: Partial<RunOutcome> = {}, courseExists = false) {
   const api: PipelineApi = {
     newCourse: rec('newCourse', { courseId: 'x', courseDir: '/c/x', outcome: null, guides: [] }),
     ingestTarget: rec('ingestTarget', { courseId: 'x', title: 'X', isNew: true }),
+    make: rec('make', {
+      courseId: 'x',
+      input: 'prompt',
+      created: true,
+      outcome: outcome({ ...next, status: 'waiting', stoppedAt: 'RELEASE', exitCode: 10 }),
+      guides: [],
+    }),
     setupInfo: async (args) => {
       calls.push({ op: 'setupInfo', args });
       return {
@@ -197,7 +204,7 @@ describe('cli dispatch', () => {
 
   it('new asks the setup questions first and passes the answers to newCourse', async () => {
     const { api, calls } = fakeApi();
-    const replies = ['fr', 'new warehouse staff', '2'];
+    const replies = ['fr', 'new warehouse staff', '3'];
     const ask = async () => replies.shift() ?? '';
     const { io, out } = capture();
     expect(await main(['new', 'Forklift safety', '--id', 'forklift'], io, { api, ask })).toBe(0);
@@ -219,5 +226,32 @@ describe('cli dispatch', () => {
     expect(calls.map((c) => c.op)).toEqual(['setupInfo', 'setupInfo', 'configure']);
     expect(calls[2]?.args).toEqual({ courseId: 'x', answers: defaultAnswers() });
     expect(out.stdout).toContain('Settings saved in /c/x/course.yaml');
+  });
+
+  it('make splits files from the prompt, applies --review without a terminal, and explains the sign-off', async () => {
+    const { api, calls } = fakeApi();
+    const { io, out } = capture();
+    const here = import.meta.dirname;
+    const code = await main(['make', 'Forklift', 'safety', here, '--review', 'one-shot'], io, { api });
+    expect(code).toBe(10);
+    const make = calls.find((c) => c.op === 'make')?.args as { prompt: string; paths: string[]; setup?: SetupAnswers };
+    expect(make.prompt).toBe('Forklift safety');
+    expect(make.paths).toEqual([here]);
+    expect(make.setup?.review).toBe('one_shot');
+    expect(out.stdout).toContain('waiting for your approval');
+    expect(out.stdout).toContain('courseforge gate approve --course x --stage release');
+    expect(await main(['make', 'x', '--review', 'sometimes'], capture().io, { api })).toBe(2);
+  });
+
+  it('make asks the setup questions first in a terminal; without one and without --review it uses the course defaults', async () => {
+    const { api, calls } = fakeApi();
+    const replies = ['', '', '1'];
+    await main(['make', 'Ladder safety'], capture().io, { api, ask: async () => replies.shift() ?? '' });
+    const made = (xs: { op: string; args: unknown }[]) => xs.find((c) => c.op === 'make')?.args as { setup?: SetupAnswers } | undefined;
+    expect(made(calls)?.setup?.review).toBe('one_shot');
+    const quiet = fakeApi();
+    await main(['make', 'Ladder safety'], capture().io, { api: quiet.api });
+    expect(made(quiet.calls)).toBeDefined();
+    expect(made(quiet.calls)?.setup).toBeUndefined();
   });
 });

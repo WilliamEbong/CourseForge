@@ -12,6 +12,10 @@ Locked IDs: {{locks}}
 2. Produce a concept brief that a research planner can act on without re-reading the request. Be concrete; one precise sentence beats three vague ones.
 3. Separate what the requester said from what you are assuming. Every assumption goes in `assumptions`, never silently into another field.
 
+## The author's own documents
+
+If `input/source-material.md` is listed under Inputs, it holds documents the author supplied (their policies, procedures, notes or reference material), one section per document. Use them to understand the intended subject, audience, scope and organisational context. When they conflict with the request, follow the request and record the conflict in `assumptions`.
+
 ## Field guidance
 
 - `title`: a learner-facing course title. Keep the requester's title unless it is misleading or ambiguous; if you change it, record why in `assumptions`.

@@ -17,6 +17,11 @@ export const COMMAND_HELP: Record<string, { usage: string; summary: string }> = 
     usage: `ingest <file> [--course <id>] [--title <text>] [--stage <stage>] [--mode preserve|review-only|improve|rebuild] [--replace] [--conservative] [--defaults] ${H}`,
     summary: 'Import an existing artifact (research, design, storyboard, HTML …); a new course asks the setup questions first',
   },
+  make: {
+    usage: `make [what the course is about] [files or folders…] [--course <id>] [--title <text>] [--id <id>] [--review one-shot|recommended|every-step|strict] [--defaults] ${H}`,
+    summary:
+      'Make a finished course from whatever you have: a description, documents, a half-finished course, or an existing course (--course)',
+  },
   configure: {
     usage: 'configure --course <id>',
     summary: 'Answer the setup questions again (language, audience, how much you review, results tracking)',

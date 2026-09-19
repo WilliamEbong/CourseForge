@@ -15,6 +15,7 @@ import {
   type CourseModel,
   CourseModelSchema,
   DesignDirectionSchema,
+  effectiveRiskTier,
   effectiveTracking,
   type Finding,
   FindingSchema,
@@ -462,7 +463,7 @@ export const release: StageHandler = {
         waived: findings.filter((f) => f.status === 'waived' || f.status === 'rejected').length,
       },
       trace: releaseTrace(ctx),
-      riskTier: ctx.manifest.course.risk_tier,
+      riskTier: effectiveRiskTier(ctx.manifest),
       riskOverride: ctx.manifest.course.risk_override,
       humanApprovals: Object.entries(stateStages)
         .filter(([, s]) => s.gate?.status === 'approved')

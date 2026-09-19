@@ -42,6 +42,7 @@ design, storyboard, editorial, visual, model, build, qa, release`.
 |---|---|
 | `new` | `new <title> [--id <id>] [--notes <file>] [--audience <text>] [--duration <minutes>] [--jurisdiction <text>] [--language <code>] [--to <stage>] [--gate auto\|hybrid\|human] [--defaults] [--backend …] [--harness …]` |
 | `ingest` | `ingest <file> [--course <id>] [--title <text>] [--stage <stage>] [--mode preserve\|review-only\|improve\|rebuild] [--replace] [--conservative] [--defaults] [--backend …] [--harness …]` |
+| `make` | `make [what the course is about] [files or folders…] [--course <id>] [--title <text>] [--id <id>] [--review one-shot\|recommended\|every-step\|strict] [--defaults] [--backend …] [--harness …]` |
 | `configure` | `configure --course <id>` — answer the setup questions again; current answers are the defaults |
 | `reconfigure` | `reconfigure --course <id>` — same as `configure` |
 
@@ -49,6 +50,20 @@ design, storyboard, editorial, visual, model, build, qa, release`.
 CONCEPT to that stage. `ingest` creates the course if it does not exist (ID from the file name unless
 `--course`). `--replace` records the file as a human edit replacing the stage's canonical artifact.
 `--conservative` uses `review-only` instead of stopping when stage inference is uncertain.
+
+**`make`** turns whatever you have into a finished course, working out what you gave it:
+
+- **A description only.** A new course is made from it.
+- **Documents or folders** (`.md .txt .docx .pdf .html .json`). Their text is put in
+  `input/source-material.md`, which the concept and research steps use as your own source material. Any
+  description you add becomes the request.
+- **One `.html` or `.json` file.** This is a half-finished course: it is imported at the step it belongs to (as
+  with `ingest`) and finished from there.
+- **`--course <id>`.** An existing course is taken on to release.
+
+New courses get the setup questions first; without a terminal, `--review` sets the review level. `make` then
+runs towards release and stops where the review level says. With `one-shot`, that is only once, before release,
+and it prints how to approve. It exits 10 while waiting for you.
 
 **Setup questions.** When `new` or `ingest` creates a course in an interactive terminal, CourseForge first asks
 a few plain-language questions: the course language, who it is for, how much you want to approve yourself, and

@@ -30,7 +30,8 @@ const TRACKING_STAGES: readonly Stage[] = ['COURSE_BUILD', 'COURSE_QA', 'RELEASE
 
 export function reviewChoice(manifest: CourseManifest): ReviewChoice {
   const entries = Object.values(manifest.human_review);
-  if (entries.length === 0) return 'recommended';
+  if (entries.length === 0) return manifest.pipeline.review_level;
+  // Courses configured before review levels existed stored "every step" as a human gate on all stages.
   if (entries.length === STAGES.length && entries.every((m) => m === 'human')) return 'every_step';
   return 'custom';
 }
@@ -46,16 +47,12 @@ export function setupFromManifest(manifest: CourseManifest): SetupAnswers {
 
 /** Returns a copy of the manifest with the answers applied and `setup.configured_at` stamped. */
 export function applySetup(manifest: CourseManifest, answers: SetupAnswers, now: string): CourseManifest {
-  const human_review =
-    answers.review === 'recommended'
-      ? {}
-      : answers.review === 'every_step'
-        ? Object.fromEntries(STAGES.map((s) => [s, 'human' as const]))
-        : manifest.human_review;
+  const level = answers.review;
   return {
     ...manifest,
     course: { ...manifest.course, language: answers.language, audience: answers.audience },
-    human_review,
+    pipeline: { ...manifest.pipeline, review_level: level === 'custom' ? 'recommended' : level },
+    human_review: level === 'custom' ? manifest.human_review : {},
     tracking: { ...answers.tracking },
     setup: { configured_at: now },
   };

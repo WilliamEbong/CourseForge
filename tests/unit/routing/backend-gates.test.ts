@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { GateMode, Stage } from '../../../src/core/enums.js';
+import { type GateMode, STAGES, type Stage } from '../../../src/core/enums.js';
 import { selectBackend } from '../../../src/routing/backend.js';
 import { effectiveGate } from '../../../src/routing/gates.js';
 import { resolveExecutionPlan } from '../../../src/routing/plan.js';
@@ -64,7 +64,13 @@ describe('backend selection @B4', () => {
 describe('human gate strictness @B4 @C7', () => {
   const gate = (
     stage: Stage,
-    opts: { tier?: 'standard' | 'elevated' | 'high_stakes'; human?: Record<string, string>; override?: boolean; cli?: GateMode } = {},
+    opts: {
+      tier?: 'standard' | 'elevated' | 'high_stakes';
+      human?: Record<string, string>;
+      override?: boolean;
+      cli?: GateMode;
+      level?: 'one_shot' | 'recommended' | 'every_step' | 'strict';
+    } = {},
   ) =>
     effectiveGate(stage, {
       policy: registries.policy,
@@ -72,6 +78,7 @@ describe('human gate strictness @B4 @C7', () => {
       manifest: manifest({
         course: opts.override ? { risk_override: 'acknowledged' } : {},
         ...(opts.human ? { human_review: opts.human } : {}),
+        ...(opts.level ? { pipeline: { review_level: opts.level } } : {}),
       }),
       riskTier: opts.tier ?? 'standard',
       cli: opts.cli ?? null,
@@ -99,6 +106,25 @@ describe('human gate strictness @B4 @C7', () => {
     expect(gate('STORYBOARD', { cli: 'auto' })).toEqual({ mode: 'auto', source: 'cli' });
     expect(gate('COURSE_QA', { tier: 'high_stakes', cli: 'auto' })).toEqual({ mode: 'human', source: 'risk-floor' });
     expect(gate('CONCEPT', { cli: 'human' })).toEqual({ mode: 'human', source: 'cli' });
+  });
+
+  it('one-shot review: no gate until one human sign-off at release, whatever the risk tier', () => {
+    for (const s of STAGES.filter((x) => x !== 'RELEASE')) {
+      expect(gate(s, { level: 'one_shot' })).toEqual({ mode: 'auto', source: 'review-level' });
+      expect(gate(s, { level: 'one_shot', tier: 'high_stakes' })).toEqual({ mode: 'auto', source: 'review-level' });
+    }
+    expect(gate('RELEASE', { level: 'one_shot' })).toEqual({ mode: 'human', source: 'review-level' });
+    expect(gate('RELEASE', { level: 'one_shot', tier: 'high_stakes' })).toEqual({ mode: 'human', source: 'review-level' });
+    // A CLI override still applies for that run, with the usual floor.
+    expect(gate('COURSE_QA', { level: 'one_shot', cli: 'human' })).toEqual({ mode: 'human', source: 'cli' });
+  });
+
+  it('every-step and strict review put a human gate on every stage', () => {
+    for (const s of STAGES) {
+      expect(gate(s, { level: 'every_step' }).mode).toBe('human');
+      expect(gate(s, { level: 'strict' }).mode).toBe('human');
+    }
+    expect(gate('CONCEPT', { level: 'every_step' })).toEqual({ mode: 'human', source: 'review-level' });
   });
 
   it('risk_override: acknowledged drops the floor', () => {

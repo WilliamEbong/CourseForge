@@ -22,6 +22,7 @@ import type {
   RepairResult,
   TaskSpec,
 } from '../core/schemas/index.js';
+import { effectiveRiskTier } from '../core/schemas/index.js';
 import {
   applyAdjudication,
   applyHtmlEdits,
@@ -216,6 +217,14 @@ function lockStage(ctx: RunContext, stage: Stage, byHuman: boolean): StageResult
   save(ctx);
   ctx.progress(`${stage}: locked`);
   return 'locked';
+}
+
+/**
+ * One-shot review: the author is asked once, before release. A stage whose findings could not be fixed is locked
+ * with them still open instead of pausing; the release gate reports them (and blocks on the serious ones).
+ */
+function carryToRelease(ctx: RunContext, stage: Stage): boolean {
+  return ctx.manifest.pipeline.review_level === 'one_shot' && stage !== 'RELEASE';
 }
 
 /** After a stage produces new canonical content, previously locked downstream stages are no longer current. */
@@ -532,7 +541,7 @@ export async function runStage(ctx: RunContext, stage: Stage, opts: StageRunOpti
       fromStatus: st.status,
       registries: ctx.registries,
       manifest: ctx.manifest,
-      riskTier: ctx.manifest.course.risk_tier,
+      riskTier: effectiveRiskTier(ctx.manifest),
       probes: ctx.probes,
       forcedHarness: ctx.harnessName === 'fake' ? 'fake' : undefined,
       overrides: { backend: ctx.backendPref, ...(ctx.cliGate ? { gate: ctx.cliGate } : {}) },
@@ -617,6 +626,7 @@ export async function runStage(ctx: RunContext, stage: Stage, opts: StageRunOpti
       }
       if (!actions.length || !(canRepair || instructions)) break;
       if (cycle >= maxCycles) {
+        if (carryToRelease(ctx, stage)) break;
         if (plan.onCapReached === 'human') return openGate(ctx, stage, plan, 'cycle_cap', null);
         throw new CfError('CYCLE_CAP', `${stage}: ${actions.length} actionable findings remain after ${cycle} repair cycles`, {
           kind: 'cycle_cap',
@@ -663,6 +673,10 @@ export async function runStage(ctx: RunContext, stage: Stage, opts: StageRunOpti
     const gateMode = plan.humanGate.mode;
     if (gateMode === 'auto') {
       if (!blocking.length) return lockStage(ctx, stage, false);
+      if (carryToRelease(ctx, stage)) {
+        ctx.progress(`${stage}: ${blocking.length} unresolved finding(s) carried to the release sign-off`);
+        return lockStage(ctx, stage, false);
+      }
       if (plan.onCapReached === 'human' || stage === 'RELEASE') return openGate(ctx, stage, plan, 'validator_failed', null);
       throw new CfError('BLOCKING_FINDINGS', `${stage}: ${blocking.length} blocking finding(s) remain`, {
         kind: 'validator_failed',
