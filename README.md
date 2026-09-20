@@ -1,5 +1,128 @@
 # CourseForge
 
+**CourseForge turns a course idea, or the material you already have, into a tested, accessible e-learning course
+you can share as a single file, with every fact traced back to its source.**
+
+![A screen from a course built by CourseForge: module navigation with per-screen progress, a titled content
+screen, and cards listing the module's objectives and contents.](docs/assets/course-desktop.png)
+
+## The problem
+
+Building a one-hour course by hand takes weeks. Someone researches the subject, writes learning objectives,
+storyboards every screen, writes the assessment, builds it in an authoring tool, then tests that it works and
+that people using a keyboard or a screen reader can complete it.
+
+General-purpose AI tools draft that material in minutes, and the draft cannot be trusted. Facts arrive without
+sources. Nothing is reviewed except by the person who asked for it. Accessibility is whatever the model happened
+to produce, and there is no record of what was checked, what was changed, or who approved it. That may be
+tolerable for onboarding trivia, but safety, compliance, clinical and financial training have to stand up to
+scrutiny later.
+
+CourseForge sits between those two. The agent does the reading and writing; the system decides what must be
+checked, who checks it, when a person has to approve, and whether the result is allowed to ship.
+
+## What it does
+
+Give it any of these:
+
+- a one-line description of the course you want;
+- a folder of your own material (`.md`, `.txt`, `.docx`, `.pdf`, `.html`, `.json`);
+- work already in progress at any stage: a research dossier, a design blueprint, a storyboard, or a finished
+  HTML course you want reviewed or rebuilt.
+
+It runs an eleven-stage production line: research brief, sourced research dossier, instructional design,
+storyboard, editorial pass, visual direction, build, browser testing, release. What comes back is **one
+self-contained HTML file**, along with a QA report, a source report and a full record of how the course was made.
+
+## Why it is different
+
+- **Every claim carries its source.** Research produces a dossier where each substantive statement gets a claim
+  ID tied to a source, and those IDs follow the claim through design, storyboard and the finished screen. A
+  course cannot be released if its citations do not hold together.
+- **Thirty-six specialist reviewers.** They cover accuracy, objective alignment, assessment quality, reading
+  level, accessibility, learner experience and visual design. Each one has a written rubric and a defined remit,
+  and returns structured findings rather than a general opinion on the draft.
+- **Repairs are bounded and audited.** Findings are deduplicated by code, adjudicated where reviewers disagree,
+  then repaired by stable ID. A repair that touches anything outside its plan is rolled back. Repair cycles are
+  capped, so a course cannot spin in review forever.
+- **You decide where a human approves.** Run it with no gates, with the recommended gates, or stop at every
+  stage. Higher-risk subjects raise the minimum automatically, and a course cannot quietly lower it.
+- **Accessibility decides whether the course ships.** Every interaction is keyboard-operable, every figure has a
+  text equivalent, and a real browser drives every screen with axe-core. Serious violations block release.
+- **Your own work is preserved.** Anything you import is kept byte-for-byte and re-verified at release, so a
+  rebuild cannot silently rewrite the source you gave it.
+- **No lock-in.** The deliverable is one HTML file with no external requests. Email it, put it on a shared drive,
+  or host it anywhere. A SCORM 1.2 package and simple completion tracking are available if you want them.
+- **No API keys.** It drives the Claude Code or Codex CLI you are already signed in to.
+
+## What a finished course contains
+
+Sixteen content block types (concepts, examples, comparisons, processes, evidence, warnings, misconceptions,
+scenarios and more) and six interaction types: single and multiple choice, matching, categorization, sequencing
+and reveal. Twenty-two diagram and chart archetypes rendered as real SVG rather than pictures of text. Six visual
+design families with light and dark themes, each contrast-checked. Knowledge checks throughout, a graded
+assessment with a pass mark, a glossary and a references list.
+
+## Who it is for
+
+- **Learning and development teams** who need more courses than they have developer time for.
+- **Compliance, safety and onboarding training**, where traceable sources and accessibility are requirements.
+- **Subject-matter experts** who have the knowledge, and the documents, but no course developer.
+- **Consultancies and agencies** producing training for clients, who need an audit trail of what was checked.
+- **Anyone modernizing an old course**: `improve` mode reviews existing HTML and rebuilds it, with a
+  before-and-after report of what changed.
+
+## How it works, in sixty seconds
+
+Code owns the process; the agent owns the words. Registries in `config/` decide which stage runs, which reviewers
+sit on it, which tools they may use, which renderer draws each figure, when a person must approve, and whether
+the course may be released. Prompts are data files, not code. Every agent call runs against an execution plan
+written down in advance, returns output checked against a schema, and is logged, so any run can be explained,
+resumed or repeated. See the [pipeline](#pipeline) below.
+
+## What it is not, yet
+
+This is version 0.1.0, with the gaps that implies:
+
+- No video, no audio or narration, and no AI-generated imagery. Figures are diagrams, charts and icons.
+- Navigation is linear. There are scenario screens, but no branching paths.
+- The accessibility checks are automated. They are not a formal WCAG conformance audit.
+- SCORM export has not yet been verified against a live learning management system.
+- A full live run takes hours and costs model tokens. The tests and the demo run offline on fixtures.
+- Scoring happens in the learner's browser, which suits training records rather than high-stakes exams.
+
+The full list is under [Limitations](#limitations).
+
+## Try it
+
+```sh
+git clone <repo-url> CourseForge
+cd CourseForge
+./setup.sh          # or .\setup.ps1 on Windows
+```
+
+Then run the offline demo, which replays committed fixtures from `tests/fixtures/harness/demo` and needs no
+agent and no network:
+
+```sh
+export COURSEFORGE_HARNESS=fake COURSEFORGE_FIXTURES=tests/fixtures/harness/demo
+./courseforge new "Spotting Phishing Emails" --to release
+```
+
+More in [Quick start](#quick-start).
+
+CourseForge was specified, tested and directed by its author; the implementation is AI-assisted, built with
+Claude Code.
+
+---
+
+The rest of this document is the technical reference.
+
+- [Architecture](#architecture) · [Pipeline](#pipeline) · [Features](#key-features) · [Install](#install) ·
+  [Quick start](#quick-start) · [Example: importing existing work](#example-importing-existing-work) ·
+  [Human review](#human-review-workflow) · [Outputs](#outputs) · [Troubleshooting](#troubleshooting) ·
+  [Limitations](#limitations) · [Development](#development)
+
 CourseForge is a local, repository-contained course-engineering harness. It takes a one-line concept, or an
 existing artifact from any production stage (research dossier, instructional design, storyboard, finished HTML
 course), and drives it through a deterministic eleven-stage pipeline to a tested, accessible, single-file HTML
@@ -11,11 +134,6 @@ It is not a prompt collection. Prompts are data files routed by code. Every agen
 execution plan, returns schema-validated JSON, and is audited: writes outside the plan are rolled back, locked
 content cannot be changed, repair cycles are capped, and every decision is logged so a run can be explained
 and resumed.
-
-- [Architecture](#architecture) · [Pipeline](#pipeline) · [Features](#key-features) · [Install](#install) ·
-  [Quick start](#quick-start) · [Example: importing existing work](#example-importing-existing-work) ·
-  [Human review](#human-review-workflow) · [Outputs](#outputs) · [Troubleshooting](#troubleshooting) ·
-  [Limitations](#limitations) · [Development](#development)
 
 ## Architecture
 
