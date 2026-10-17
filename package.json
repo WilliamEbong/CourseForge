@@ -35,7 +35,7 @@
   "dependencies": {
     "@axe-core/playwright": "4.13.0",
     "@svgdotjs/svg.js": "3.2.8",
-    "axe-core": "4.13.0",
+    "axe-core": "4.14.0",
     "cheerio": "1.2.0",
     "cross-spawn": "7.0.6",
     "d3": "7.9.0",
@@ -44,7 +44,7 @@
     "mammoth": "1.12.3",
     "marked": "18.0.13",
     "mermaid": "12.0.0",
-    "playwright": "1.63.0",
+    "playwright": "1.64.0",
     "unpdf": "1.8.1",
     "vega": "6.4.0",
     "vega-lite": "6.4.3",
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
-    "@playwright/test": "1.63.0",
+    "@playwright/test": "1.64.0",
     "@storybook/addon-a11y": "10.6.0",
     "@storybook/html-vite": "10.6.0",
     "@types/cross-spawn": "6.0.6",
